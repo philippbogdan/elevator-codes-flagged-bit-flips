@@ -26,7 +26,7 @@ from .repcode import sample_rep
 
 
 def task_id(spec: dict) -> str:
-    s = json.dumps({k: spec[k] for k in sorted(spec) if k not in ("shots", "max_fail")}, sort_keys=True)
+    s = json.dumps({k: spec[k] for k in sorted(spec) if k not in ("shots", "max_fail", "outdir")}, sort_keys=True)
     return hashlib.sha1(s.encode()).hexdigest()[:12]
 
 
