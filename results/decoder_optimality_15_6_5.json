@@ -1,0 +1,119 @@
+[
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.0,
+  "classes": [
+   "idle"
+  ],
+  "stratum": [
+   3,
+   0
+  ],
+  "seconds": 140.8252956867218,
+  "n": 1600,
+  "ml": 34,
+  "mle": 34,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.9,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   3,
+   0
+  ],
+  "seconds": 142.24917817115784,
+  "n": 1600,
+  "ml": 29,
+  "mle": 33,
+  "disagree": 6,
+  "mle_only": 5,
+  "ml_only": 1
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.9,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   2,
+   1
+  ],
+  "seconds": 120.80355787277222,
+  "n": 1600,
+  "ml": 1,
+  "mle": 1,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.9,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   2,
+   2
+  ],
+  "seconds": 120.00461149215698,
+  "n": 1600,
+  "ml": 2,
+  "mle": 2,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.99,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   2,
+   1
+  ],
+  "seconds": 141.95025157928467,
+  "n": 1600,
+  "ml": 6,
+  "mle": 6,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
+ }
+]

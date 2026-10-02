@@ -14,7 +14,7 @@ thin XZZX 145; at p_Z = 1e-2, η = 1e6 the fits bottom out near 2e-9 ([15,9,3]) 
 | Z memory [15,6,5], one ancilla, 16 sampled points | 15/16 within 2× (0.43–1.33×) | met |
 | Z memory [15,6,5], two ancillas | 14/16 within 2× (0.60–2.45×) | met at 14 of 16 points |
 | Z memory [15,9,3] | full sweep: 6/16 within 2× (1.43–3.76×); shortest-path ancilla: 4/4 (1.42–1.89×) | met with the shortest-path ancilla; the main study keeps the (pessimistic) full sweep — explained below |
-| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | 0.16–0.47× counting any of the k logical qubits; 0.42–1.30× counting each logical qubit's errors (measured multiplicity 2.6) | met in the per-qubit count, which the paper's X fit evidently uses |
+| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | 0.31–0.47× counting any of the k logical qubits; 0.80–1.30× counting each logical qubit's errors (measured multiplicity 2.6) | met in the per-qubit count, which the paper's X fit evidently uses |
 | Z memory [16,3,8] (needed only below η ≈ 7e4) | full sweep: 0/14 within 2× (2.6–17.8×); shortest-path ancilla: 1.47–1.93× (4 points) | met with the shortest-path ancilla (`schedule_comparison.md`); the main study keeps the full sweep — explained below |
 | repetition code (paper's fit, App. B) | 0.7–1.4× for d_Z ≤ 13 over p_Z = 1e-3 … 1.3e-2 (the fit was sampled to d_Z = 11) | met |
 
@@ -52,10 +52,10 @@ sampled failure fractions) and its held-out checks: 30/30
 direct-sampling points under flags agree with the stratified estimate at the same p_X and
 30/30 with the p_X = 1e-9
 failure fractions re-weighted; d_Z transfers 146/146
-(p_Z = 1e-3) and 84/84
+(p_Z = 1e-3) and 124/124
 (p_Z = 1e-2); p_X transfers 24/24.  Strata in which sampling saw no failure enter the upper bound
 at the smaller of their Wilson bound and an analytic bound from the code distance and the decoder's
-costs (FINDINGS 7b; 963 sampled strata checked against it,
+costs (FINDINGS 7b; 1112 sampled strata checked against it,
 0 violations) or the false-flag pair bounds; strata never sampled enter
 at their bound or with failure probability one.  Overheads are stated from the central rate and,
 where it differs, from the 95 % upper bound.  Phase flips below ~1e-9 are model extrapolations
@@ -88,7 +88,7 @@ on all locations at f = 0.99 the floors fall to
 1.3e-14 ([15,6,5], two
 ancillas), and [15,6,5] reaches 1e-12 at 269.3
 qubits per logical qubit (paper pZL; 482.7
-this-work pZL; with p_XL at its 95 % upper bound 280.0 and
+this-work pZL; with p_XL at its 95 % upper bound 269.3 and
 not reached).  Full table: FINDINGS §6.
 
 ## 5. The frontier
@@ -110,10 +110,10 @@ the paper-pZL version is in FINDINGS §7):
 | 44.8 | ext. Hamming [16,11,4] | 15 | 8.2e-13 | 0.99 | idle | 4096 | 0 |
 | 51.6 | [15,9,3] | 15 | 7.5e-13 | 0.8 | all | 4096 | 0 |
 | 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.8 | all | 16 | 1e-08 |
-| 51.6 | [15,9,3] | 15 | 4.1e-13 | 0.9 | all | 16 | 1e-07 |
-| 51.6 | [15,9,3] | 15 | 1.9e-13 | 0.99 | all | 64 | 1e-07 |
-| 51.6 | [15,9,3] | 15 | 1.4e-13 | 0.99 | all | exact | 1e-06 |
-| 77.3 | [15,6,5] | 15 | 1.6e-13 | 0.0 | none | any (no flags) | 0 |
+| 51.6 | [15,9,3] | 15 | 6.3e-13 | 0.8 | all | 4 | 1e-07 |
+| 51.6 | [15,9,3] | 15 | 4.7e-13 | 0.9 | all | 16 | 1e-07 |
+| 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.99 | all | 64 | 1e-06 |
+| 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |
 
 Pushed outward on the criterion furthest from its limit: overhead first (from 88 to the lowest
 row above by admitting higher-rate outer codes), then the timing window (to 4096 ticks, longer
@@ -127,7 +127,7 @@ than the memory), then the flag efficiency.
 | floors at p_Z = 1e-2 with perfect flags | the code's distance: ≥ d flagged events containing an undetectable logical, computed without a decoder | `limits.md`, `perfect_flags_exact.json` |
 | flag efficiency required | set by unflagged bit flips under a decoder shown to be ML-optimal for the flag model (exact and coarse timing) | `decoder_optimality*.json`, `required_f_*.md` |
 | timing precision | none within exact … 4096 ticks when gates are flagged | `flags_main_*.md` |
-| false flags | with exact timing none up to 1e-06 per qubit per tick, the largest rate tested (95 % bound; the dominant strata bounded analytically, without decoding); with 64-tick windows up to 1e-07 (1e-06 central) | `assumptions.md`, `false_flag_bounds.json` |
+| false flags | with exact timing none up to 1e-06 per qubit per tick, the largest rate tested (95 % bound; the dominant strata bounded analytically, without decoding); with 64-tick windows up to 1e-06 (1e-06 central) | `assumptions.md`, `false_flag_bounds.json` |
 
 ## 7. What failed, what remains open
 
@@ -142,4 +142,4 @@ than the memory), then the flag efficiency.
   carried; every conclusion above holds under either.
 * At p_Z = 1e-2 the floors with flags lie at d_Z = 39–123, beyond the largest elevator X memory sampled
   there (d_Z = 25, fitted within a factor 2); they are model extrapolations, marked as such.
-* False flags with 64-tick windows: between 1e-07 and 1e-06 per qubit per tick the 95 % upper bound, not the central estimate, exceeds the target: a sampling limit, not a property of the problem.
+* False flags: with exact timing and with 64-tick windows the 95 % bounds meet the target up to the largest rate tested (1e-6 per qubit per tick); no open item.

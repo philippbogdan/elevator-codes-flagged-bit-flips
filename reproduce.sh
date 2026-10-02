@@ -57,12 +57,14 @@ if [ "$MODE" = "all" ]; then
   run_tasks tasks/xham16_idle.jsonl results/flag_alt 4 16         # [16,11,4] with idle-only flags
   run_tasks tasks/pz1e2_deep.jsonl results/flag_pz1e2 12 12       # p_Z = 1e-2: deeper [15,6,5] strata at d_Z = 33
   run_tasks tasks/pz1e2_grid.jsonl results/flag_pz1e2 8 16        # p_Z = 1e-2: the remaining flag settings
+  run_tasks tasks/pz1e2_deep_windows.jsonl results/flag_pz1e2 12 6 # p_Z = 1e-2: deeper windowed strata at d_Z = 33
   run_tasks tasks/ff_deep.jsonl results/flag_falseflag 14 12      # false flags at 1e-7, 1e-6: deeper strata
   [ -s tasks/legacy.jsonl ] && run_tasks tasks/legacy.jsonl results/flag_literal 4 16
   # local checks (minutes to an hour each)
   "$PY" scripts/known_answers.py --out results/known_answers.json
   "$PY" scripts/decoder_optimality.py 500
   "$PY" scripts/decoder_optimality_windows.py 2000
+  "$PY" scripts/decoder_optimality_15_6_5.py 1600             # [15,6,5], p_Z = 1e-2 regime (~1 core-hour)
   "$PY" scripts/decoder_variants_flagfree.py 600
   "$PY" scripts/sensitivity_15_9_3.py
   "$PY" scripts/variants_z.py results/variants/z_variants_v1.json 20000

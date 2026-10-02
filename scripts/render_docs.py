@@ -88,9 +88,10 @@ def first_eta(tag, key, code_label):
 
 
 def reach(key, hi=False):
-    """overhead at which 1e-12 is reached at p_Z = 1e-2 (limits entry 'p1e-2|code|flags|tag'), from the
-    central p_XL or from its 95 % upper bound"""
-    v = N["limits"][key].get("reach_hi" if hi else "reach")
+    """overhead at which 1e-12 is reached at p_Z = 1e-2 (limits entry 'p1e-2|code|flags|tag', emulation
+    closure over the settings it can emulate), from the central p_XL or from its 95 % upper bound"""
+    e = N["limits"][key]
+    v = e.get("c_reach_hi" if hi else "c_reach", e.get("reach_hi" if hi else "reach"))
     return f1(v) if v else "not reached"
 
 

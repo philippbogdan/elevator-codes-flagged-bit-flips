@@ -4,7 +4,7 @@ of scripts/strata_caps.py remove the strata they bound by 0; the budget goes to 
 the 95 % upper bounds there ((1,3), (2,1), (1,4), (2,2), ...).  The analysis pools these runs with the
 earlier ones of the same setting (independent seeds).
 
-    python scripts/make_pz1e2_deep_tasks.py      # writes tasks/pz1e2_deep.jsonl
+    python scripts/make_pz1e2_deep_tasks.py      # writes tasks/pz1e2_deep.jsonl, tasks/pz1e2_deep_windows.jsonl
 """
 import json
 import os
@@ -12,6 +12,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALL = ["idle", "gate", "prep", "meas"]
 SETTINGS = [(0.0, ["idle"]), (0.9, ["idle"]), (0.99, ["idle"]), (0.9, ALL), (0.99, ALL), (0.99, ["idle", "gate"])]
+WINDOWS = [1, 16, 64, 256, 1024, 4096]      # f = 0.99 on all locations (written to tasks/pz1e2_deep_windows.jsonl)
 
 
 def main():
@@ -26,6 +27,23 @@ def main():
                             analytic_caps=True, seed=seed, tag="pz1e2-deep", outdir="results/flag_pz1e2"))
             seed += 1
     fn = os.path.join(ROOT, "tasks", "pz1e2_deep.jsonl")
+    with open(fn, "w") as fh:
+        for s in out:
+            fh.write(json.dumps(s) + "\n")
+    print(fn, len(out))
+    # timing windows: the same depth (no analytic bounds there), so that the window dependence at
+    # p_Z = 1e-2 is not set by single failures in 400-sample strata
+    out = []
+    seed = 740001
+    for n_anc in (1, 2):
+        for w in WINDOWS:
+            out.append(dict(kind="strata", code="15_6_5", n_anc=n_anc, d=33, mode="full", compress=False,
+                            idle_ctx=["edge", "cnot"], n_outer=5, p_x=1e-8,
+                            flag=dict(f=0.99, classes=ALL, window=w, false_rate=0.0), decoder="mle_excl",
+                            kmax=7, budget=400000, n1=8000, lo_order=5, rel_tol=0.02, abs_tol=1e-22,
+                            seed=seed, tag="pz1e2-deep-w", outdir="results/flag_pz1e2"))
+            seed += 1
+    fn = os.path.join(ROOT, "tasks", "pz1e2_deep_windows.jsonl")
     with open(fn, "w") as fh:
         for s in out:
             fh.write(json.dumps(s) + "\n")

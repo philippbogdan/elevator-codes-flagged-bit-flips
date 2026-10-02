@@ -72,7 +72,9 @@ this work's own.
   η ≥ 4e4 with perfect flags (paper pZL).  §5.
 * **p_Z = 1e-2.**  Flags push the memory past the bit-flip wall: [15,6,5] reaches 1e-12, which no
   code reaches without flags, at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
-  qubits per logical qubit (f = 0.99, paper pZL); [15,9,3] bottoms out at
+  qubits per logical qubit (f = 0.99, paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} with the 95 % upper
+  bound of p_XL), from f = {{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("f", "–") }} on all locations
+  ({{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("f", "–") }} with the 95 % bound); [15,9,3] bottoms out at
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }} even with perfect flags (its
   distance).  §6.
 
@@ -168,8 +170,14 @@ this work's own.
    ticks), where ML is computed by enumerating every assignment of flagged events to the locations
    of their windows: ML {{ N["checks"]["decoder_optimality_windows"]["ml"] }} versus MLE
    {{ N["checks"]["decoder_optimality_windows"]["mle"] }} failures on
-   {{ N["checks"]["decoder_optimality_windows"]["n"] }} configurations.  Evidence:
-   `results/decoder_optimality.json`, `results/decoder_optimality_windows.json`.
+   {{ N["checks"]["decoder_optimality_windows"]["n"] }} configurations.  [15,6,5] in the p_Z = 1e-2
+   regime (d_Z = 17, p_X = 1e-8, strata (3,0), (2,1), (2,2), (1,3) without flags and at f = 0.9 and
+   0.99 on all locations): ML {{ N["checks"].get("decoder_optimality_15_6_5", {}).get("ml", "–") }} versus MLE
+   {{ N["checks"].get("decoder_optimality_15_6_5", {}).get("mle", "–") }} failures on
+   {{ N["checks"].get("decoder_optimality_15_6_5", {}).get("n", "–") }} configurations (MLE failing where ML
+   does not: {{ N["checks"].get("decoder_optimality_15_6_5", {}).get("mle_only", "–") }}).  Evidence:
+   `results/decoder_optimality.json`, `results/decoder_optimality_windows.json`,
+   `results/decoder_optimality_15_6_5.json`.
 
 6. **Known answers are met exactly.**  Repetition codes of distance 3, 5, 7, 9 with every flip
    flagged correct every pattern of up to d − 1 flips (all
@@ -386,7 +394,10 @@ this work's own.
     more than an outer round at the d_Z of these floors — with its overhead, the lowest p_L with p_XL
     at its 95 % upper bound, and the cheapest overhead at which 1e-12 is reached (all floors lie
     beyond d_Z = 25, the largest elevator X memory sampled at p_Z = 1e-2, so their phase flips are
-    extrapolations of the phase-flip model).  With the paper's phase-flip fit:
+    extrapolations of the phase-flip model).  A decoder can always coarsen aligned windows, drop flags or
+    ignore a class, so each 95 % bound is the best over the settings the entry can emulate, and a central
+    value above such a bound is replaced by it (per-setting values: `pz1e2_floors.md`).  With the paper's
+    phase-flip fit:
 
 {{ N["md"]["pz1e2_compact|paper-pZL"] }}
 

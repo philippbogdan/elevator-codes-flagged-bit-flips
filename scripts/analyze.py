@@ -50,11 +50,12 @@ def repro_tables():
         for r in rows:
             by_var[(r["code"], r["n_anc"], r["variant"])].append(r)
         out.append(f"\n### {mem}-type memory (flags off) vs arXiv:2601.10786 fits\n")
-        out.append("| code | anc | reading | points within 2x / 95% CI | ratio range (this work / fit) |")
+        out.append("| code | anc | reading | points within 2x / 95% CI | ratio range (this work / fit; points with >= 20 failures) |")
         out.append("|---|---|---|---|---|")
         for key, rs in sorted(by_var.items()):
             ok = sum(r["within"] for r in rs)
-            rat = [r["ratio"] for r in rs]
+            # ratio ranges from points with enough failures to fix the ratio (>= 20); all points are listed
+            rat = [r["ratio"] for r in rs if r["fails"] >= 20] or [r["ratio"] for r in rs]
             out.append(f"| {key[0]} | {key[1]} | {key[2]} | {ok}/{len(rs)} | {min(rat):.2f} - {max(rat):.2f} |")
             NUMBERS.setdefault("repro", {})[f"{mem}:{key[0]}:a{key[1]}:{key[2]}"] = dict(
                 within=ok, n=len(rs), ratio_min=min(rat), ratio_max=max(rat))
@@ -1096,6 +1097,12 @@ def aux_checks():
         A["decoder_optimality_windows"] = dict(cases=len(dw), n=sum(r["n"] for r in dw), ml=sum(r["ml"] for r in dw),
                                                mle=sum(r["mle"] for r in dw), disagree=sum(r["disagree"] for r in dw),
                                                windows=sorted({r["window"] for r in dw}), rows=dw)
+    d5 = load("decoder_optimality_15_6_5.json")
+    if d5:
+        A["decoder_optimality_15_6_5"] = dict(cases=len(d5), n=sum(r["n"] for r in d5), ml=sum(r["ml"] for r in d5),
+                                              mle=sum(r["mle"] for r in d5), disagree=sum(r["disagree"] for r in d5),
+                                              mle_only=sum(r["mle_only"] for r in d5), ml_only=sum(r["ml_only"] for r in d5),
+                                              rows=d5)
     dv = load("decoder_variants_flagfree.json")
     if dv:
         A["decoder_variants_flagfree"] = dv
@@ -1276,6 +1283,35 @@ def limits_table():
                          f"{fo / tot:.2f} | {wu / tot:.2f} |")
     NUMBERS["limits"] = L
     open(os.path.join(OUT, "limits.md"), "w").write("\n".join(lines) + "\n")
+    # emulation closure at p_Z = 1e-2: a setting can always be degraded (coarser aligned windows, flags
+    # dropped at random, a class ignored), so its p_L is at most that of every setting it can emulate.  The
+    # 95 % bounds are closed over those settings; the central value is the setting's own estimate, clipped
+    # by those bounds only (a minimum over noisy central estimates would be biased low).  c_* fields.
+    def parse_fl(fl):
+        if fl == "none":
+            return ("none", 0, 0.0)
+        f_, cls_, w_ = fl.split()
+        return (cls_, 0 if w_ == "w=exact" else int(w_[2:]), float(f_[2:]))
+    groups = defaultdict(dict)
+    for key, e in L.items():
+        if key.startswith("p1e-2|"):
+            _, code, fl, tag = key.split("|")
+            groups[(code, tag)][fl] = e
+    for (code, tag), byfl in groups.items():
+        for fl, e in byfl.items():
+            X = parse_fl(fl)
+            cands = [(fl2, e2) for fl2, e2 in byfl.items() if emulable(parse_fl(fl2), X)]
+            bh = min(cands, key=lambda t: t[1]["floor_hi"])
+            rh = [t[1]["reach_hi"] for t in cands if t[1].get("reach_hi")]
+            c_reach_hi = min(rh) if rh else None
+            if e["pL"] <= bh[1]["floor_hi"]:
+                c_pL, c_oh, c_d = e["pL"], e["overhead"], e["d"]
+            else:
+                c_pL, c_oh, c_d = bh[1]["floor_hi"], bh[1]["overhead_hi"], bh[1]["d_hi"]
+            rc = [x for x in (e.get("reach"), c_reach_hi) if x]
+            e.update(c_pL=c_pL, c_overhead=c_oh, c_d=c_d, c_floor_hi=bh[1]["floor_hi"],
+                     c_overhead_hi=bh[1]["overhead_hi"], c_from_hi=bh[0],
+                     c_reach=min(rc) if rc else None, c_reach_hi=c_reach_hi)
     # p_Z = 1e-2 tables for the documents: the full one (results/summary/pz1e2_floors.md) and a compact
     # one per phase-flip model (every flag setting, the paper's codes)
     order = ["none", "f=0.5 all w=exact", "f=0.8 all w=exact", "f=0.9 all w=exact", "f=0.95 all w=exact",
@@ -1299,6 +1335,21 @@ def limits_table():
                       f"{rch(b, 'reach')} / {rch(b, 'reach_hi')} | "
                       f"{b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
     NUMBERS.setdefault("md", {})["pz1e2_table"] = "\n".join(md)
+    # smallest efficiency (flags on all locations, exact timing) at which some code reaches 1e-12
+    minf = {}
+    for tag in ("paper-pZL", "this-work-pZL"):
+        for which in ("reach", "reach_hi"):
+            best = None
+            for k, v in L.items():
+                parts = k.split("|")
+                if not (k.startswith("p1e-2|") and parts[-1] == tag and parts[2].endswith(" all w=exact")):
+                    continue
+                if v.get("c_" + which):
+                    f = float(parts[2].split()[0][2:])
+                    if best is None or f < best[0] or (f == best[0] and v["c_" + which] < best[1]):
+                        best = (f, v["c_" + which], parts[1])
+            minf[f"{tag}|{which}"] = dict(f=best[0], overhead=best[1], code=best[2]) if best else None
+    NUMBERS["pz1e2_min_f"] = minf
     open(os.path.join(OUT, "pz1e2_floors.md"), "w").write(
         "## p_Z = 1e-2, eta = 1e6: lowest reachable p_L per code and flag setting\n\n"
         "Central estimate (d_Z, overhead), in brackets the lowest p_L with p_XL at its 95 % upper bound; "
@@ -1311,9 +1362,9 @@ def limits_table():
             es = [L.get(f"p1e-2|{c}|{fl}|{tag}") for c in codes3]
             if not any(es):
                 continue
-            cells = [f"{e['pL']:.1e} ({e['overhead']:.0f}) [{e['floor_hi']:.1e}]" if e else "–" for e in es]
-            rc = [(e["reach"], c) for e, c in zip(es, codes3) if e and e.get("reach")]
-            rh = [(e["reach_hi"], c) for e, c in zip(es, codes3) if e and e.get("reach_hi")]
+            cells = [f"{e['c_pL']:.1e} ({e['c_overhead']:.0f}) [{e['c_floor_hi']:.1e}]" if e else "–" for e in es]
+            rc = [(e["c_reach"], c) for e, c in zip(es, codes3) if e and e.get("c_reach")]
+            rh = [(e["c_reach_hi"], c) for e, c in zip(es, codes3) if e and e.get("c_reach_hi")]
             r1 = f"{min(rc)[0]:.0f} ({min(rc)[1]})" if rc else "no"
             r2 = f"{min(rh)[0]:.0f} ({min(rh)[1]})" if rh else "no"
             cm.append(f"| {fl} | " + " | ".join(cells) + f" | {r1} / {r2} |")
