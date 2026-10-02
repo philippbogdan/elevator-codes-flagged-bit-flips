@@ -113,3 +113,36 @@ def fit_ratio(elev_rows, rep_model: RepModel, nb_over_k: dict):
     s2 = float(np.sum(w * resid ** 2) / dof)
     cov = s2 * np.linalg.pinv((X * W).T @ (X * W))
     return coef, cov, resid
+
+
+def fit_two_component(elev_rows, rep_model: RepModel, nb_k: dict, data_only_rows=None):
+    """p_ZL k = (n_b - 1) a p_rep(d, p) + g p_rep(d, kappa p): data blocks behave like isolated
+    repetition codes (factor a), the moving ancilla like one at kappa times the noise (weight g).
+    Weighted least squares on log p_ZL over (a, g, kappa); data_only_rows (ancilla noise off)
+    constrain a directly."""
+    from scipy.optimize import least_squares
+
+    rows = list(elev_rows)
+    def model(theta, r, anc=True):
+        la, lg, lk = theta
+        n, k = nb_k[(r["code"], r["n_anc"])]
+        pr = rep_model.predict(r["d"], r["p"])
+        val = (n + r["n_anc"] - 1) * np.exp(la) * pr
+        if anc:
+            val += np.exp(lg) * rep_model.predict(r["d"], np.exp(lk) * r["p"])
+        return val / k
+
+    def resid(theta):
+        out = []
+        for r in rows:
+            out.append(np.sqrt(r["fails"]) * (np.log(model(theta, r)) - np.log(r["y"])))
+        for r in (data_only_rows or []):
+            out.append(np.sqrt(r["fails"]) * (np.log(model(theta, r, anc=False)) - np.log(r["y"])))
+        return np.array(out)
+
+    sol = least_squares(resid, x0=np.array([0.0, 0.0, np.log(1.5)]))
+    J = sol.jac
+    dof = max(len(sol.fun) - 3, 1)
+    s2 = float(np.sum(sol.fun ** 2) / dof)
+    cov = s2 * np.linalg.pinv(J.T @ J)
+    return sol.x, cov, model
