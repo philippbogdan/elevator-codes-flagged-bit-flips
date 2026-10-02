@@ -101,7 +101,7 @@ def pxl3(key):
 
 ENV = dict(N=N, H=H, asm=asm, pxl3=pxl3, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
            round=round, sorted=sorted, ohv=ohv, ohs=ohs, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
-           abs=abs, str=str, int=int, float=float)
+           abs=abs, str=str, int=int, float=float, zip=zip, list=list, dict=dict, any=any, all=all)
 PAT = re.compile(r"\{\{(.+?)\}\}", re.S)
 
 
