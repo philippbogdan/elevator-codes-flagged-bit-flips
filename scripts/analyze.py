@@ -1236,6 +1236,16 @@ def counting_convention():
                     best = (oh, CODE_LABEL[code], r["d"])
         out[f"{cls}|w{w}|f{f}"] = dict(overhead=best[0], code=best[1], d=best[2]) if best else None
     C["headline_marginal"] = out
+    # the phase-flip floor at p_Z = 1e-3 under both models in both conventions
+    pc = {}
+    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]:
+        m = mX.get(code[0])
+        if not m:
+            continue
+        for d in (13, 15, 17):
+            pp, pw = pzl_paper(code[0], code[1], d, 1e-3), pzl_model(code[0], code[1], d, 1e-3)
+            pc[f"{CODE_LABEL[code]}|d{d}"] = dict(paper=pp, paper_anyofk=pp / m, this_work=pw, this_work_perqubit=pw * m)
+    C["phase_compare"] = pc
     NUMBERS["convention"] = C
 
 

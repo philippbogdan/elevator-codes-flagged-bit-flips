@@ -199,12 +199,17 @@ this work's own.
     (overhead {{ f1(pfloor("15_9_3|a1", 1e-3, 1e-12, "oh_model")) }} for [15,9,3],
     {{ f1(pfloor("15_6_5|a1", 1e-3, 1e-12, "oh_model")) }} for [15,6,5],
     {{ f1(pfloor("15_6_5|a2", 1e-3, 1e-12, "oh_model")) }} with two ancillas), the same with an
-    ideal decoder for the data blocks; the paper's extrapolated fit puts it at d_Z = 17.  The
-    difference is a factor ≈ {{ f1(N["convention"]["mX"]["15_9_3"]) }} of counting convention (item 4)
-    and an extrapolation question below sampling reach: the paper's elevator fit decays by
-    0.042 per step of d_Z at p_Z = 1e-3, while the repetition code sampled at p_Z = 1e-3 decays by
-    {{ f2([t["step_ratio"] for t in N["phase_rep_fit"]["table"] if t["p"] == 0.001][0]) }} per step (and the
-    paper's own repetition-code fit by 0.026).  Evidence: `phase_floor.md`, `phase_model.md`.
+    ideal decoder for the data blocks; the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
+    fit gives {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["paper"]) }} for [15,9,3] and this
+    work's model {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["this_work"]) }}.  Part of the
+    gap is the counting convention (item 4: the paper's X fit counts per logical qubit; in this work's
+    any-of-k count the fit would be {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["paper_anyofk"]) }},
+    below 1e-12 as well), the rest is the extrapolation below sampling reach: the paper's elevator fit
+    decays by 0.042 per step of d_Z at p_Z = 1e-3, while the repetition code sampled at p_Z = 1e-3
+    decays by {{ "%.3f" % [t["step_ratio"] for t in N["phase_rep_fit"]["table"] if t["p"] == 0.001][0] }} per step
+    (the paper's own repetition-code fit: 0.026).  Counting per logical qubit, this work's model gives
+    {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["this_work_perqubit"]) }} at d_Z = 15: the floor
+    stays at 15 in either count.  Evidence: `phase_floor.md`, `phase_model.md`, `counting_convention.json`.
 
 ## 4. Flagged bit flips at p_Z = 1e-3, η = 1e6
 
