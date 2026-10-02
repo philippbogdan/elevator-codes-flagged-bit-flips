@@ -260,7 +260,8 @@ def transfer_pxl(row, d_target, p_x=None):
 # ------------------------------------------------------------------ 3. flag study
 CODES_MAIN = [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]
 CODE_LABEL = {("15_9_3", 1): "[15,9,3]", ("15_6_5", 1): "[15,6,5]", ("15_6_5", 2): "[15,6,5] 2 anc",
-              ("ham15", 1): "Hamming [15,11,3]", ("ham31", 1): "Hamming [31,26,3]", ("xham16", 1): "ext. Hamming [16,11,4]"}
+              ("ham15", 1): "Hamming [15,11,3]", ("ham31", 1): "Hamming [31,26,3]", ("xham16", 1): "ext. Hamming [16,11,4]",
+              ("ham63", 1): "Hamming [63,57,3]", ("16_3_8", 1): "[16,3,8]"}
 
 
 def pzl_paper(code, n_anc, d, pz):
@@ -509,7 +510,7 @@ CLASS_RANK = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
 
 def frontier(pzl_fn, tag):
     """Non-dominated (overhead, p_L, f, window, flag classes, false-flag rate) at p_Z=1e-3, eta=1e6."""
-    rows = [r for r in flag_rows(("flag_main", "flag_alt", "flag_supp", "flag_falseflag")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
+    rows = [r for r in flag_rows(("flag_main", "flag_alt", "flag_supp", "flag_falseflag", "flag_ham63")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
     pts = []
     for r in rows:
         pl = r["pL"] + pzl_fn(r["code"], r["n_anc"], r["d"], 1e-3)
@@ -610,8 +611,8 @@ if __name__ == "__main__":
     if phase_model() is not None:
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_main", "flag_supp", "flag_falseflag"))
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
-        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt",), label="alt",
-                    codes=[("ham15", 1), ("ham31", 1), ("xham16", 1)])
+        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt", "flag_ham63"), label="alt",
+                    codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)])
         plot_bias(bias_sweep(pzl_model, "this-work-pZL"), "this-work-pZL")
         plot_overheads(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
