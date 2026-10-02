@@ -1193,6 +1193,52 @@ def schedule_comparison():
     open(os.path.join(OUT, "schedule_comparison.md"), "w").write("\n".join(lines) + "\n")
 
 
+def counting_convention():
+    """'Per logical qubit': P_any/(R k) (this work) vs the per-qubit marginal sum_i P_i/(R k).  Measured
+    multiplicities (results/counting_convention.json), the X-memory reproduction in the marginal
+    convention, and the headline overheads with every rate in the marginal convention."""
+    fn = os.path.join(ROOT, "results", "counting_convention.json")
+    if not os.path.exists(fn) or "two" not in PHASE:
+        return
+    cc = json.load(open(fn))
+    mX = defaultdict(list)
+    mZ = defaultdict(list)
+    for r in cc:
+        if r["memory"] == "X":
+            mX[r["code"]].append(r["mult"])
+        elif r.get("f", 0) == 0:
+            mZ[(r["code"], r["n_anc"])].append(r["mult"])
+    mX = {c: float(np.mean(v)) for c, v in mX.items()}
+    mZ = {c: float(np.mean(v)) for c, v in mZ.items()}
+    C = dict(rows=cc, mX=mX, mZ={f"{c[0]}|a{c[1]}": v for c, v in mZ.items()})
+    xr = [r for r in cc if r["memory"] == "X"]
+    C["x_ratio_sum"] = [min(r["ratio_sum"] for r in xr), max(r["ratio_sum"] for r in xr)] if xr else None
+    # X-memory reproduction rows in the marginal convention (multiplicity of [15,9,3] applied)
+    rep = NUMBERS.get("repro", {})
+    k = "X:15_9_3:a1:full/noop bplsd-minsum"
+    if k in rep and "15_9_3" in mX:
+        C["x_repro_marginal"] = [rep[k]["ratio_min"] * mX["15_9_3"], rep[k]["ratio_max"] * mX["15_9_3"]]
+    # headline overheads, every rate in the marginal convention (main codes with measured multiplicities)
+    rows = [r for r in flag_rows(("flag_main", "flag_supp")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9
+            and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
+    out = {}
+    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("idle", 0, 1.0), ("all", 0, 0.8), ("all", 0, 0.9),
+                        ("all", 0, 0.99), ("all", 4096, 0.99)]:
+        best = None
+        for r in rows:
+            code = (r["code"], r["n_anc"])
+            if code not in mZ or r["code"] not in mX or r["f"] != f or (f > 0 and (r["classes"] != cls or r["window"] != w)):
+                continue
+            tot = r["pL"] * mZ[code] + pzl_model(r["code"], r["n_anc"], r["d"], 1e-3) * mX[r["code"]]
+            if tot <= 1e-12:
+                oh = overhead(r["code"], r["n_anc"], r["d"])
+                if best is None or oh < best[0]:
+                    best = (oh, CODE_LABEL[code], r["d"])
+        out[f"{cls}|w{w}|f{f}"] = dict(overhead=best[0], code=best[1], d=best[2]) if best else None
+    C["headline_marginal"] = out
+    NUMBERS["convention"] = C
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1665,6 +1711,7 @@ if __name__ == "__main__":
         fig1_this_work(pzl_model, "this-work-pZL")
         assumptions_table()
         literal_reading()
+        counting_convention()
         fig2_this_work(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
