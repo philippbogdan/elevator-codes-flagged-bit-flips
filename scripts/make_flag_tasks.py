@@ -19,7 +19,7 @@ ALL = ["edge", "cnot", "op"]
 
 
 def spec(code, n_anc, d, p_x, f, classes, window, r=0.0, idle_ctx=NOOP, seed=0, budget=30000, tag=""):
-    dist = {"15_9_3": 3, "15_6_5": 5, "ham15": 3, "ham31": 3, "xham16": 4, "16_3_8": 8}[code]
+    dist = {"15_9_3": 3, "15_6_5": 5, "ham15": 3, "ham31": 3, "ham63": 3, "xham16": 4, "16_3_8": 8}[code]
     return dict(kind="strata", code=code, n_anc=n_anc, d=d, mode="full", compress=False,
                 idle_ctx=idle_ctx, n_outer=5, p_x=p_x,
                 flag=dict(f=f, classes=CLASSES[classes], window=window, false_rate=r),
@@ -187,11 +187,27 @@ def herald_tasks():
     return ts
 
 
+def ham63_tasks():
+    """[63,57,3] Hamming outer code (frontier push toward the bare repetition-code overhead);
+    3 outer rounds to keep the block model within memory."""
+    ts = []
+    seed = 900000
+    for d in [15, 17]:
+        for (f, cls, w) in [(0.0, "idle", 0), (0.9, "all", 0), (0.99, "all", 0), (0.995, "all", 0), (1.0, "all", 0),
+                            (0.99, "all", 64), (0.99, "all", 1024), (0.99, "idle", 0)]:
+            seed += 1
+            t = spec("ham63", 1, d, 1e-9, f, cls, w, seed=seed, tag="ham63")
+            t["n_outer"] = 3
+            ts.append(t)
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
     ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
           "pz1e2": pz1e2_tasks, "validation": validation_tasks,
-          "supp": supp_tasks, "falseflag": falseflag_tasks, "herald": herald_tasks}[which]()
+          "supp": supp_tasks, "falseflag": falseflag_tasks, "herald": herald_tasks,
+          "ham63": ham63_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
