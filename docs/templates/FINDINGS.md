@@ -36,7 +36,7 @@ this work's own.
 * **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**
   {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
   inside CNOTs (the rest while idle; preparation and measurement
-  {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["prep"] + N["checks"]["class_share"]["15_9_3:a1:d15"]["meas"]) }})
+  {{ f"{100 * (N['checks']['class_share']['15_9_3:a1:d15']['prep'] + N['checks']['class_share']['15_9_3:a1:d15']['meas']):.1f} %" }})
   and stay unflagged; [15,9,3] then saturates at
   p_XL = {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} per round (d_Z = 15, f = 1), barely
   below the target: with the paper's phase-flip fit no idle-only setting beats the flag-free 88
@@ -94,12 +94,20 @@ this work's own.
    2×, the excess growing towards p_X = 1e-6); (ii) the X memory is
    {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×
    the published fit.  Neither is the decoder: exact maximum likelihood still leaves [15,9,3] at
-   2.0–2.5× (`sensitivity_15_9_3.json`), and on the same X-memory shots BP+OSD-CS7, BP+OSD-0 and
-   BP+LSD fail equally often (`decoder_variants_flagfree.json`).  Neither is the check order (≤ 15 %),
-   the number of outer rounds (≤ 10 %) or the schedule ('compress', 'span').  Both are bracketed by
-   the unstated idle-noise placement: idle noise only during CNOT layers puts [15,9,3] at
-   0.55–0.85× of its fit and the literal reading at 4.5–5.8× (`z_variants_v1.json`); the X memory
-   lies between the noop (≈ 0.45×) and literal (≈ 2.4×) readings.  The published fits thus sit
+   {{ f1(N["checks"]["sensitivity_summary"]["mle_min"]) }}–{{ f1(N["checks"]["sensitivity_summary"]["mle_max"]) }}×
+   (`sensitivity_15_9_3.json`), and on the same X-memory shots BP+OSD-CS7, BP+OSD-0 and BP+LSD fail
+   equally often ({{ ", ".join(f"{k}: {v['fails']}" for k, v in N["checks"]["decoder_variants_flagfree"][0]["decoders"].items()) }}
+   of {{ N["checks"]["decoder_variants_flagfree"][0]["shots"] }} shots at d_Z = 9, p_Z = 1e-2;
+   `decoder_variants_flagfree.json`).  Neither is the check order
+   (≤ {{ pct(N["checks"]["sensitivity_summary"]["order_dev"]) }}), the number of outer rounds
+   (≤ {{ pct(N["checks"]["sensitivity_summary"]["rounds_dev"]) }}) or the schedule ('compress', 'span').
+   Both are bracketed by the unstated idle-noise placement: idle noise only during CNOT layers puts
+   [15,9,3] at {{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][0]) }}–{{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][1]) }}×
+   of its fit and the literal reading at {{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][0]) }}–{{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][1]) }}×
+   (`z_variants_v1.json`); the X memory lies between the noop
+   ({{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×)
+   and literal ({{ f1(N["repro"]["X:15_9_3:a1:full/all bplsd"]["ratio_min"]) }}–{{ f1(N["repro"]["X:15_9_3:a1:full/all bplsd"]["ratio_max"]) }}×)
+   readings.  The published fits thus sit
    inside the range spanned by readings of the text; the paper's exact circuit is not recoverable
    from it.  Consequence for this work: its [15,9,3] bit-flip baseline is pessimistic by up to
    3.8× at p_X ~ 1e-6 (but within {{ f2(N["headline"]["sim_15_9_3_d15"]["none|w0|f0.0"]["pXL"] / (15 ** 2.33 * (37.18e-9) ** 1.94)) }}× of the fit

@@ -23,7 +23,7 @@ For every simulated (or transferred) code and d_Z: the lowest p_L of any flag se
 
 | overhead | code | d_Z | lowest p_L | of which p_ZL | p_L without flags | f needed | flags on | coarsest window |
 |---|---|---|---|---|---|---|---|---|
-| 30.8 | Hamming [31,26,3] | 13 | 1.78e-12 | 1.78e-12 | 1.13e-11 | 0.99 | all | 1024 |
+| 30.8 | Hamming [31,26,3] | 13 | 1.78e-12 | 1.78e-12 | 1.13e-11 | 0.99 | all | 4096 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.51e-14 | 5.51e-14 | 1.27e-11 | 1.0 | all | exact |
 | 36.4 | Hamming [15,11,3] | 13 | 2.62e-12 | 2.60e-12 | - | 0.5 | all | exact |
 | 38.6 | ext. Hamming [16,11,4] | 13 | 2.70e-12 | 2.70e-12 | - | 0.95 | all | exact |

@@ -947,6 +947,20 @@ def aux_checks():
     se = load("sensitivity_15_9_3.json")
     if se:
         A["sensitivity_15_9_3"] = se
+        nat = next(r["ratio"] for r in se if r["label"] == "natural")
+        orders = [r["ratio"] for r in se if r["label"] in ("reversed", "permutation 1", "permutation 2")]
+        rounds = [r["ratio"] for r in se if "outer rounds" in r["label"]]
+        mle = [r["ratio"] for r in se if r["decoder"] == "mle"]
+        A["sensitivity_summary"] = dict(order_dev=max(abs(x - nat) / nat for x in orders),
+                                        rounds_dev=max(abs(x - nat) / nat for x in rounds),
+                                        mle_min=min(mle), mle_max=max(mle))
+    zv = load(os.path.join("variants", "z_variants_v1.json"))
+    if zv:
+        def rng(code, var):
+            xs = [r["ratio"] for r in zv if r["code"] == code and r["variant"] == var]
+            return [min(xs), max(xs)] if xs else None
+        A["z_variants"] = {f"{c}|{v}": rng(c, v) for c in ("15_9_3", "15_6_5")
+                           for v in ("full/all-idle", "full/no-op-idle", "full/cnot-idle-only", "span/all-idle")}
     NUMBERS["checks"] = A
 
 
