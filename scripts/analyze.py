@@ -299,13 +299,58 @@ def pzl_paper(code, n_anc, d, pz):
     return OH.paper_pzl(code, n_anc, d, pz)
 
 
-def flag_rows(dirs):
+def flag_rows(dirs, transfers=True):
     rows = []
     for dd in dirs:
         p = os.path.join(ROOT, "results", dd)
         if os.path.isdir(p):
             rows += load_strata(p)
+    for r in rows:
+        r.setdefault("transferred", False)
+    if transfers:
+        rows += synthesize(rows)
     return rows
+
+
+TRANSFER_D = [13, 15, 17, 19, 21]
+TRANSFER_P = [2.5e-8, 1e-8, 4e-9, 2e-9, 1e-9, 5e-10, 2e-10, 1e-10]
+
+
+def synthesize(rows):
+    """Rows for (d_Z, p_X) not simulated directly: stratum failure fractions from the closest simulated
+    d_Z at the same p_X if any, else from p_X = 1e-9, with exact fault intensities (class sums)."""
+    have = {}
+    for r in rows:
+        have[(r["code"], r["n_anc"], r["d"], r["p_x"], r["f"], r["classes"], r["window"], r["r"], r.get("mode", "erasure"), r["idle"])] = r
+    out = []
+    for (code, n_anc, d, px, f, cls, w, rr, mode, idle), src in list(have.items()):
+        if rr != 0 or mode != "erasure":
+            continue
+        for d2 in TRANSFER_D:
+            for p2 in TRANSFER_P:
+                k2 = (code, n_anc, d2, p2, f, cls, w, rr, mode, idle)
+                if k2 in have:
+                    continue
+                # prefer a source at the same p_X (any d), else the same d at 1e-9, else this one
+                cand = [x for x in rows if (x["code"], x["n_anc"], x["p_x"], x["f"], x["classes"], x["window"], x["r"], x.get("mode", "erasure"), x["idle"]) ==
+                        (code, n_anc, p2, f, cls, w, rr, mode, idle)]
+                if not cand:
+                    cand = [x for x in rows if (x["code"], x["n_anc"], x["p_x"], x["f"], x["classes"], x["window"], x["r"], x.get("mode", "erasure"), x["idle"]) ==
+                            (code, n_anc, 1e-9, f, cls, w, rr, mode, idle)]
+                if not cand:
+                    continue
+                srow = min(cand, key=lambda x: (abs(x["d"] - d2), x["transferred"]))
+                if srow.get("transferred"):
+                    continue
+                t = transfer_pxl(srow, d2, p_x=p2)
+                if t is None:
+                    continue
+                nr = dict(srow)
+                nr.update(d=d2, p_x=p2, pL=t[0], lo=t[1], hi=t[2], transferred=True,
+                          transferred_from=(srow["d"], srow["p_x"]))
+                have[k2] = nr
+                out.append(nr)
+    return out
 
 
 def select(rows, **kw):
