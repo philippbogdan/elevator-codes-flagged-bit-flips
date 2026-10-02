@@ -116,9 +116,16 @@ def fit_ratio(elev_rows, rep_model: RepModel, nb_over_k: dict):
     return coef, cov, resid
 
 
+def sweep_fraction(n: int, d: int) -> float:
+    """Fraction of an ancilla's lifetime spent sweeping (when its phase flips can reach a strict
+    subset of a check's blocks): n + 1 rounds of a check that lasts max(n + 1, d) rounds."""
+    return min(1.0, (n + 1) / max(n + 1, d))
+
+
 def fit_two_component(elev_rows, rep_model: RepModel, nb_k: dict, data_only_rows=None):
-    """p_ZL k = n a p_rep(d, p) + n_anc g p_rep(d, kappa p): the n data blocks behave like isolated
-    repetition codes (factor a), each moving ancilla like one at kappa times the noise (weight g).
+    """p_ZL k = n a p_rep(d, p) + n_anc g s(d) p_rep(d, kappa p): the n data blocks behave like isolated
+    repetition codes (factor a), each moving ancilla like one at kappa times the noise (weight g)
+    during the sweeping fraction s(d) of its lifetime.
     Weighted least squares on log p_ZL over (a, g, kappa); data_only_rows (ancilla noise off)
     constrain a directly."""
     from scipy.optimize import least_squares
@@ -130,7 +137,7 @@ def fit_two_component(elev_rows, rep_model: RepModel, nb_k: dict, data_only_rows
         pr = rep_model.predict(r["d"], r["p"])
         val = n * np.exp(la) * pr
         if anc:
-            val += r["n_anc"] * np.exp(lg) * rep_model.predict(r["d"], np.exp(lk) * r["p"])
+            val += r["n_anc"] * np.exp(lg) * sweep_fraction(n, r["d"]) * rep_model.predict(r["d"], np.exp(lk) * r["p"])
         return val / k
 
     def resid(theta):

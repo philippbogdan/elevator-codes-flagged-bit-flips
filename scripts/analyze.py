@@ -149,7 +149,7 @@ def phase_model():
         fit = 0.13 * (25.02 * r["p"]) ** (0.99 * (r["d"] + 1) / 2)
         lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} | {fit:.2e} | {r['y']/fit:.2f} |")
     # elevator / rep ratio
-    allx = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow", "phase_ancdiag")])
+    allx = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow", "phase_ancdiag", "phase_xlarge")])
             if r["idle"] == "edge,cnot" and not r["compress"]]
     elev = [r for r in allx if r["anc_scale"] == 1.0]
     data_only = [r for r in allx if r["anc_scale"] == 0.0]
@@ -177,7 +177,7 @@ def phase_model():
             NBK2 = {(c, a): OH.ELEVATOR_NK[c] for c in OH.ELEVATOR_NK for a in (1, 2)}
             th, thcov, tmodel = fit_two_component(elev, m, NBK2, data_only)
             PHASE["two"] = (th, thcov, tmodel)
-            lines.append(f"\nTwo-component model: p_ZL k = n a p_rep(d,p) + n_anc g p_rep(d, kappa p), "
+            lines.append(f"\nTwo-component model: p_ZL k = n a p_rep(d,p) + n_anc g s(d) p_rep(d, kappa p), s(d) = min(1, (n+1)/d), "
                          f"a = {math.exp(th[0]):.2f}, g = {math.exp(th[1]):.2f}, kappa = {math.exp(th[2]):.2f}\n")
             NUMBERS["phase_two_component"] = dict(a=math.exp(th[0]), g=math.exp(th[1]), kappa=math.exp(th[2]),
                                                    cov=thcov.tolist())
@@ -193,7 +193,8 @@ def pzl_model(code, n_anc, d, pz, conservative=False):
     if "two" in PHASE:
         th, thcov, tmodel = PHASE["two"]
         a, g, kap = np.exp(th)
-        val = n * a * m.predict(d, pz) + n_anc * g * m.predict(d, kap * pz)
+        from elevator.phasemodel import sweep_fraction
+        val = n * a * m.predict(d, pz) + n_anc * g * sweep_fraction(n, d) * m.predict(d, kap * pz)
         if conservative:
             val *= math.exp(2 * m.log_predict(d, kap * pz)[1][0])
         return float(val) / k
