@@ -729,6 +729,50 @@ def plot_overheads(pzl_fn, tag):
     fig.tight_layout(); fig.savefig(os.path.join(OUT, f"overhead_vs_flags_{tag}.png"), dpi=130); plt.close(fig)
 
 
+def plot_maps(pzl_fn, tag):
+    """Heat maps over (flag efficiency, timing window): minimum overhead (best code) and the
+    [15,9,3] bit-flip rate at d_Z = 15, for flags on all locations and on idle locations only."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    rows = [r for r in flag_rows(("flag_main", "flag_supp")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9 and r["r"] == 0]
+    fs = [0.0, 0.5, 0.8, 0.9, 0.95, 0.98, 0.99, 0.995, 1.0]
+    ws = [0, 1, 4, 16, 64, 256, 1024, 4096]
+    f0 = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == 0}
+    fig, axs = plt.subplots(2, 2, figsize=(11, 8))
+    for col, cls in enumerate(["all", "idle"]):
+        OHm = np.full((len(fs), len(ws)), np.nan)
+        PX = np.full((len(fs), len(ws)), np.nan)
+        for i, f in enumerate(fs):
+            for j, w in enumerate(ws):
+                if f == 0:
+                    byc = f0
+                else:
+                    byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows
+                           if r["f"] == f and r["classes"] == cls and r["window"] == w}
+                b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", CODES_MAIN)
+                if b:
+                    OHm[i, j] = b[0]
+                r15 = byc.get(("15_9_3", 1, 15))
+                if r15 is not None:
+                    PX[i, j] = r15["pL"]
+        for row, (M, lab, cmap) in enumerate([(OHm, "minimum overhead ([15,9,3], [15,6,5] 1/2 anc)", "viridis_r"),
+                                              (np.log10(np.maximum(PX, 1e-18)), "log10 p_XL of [15,9,3], d_Z = 15", "magma_r")]):
+            ax = axs[row, col]
+            im = ax.imshow(M, origin="lower", aspect="auto", cmap=cmap)
+            ax.set_xticks(range(len(ws))); ax.set_xticklabels(["exact"] + [str(w) for w in ws[1:]])
+            ax.set_yticks(range(len(fs))); ax.set_yticklabels([str(f) for f in fs])
+            ax.set_xlabel("timing window (CNOT-layer ticks)"); ax.set_ylabel("flag efficiency f")
+            ax.set_title(f"{lab}\nflags on {cls} locations", fontsize=9)
+            for i in range(len(fs)):
+                for j in range(len(ws)):
+                    if not np.isnan(M[i, j]):
+                        ax.text(j, i, f"{M[i, j]:.1f}" if row == 0 else f"{M[i, j]:.1f}", ha="center", va="center", fontsize=6, color="w")
+            fig.colorbar(im, ax=ax)
+    fig.suptitle(f"p_Z = 1e-3, eta = 1e6, target 1e-12 (phase flips: {tag}; white = not reached / not simulated)", fontsize=10)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, f"map_f_window_{tag}.png"), dpi=130); plt.close(fig)
+
+
 def plot_bias(out, tag):
     import matplotlib
     matplotlib.use("Agg")
@@ -768,6 +812,7 @@ if __name__ == "__main__":
                     codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)])
         plot_bias(bias_sweep(pzl_model, "this-work-pZL"), "this-work-pZL")
         plot_overheads(pzl_model, "this-work-pZL")
+        plot_maps(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
     pz1e2(pzl_paper, "paper-pZL")
