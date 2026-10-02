@@ -21,11 +21,12 @@ if [ ! -x "$PY" ]; then
     numpy scipy matplotlib pytest
 fi
 
-run_tasks () {   # $1 = task file, $2 = default output dir, $3 = cluster tasks, $4 = processes per task
+run_tasks () {   # $1 = task file, $2 = default output dir, $3 = cluster tasks, $4 = processes per task,
+                 # $5 = place (default condor), $6 = memory in GB (default 16)
   if [ "$RUNNER" = "local" ]; then
     "$PY" scripts/run_tasks.py "$1" "$2"
   else
-    gpurun --on condor --tasks "$3" --cpus 16 --mem 16 --time 2d \
+    gpurun --on "${5:-condor}" --tasks "$3" --cpus 16 --mem "${6:-16}" --time 2d \
       scripts/remote_python.sh scripts/run_tasks.py "$1" "$2" --procs "$4"
   fi
 }
@@ -59,6 +60,7 @@ if [ "$MODE" = "all" ]; then
   run_tasks tasks/pz1e2_grid.jsonl results/flag_pz1e2 16 6        # p_Z = 1e-2: the remaining flag settings
   run_tasks tasks/pz1e2_deep_windows.jsonl results/flag_pz1e2 12 6 # p_Z = 1e-2: deeper windowed strata at d_Z = 33
   run_tasks tasks/ff_deep.jsonl results/flag_falseflag 14 12      # false flags at 1e-7, 1e-6: deeper strata
+  run_tasks tasks/ham127.jsonl results/flag_alt 6 6 cx3-cpu 48     # Hamming [127,120,3] (~5 GB per process)
   [ -s tasks/legacy.jsonl ] && run_tasks tasks/legacy.jsonl results/flag_literal 4 16
   # local checks (minutes to an hour each)
   "$PY" scripts/known_answers.py --out results/known_answers.json

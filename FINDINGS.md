@@ -118,13 +118,13 @@ this work's own.
    the unstated ancilla path.**
    * *X memory.*  Counting a failure when any of the k logical observables is wrong and dividing by
      k (this work's convention throughout) puts the X memory at
-     0.37–0.47×
+     0.38–0.47×
      the published fit, at every d_Z and p_Z alike.  A phase flip of a block flips every logical X̄
      that contains it: a failure hits 2.6 logical qubits on average
      ([15,6,5]: 2.3).  Counting each logical qubit's errors
      separately (the per-qubit marginal) the same shots give
      0.82–1.30× the fit, and all
-     X-memory points 0.95–1.30×
+     X-memory points 0.98–1.30×
      (`counting_convention.json`).  The paper's Z-memory fits, by contrast, match the
      any-of-k convention ([15,6,5]: 0.87×
      any-of-k, 1.74× per-qubit).
@@ -204,7 +204,7 @@ this work's own.
    direct runs at d_Z = 17, 19 agree with the prediction from d_Z = 15 and
    24/24 direct runs at p_X = 1e-10 and
    2.5e-8 with the p_X transfer used for the bias sweep (`transfer_check.md`), and
-   129/129 at p_Z = 1e-2
+   132/132 at p_Z = 1e-2
    (d_Z = 17 → 25, 33).  Exactly timed perfect flags need no decoding at all: their failure
    probability is the probability that the flagged events contain an undetectable logical, computed
    from 4e6 event sets per point (`perfect_flags_exact.json`; [15,9,3]: F(0,3) =
@@ -237,7 +237,7 @@ this work's own.
    6.0× at d_Z = 25, p_Z = 1e-2); with it on, the ratio grows with d_Z
    much faster (×13 at d_Z = 21, ×40 at 25, p_Z = 1e-2).  The two-component model below fits every
    sampled elevator point (d_Z ≤ 25) within a factor 2 (`phase_model.md`).  Model: p_ZL k = n a p_rep(d, p) + n_anc g s(d)
-   p_rep(d, κp), a = 1.53, g = 0.07,
+   p_rep(d, κp), a = 1.52, g = 0.07,
    κ = 2.17.  This is the paper's lower elevator threshold
    (1/34.4 versus 1/25) made explicit.  Evidence: `phase_model.md`.
 
@@ -248,7 +248,7 @@ this work's own.
    0.94–1.48×
    for p_Z ≤ 1e-2, all inside their 95 % intervals.  The two-component elevator model fitted on
    p_Z ≥ 3e-3 predicts the held-out low-p elevator points within
-   1.52–1.95×
+   1.53–1.95×
    (below the measured values; the final model includes them).
 
 10. **Phase-flip floor at p_Z = 1e-3: d_Z = 15 for both codes**
@@ -288,7 +288,7 @@ this work's own.
     |---|---|---|---|---|
     | none | – | 0 | 88.0 ([15,6,5], d_Z = 17) | 77.3 ([15,6,5], d_Z = 15) |
     | idle | exact | 0.99 | 88.0 ([15,6,5], d_Z = 17) | 51.6 ([15,9,3], d_Z = 15); 95 % bound: 77.3 ([15,6,5], d_Z = 15) |
-    | idle | exact | 1 | 88.0 ([15,6,5], d_Z = 17) | 51.6 ([15,9,3], d_Z = 15) |
+    | idle | exact | 1 | 88.0 ([15,6,5], d_Z = 17) | 51.6 ([15,9,3], d_Z = 15); 95 % bound: 77.3 ([15,6,5], d_Z = 15) |
     | idle | 4096 | 0.99 | 88.0 ([15,6,5], d_Z = 17) | 77.3 ([15,6,5], d_Z = 15) |
     | idle + gate | exact | 0.99 | 58.7 ([15,9,3], d_Z = 17) | 51.6 ([15,9,3], d_Z = 15) |
     | all | exact | 0.5 | 88.0 ([15,6,5], d_Z = 17) | 77.3 ([15,6,5], d_Z = 15) |
@@ -410,12 +410,12 @@ this work's own.
 | f=0.99 all w=exact | 4.4e-11 (165) [4.9e-11] | 2.1e-14 (333) [3.3e-14] | 5.3e-15 (366) [9.0e-15] | 269 ([15,6,5]) / 269 ([15,6,5]) |
 | f=0.999 all w=exact | 7.5e-12 (180) [8.5e-12] | 5.7e-16 (365) [3.3e-14] | 6.7e-16 (388) [9.0e-15] | 269 ([15,6,5]) / 269 ([15,6,5]) |
 | f=1.0 all w=exact | 2.2e-12 (187) [2.4e-12] | 3.3e-16 (376) [2.4e-15] | 8.6e-17 (411) [2.7e-16] | 269 ([15,6,5]) / 269 ([15,6,5]) |
-| f=0.99 all w=1 | 5.1e-11 (165) [1.0e-10] | 8.4e-15 (333) [2.0e-11] | 4.6e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
+| f=0.99 all w=1 | 5.1e-11 (165) [1.0e-10] | 1.3e-14 (333) [2.0e-11] | 4.6e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
 | f=0.99 all w=4 | 5.0e-11 (165) [1.0e-10] | 2.2e-14 (333) [2.0e-11] | 7.0e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
-| f=0.99 all w=16 | 5.0e-11 (165) [1.1e-10] | 3.8e-14 (323) [2.0e-11] | 5.6e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
-| f=0.99 all w=64 | 1.1e-10 (158) [2.0e-10] | 1.6e-13 (312) [2.0e-11] | 8.3e-15 (366) [2.2e-11] | 269 ([15,6,5]) / no |
-| f=0.99 all w=256 | 2.2e-10 (151) [3.2e-10] | 5.8e-13 (291) [2.0e-11] | 1.1e-14 (354) [2.2e-11] | 280 ([15,6,5]) / no |
-| f=0.99 all w=1024 | 2.9e-10 (151) [4.3e-10] | 5.3e-14 (312) [6.6e-11] | 1.7e-13 (320) [2.2e-11] | 269 ([15,6,5]) / no |
+| f=0.99 all w=16 | 5.0e-11 (165) [1.1e-10] | 1.7e-13 (312) [2.0e-11] | 5.6e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
+| f=0.99 all w=64 | 1.1e-10 (158) [2.0e-10] | 1.6e-13 (312) [2.0e-11] | 1.0e-14 (354) [1.2e-11] | 269 ([15,6,5]) / no |
+| f=0.99 all w=256 | 2.2e-10 (151) [3.2e-10] | 5.8e-13 (291) [2.0e-11] | 8.3e-13 (309) [1.2e-11] | 280 ([15,6,5]) / no |
+| f=0.99 all w=1024 | 2.9e-10 (151) [4.3e-10] | 4.6e-13 (291) [2.2e-11] | 9.1e-13 (309) [1.3e-11] | 280 ([15,6,5]) / no |
 | f=0.99 all w=4096 | 3.8e-10 (151) [5.0e-10] | 5.8e-13 (291) [6.6e-11] | 7.0e-14 (332) [2.2e-11] | 280 ([15,6,5]) / no |
 | f=0.9 all w=4096 | 7.6e-10 (144) [9.2e-10] | 7.6e-12 (269) [6.6e-11] | 4.6e-12 (286) [2.2e-11] | no / no |
 | f=0.99 idle+gate w=exact | 4.5e-11 (165) [6.0e-11] | 2.1e-14 (333) [6.0e-14] | 5.9e-15 (366) [1.3e-14] | 269 ([15,6,5]) / 269 ([15,6,5]) |
@@ -428,27 +428,27 @@ this work's own.
 
 | flags | [15,9,3]: lowest p_L (overhead) [95 % bound] | [15,6,5]: lowest p_L (overhead) [95 % bound] | [15,6,5] 2 anc: lowest p_L (overhead) [95 % bound] | 1e-12 reached at (central / 95 % bound) |
 |---|---|---|---|---|
-| none | 1.3e-08 (172) [1.3e-08] | 4.2e-10 (355) [4.4e-10] | 1.8e-10 (422) [1.9e-10] | no / no |
-| f=0.5 all w=exact | 5.7e-09 (187) [6.0e-09] | 1.4e-10 (387) [3.1e-10] | 5.6e-11 (456) [1.0e-10] | no / no |
-| f=0.8 all w=exact | 2.2e-09 (208) [2.4e-09] | 2.9e-11 (419) [5.7e-11] | 8.6e-12 (502) [2.5e-11] | no / no |
-| f=0.9 all w=exact | 1.1e-09 (215) [1.3e-09] | 9.9e-12 (451) [1.6e-11] | 3.9e-12 (524) [6.1e-12] | no / no |
-| f=0.95 all w=exact | 6.5e-10 (229) [7.2e-10] | 3.3e-12 (483) [1.4e-11] | 1.7e-12 (547) [6.1e-12] | no / no |
-| f=0.99 all w=exact | 1.7e-10 (251) [1.9e-10] | 3.3e-13 (536) [1.1e-12] | 8.9e-14 (626) [4.3e-13] | 483 ([15,6,5]) / 524 ([15,6,5] 2 anc) |
-| f=0.999 all w=exact | 3.9e-11 (272) [4.5e-11] | 2.4e-14 (600) [1.1e-12] | 4.4e-14 (638) [4.3e-13] | 472 ([15,6,5]) / 524 ([15,6,5] 2 anc) |
-| f=1.0 all w=exact | 2.0e-11 (279) [2.2e-11] | 2.2e-14 (600) [7.3e-13] | 7.8e-15 (694) [7.5e-14] | 472 ([15,6,5]) / 483 ([15,6,5]) |
-| f=0.99 all w=1 | 2.0e-10 (251) [4.2e-10] | 2.1e-13 (547) [9.7e-11] | 8.0e-14 (638) [6.2e-11] | 483 ([15,6,5]) / no |
-| f=0.99 all w=4 | 2.1e-10 (244) [4.2e-10] | 2.7e-13 (547) [9.7e-11] | 1.1e-13 (626) [6.2e-11] | 483 ([15,6,5]) / no |
-| f=0.99 all w=16 | 1.8e-10 (251) [4.2e-10] | 5.4e-13 (525) [9.7e-11] | 1.0e-13 (626) [6.2e-11] | 483 ([15,6,5]) / no |
-| f=0.99 all w=64 | 3.7e-10 (236) [7.5e-10] | 1.6e-12 (504) [9.7e-11] | 1.3e-13 (626) [1.9e-10] | 524 ([15,6,5] 2 anc) / no |
-| f=0.99 all w=256 | 8.0e-10 (222) [1.2e-09] | 7.0e-12 (461) [9.7e-11] | 3.3e-13 (592) [1.9e-10] | 524 ([15,6,5] 2 anc) / no |
-| f=0.99 all w=1024 | 9.3e-10 (222) [1.4e-09] | 2.0e-12 (483) [4.4e-10] | 5.3e-12 (513) [1.9e-10] | no / no |
-| f=0.99 all w=4096 | 1.3e-09 (215) [1.7e-09] | 1.5e-11 (429) [4.4e-10] | 2.3e-12 (536) [1.9e-10] | no / no |
-| f=0.9 all w=4096 | 2.4e-09 (201) [2.9e-09] | 7.0e-11 (397) [4.4e-10] | 4.7e-11 (456) [1.9e-10] | no / no |
-| f=0.99 idle+gate w=exact | 1.8e-10 (251) [3.2e-10] | 3.2e-13 (536) [4.1e-12] | 1.1e-13 (626) [8.4e-13] | 483 ([15,6,5]) / 536 ([15,6,5] 2 anc) |
-| f=0.9 idle w=exact | 5.3e-09 (194) [5.7e-09] | 1.1e-10 (387) [1.3e-10] | 5.0e-11 (456) [5.6e-11] | no / no |
-| f=0.99 idle w=exact | 4.7e-09 (194) [5.1e-09] | 9.3e-11 (397) [1.1e-10] | 4.0e-11 (456) [4.6e-11] | no / no |
-| f=1.0 idle w=exact | 4.4e-09 (194) [4.7e-09] | 8.6e-11 (397) [1.1e-10] | 3.4e-11 (468) [4.6e-11] | no / no |
-| f=0.99 idle w=4096 | 5.7e-09 (187) [6.2e-09] | 1.7e-10 (376) [4.4e-10] | 8.2e-11 (445) [1.9e-10] | no / no |
+| none | 1.3e-08 (172) [1.3e-08] | 4.2e-10 (355) [4.3e-10] | 1.8e-10 (411) [1.9e-10] | no / no |
+| f=0.5 all w=exact | 5.6e-09 (187) [6.0e-09] | 1.4e-10 (376) [3.1e-10] | 5.5e-11 (445) [9.8e-11] | no / no |
+| f=0.8 all w=exact | 2.1e-09 (208) [2.3e-09] | 2.8e-11 (419) [5.6e-11] | 8.4e-12 (502) [2.4e-11] | no / no |
+| f=0.9 all w=exact | 1.1e-09 (215) [1.2e-09] | 9.7e-12 (451) [1.5e-11] | 3.9e-12 (524) [6.0e-12] | no / no |
+| f=0.95 all w=exact | 6.4e-10 (229) [7.1e-10] | 3.3e-12 (483) [1.3e-11] | 1.6e-12 (547) [6.0e-12] | no / no |
+| f=0.99 all w=exact | 1.7e-10 (251) [1.9e-10] | 3.2e-13 (536) [1.0e-12] | 8.7e-14 (626) [4.1e-13] | 483 ([15,6,5]) / 524 ([15,6,5] 2 anc) |
+| f=0.999 all w=exact | 3.9e-11 (272) [4.4e-11] | 2.3e-14 (600) [1.0e-12] | 4.2e-14 (638) [4.1e-13] | 472 ([15,6,5]) / 524 ([15,6,5] 2 anc) |
+| f=1.0 all w=exact | 2.0e-11 (279) [2.1e-11] | 2.1e-14 (600) [7.0e-13] | 7.5e-15 (683) [7.1e-14] | 472 ([15,6,5]) / 483 ([15,6,5]) |
+| f=0.99 all w=1 | 2.0e-10 (244) [4.1e-10] | 1.9e-13 (547) [9.3e-11] | 7.8e-14 (626) [6.2e-11] | 472 ([15,6,5]) / no |
+| f=0.99 all w=4 | 2.0e-10 (244) [4.1e-10] | 2.7e-13 (547) [9.3e-11] | 1.0e-13 (626) [6.2e-11] | 472 ([15,6,5]) / no |
+| f=0.99 all w=16 | 1.8e-10 (251) [4.1e-10] | 1.6e-12 (504) [9.3e-11] | 1.0e-13 (626) [6.2e-11] | 524 ([15,6,5] 2 anc) / no |
+| f=0.99 all w=64 | 3.7e-10 (236) [7.4e-10] | 1.5e-12 (504) [9.6e-11] | 2.4e-13 (592) [6.4e-11] | 524 ([15,6,5] 2 anc) / no |
+| f=0.99 all w=256 | 7.9e-10 (222) [1.2e-09] | 6.9e-12 (461) [9.6e-11] | 8.6e-12 (502) [6.4e-11] | no / no |
+| f=0.99 all w=1024 | 9.3e-10 (222) [1.4e-09] | 7.5e-12 (451) [1.0e-10] | 9.4e-12 (502) [7.0e-11] | no / no |
+| f=0.99 all w=4096 | 1.3e-09 (215) [1.6e-09] | 1.5e-11 (429) [4.3e-10] | 2.2e-12 (524) [1.9e-10] | no / no |
+| f=0.9 all w=4096 | 2.4e-09 (201) [2.8e-09] | 6.9e-11 (397) [4.3e-10] | 4.6e-11 (456) [1.9e-10] | no / no |
+| f=0.99 idle+gate w=exact | 1.8e-10 (251) [3.2e-10] | 3.1e-13 (536) [3.9e-12] | 1.1e-13 (626) [8.1e-13] | 483 ([15,6,5]) / 536 ([15,6,5] 2 anc) |
+| f=0.9 idle w=exact | 5.2e-09 (194) [5.7e-09] | 1.1e-10 (387) [1.3e-10] | 4.9e-11 (456) [5.5e-11] | no / no |
+| f=0.99 idle w=exact | 4.6e-09 (194) [5.1e-09] | 9.2e-11 (387) [1.1e-10] | 3.9e-11 (456) [4.5e-11] | no / no |
+| f=1.0 idle w=exact | 4.4e-09 (194) [4.7e-09] | 8.5e-11 (397) [1.1e-10] | 3.3e-11 (468) [4.5e-11] | no / no |
+| f=0.99 idle w=4096 | 5.7e-09 (187) [6.2e-09] | 1.7e-10 (376) [4.3e-10] | 8.1e-11 (434) [1.9e-10] | no / no |
 
     d_Z, the floor's composition (phase flips / flagged-only / with unflagged errors) and Hamming
     [15,11,3]: `pz1e2_floors.md`; per-d_Z values and the transfer checks: `pz1e2_*.md`, `limits.md`.
@@ -488,7 +488,7 @@ this work's own.
 | 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.8 | all | 16 | 1e-08 |
 | 51.6 | [15,9,3] | 15 | 6.3e-13 | 0.8 | all | 4 | 1e-07 |
 | 51.6 | [15,9,3] | 15 | 4.7e-13 | 0.9 | all | 16 | 1e-07 |
-| 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.99 | all | 64 | 1e-06 |
+| 51.6 | [15,9,3] | 15 | 6.1e-13 | 0.99 | all | 64 | 1e-06 |
 | 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |
 
     and with the paper's phase-flip fit:
@@ -526,15 +526,15 @@ this work's own.
 | 41.5 | Hamming [63,57,3] | 19 | 5.3e-16 | 4.3e-17 | 8.5e-11 | 1.0 | all | exact |
 | 42.2 | Hamming [15,11,3] | 15 | 9.0e-14 | 9.0e-14 | 3.1e-12 | 0.99 | all | 16 |
 | 44.4 | [15,9,3] | 13 | 3.2e-12 | 3.2e-12 | 5.5e-12 | 0.5 | idle | 4096 |
-| 44.8 | ext. Hamming [16,11,4] | 15 | 9.2e-14 | 9.2e-14 | 3.0e-12 | 0.9 | all | exact |
-| 45.5 | Hamming [31,26,3] | 19 | 1.4e-16 | 7.6e-17 | 2.0e-11 | 1.0 | all | exact |
+| 44.8 | ext. Hamming [16,11,4] | 15 | 9.3e-14 | 9.3e-14 | 3.0e-12 | 0.9 | all | exact |
+| 45.5 | Hamming [31,26,3] | 19 | 1.4e-16 | 7.5e-17 | 2.0e-11 | 1.0 | all | exact |
 | 46.0 | Hamming [63,57,3] | 21 | 6.5e-16 | 1.7e-18 | 1.0e-10 | 1.0 | all | exact |
 | 48.0 | Hamming [15,11,3] | 17 | 3.4e-15 | 3.4e-15 | 4.0e-12 | 1.0 | all | exact |
 | 50.5 | Hamming [31,26,3] | 21 | 9.2e-17 | 3.3e-18 | 2.5e-11 | 1.0 | all | exact |
-| 50.5 | Hamming [63,57,3] | 23 | 8.6e-16 | 7.7e-20 | 1.2e-10 | 1.0 | all | exact |
+| 50.5 | Hamming [63,57,3] | 23 | 8.6e-16 | 7.6e-20 | 1.2e-10 | 1.0 | all | exact |
 | 51.0 | ext. Hamming [16,11,4] | 17 | 3.6e-15 | 3.6e-15 | 3.8e-12 | 0.98 | all | exact |
 | 51.6 | [15,9,3] | 15 | 1.1e-13 | 1.1e-13 | 3.2e-12 | 0.98 | idle+gate | 4 |
-| 53.8 | Hamming [15,11,3] | 19 | 1.5e-16 | 1.3e-16 | 5.5e-12 | 1.0 | all | exact |
+| 53.8 | Hamming [15,11,3] | 19 | 1.4e-16 | 1.3e-16 | 5.5e-12 | 1.0 | all | exact |
 | 55.0 | Hamming [63,57,3] | 25 | 1.1e-15 | 3.6e-21 | 1.5e-10 | 1.0 | all | exact |
 | 55.4 | Hamming [31,26,3] | 23 | 6.1e-17 | 1.6e-19 | 2.2e-11 | 1.0 | all | exact |
 | 57.2 | ext. Hamming [16,11,4] | 19 | 1.4e-16 | 1.4e-16 | 5.2e-12 | 0.999 | all | exact |
@@ -549,7 +549,7 @@ this work's own.
     * *Phase flips, which flags cannot reveal.*  At p_Z = 1e-3 every code on the frontier sits at
       its phase-flip floor: one step lower in d_Z its phase flips alone exceed 1e-12, at the floor its
       bit flips are orders of magnitude below them (e.g. [15,9,3]: p_ZL(13) =
-      3.19e-12, p_ZL(15) =
+      3.20e-12, p_ZL(15) =
       1.10e-13, lowest p_XL(15) =
       4.81e-18).  The floor does not move with an
       ideal decoder for the data blocks (§3), and no Elevator-type memory can go below
@@ -567,7 +567,7 @@ this work's own.
     * *The code distance.*  With perfect, exactly timed flags failures need ≥ d flagged events that
       contain an undetectable logical (computed without a decoder, item 7); at p_Z = 1e-2 this
       sets the [15,9,3] and Hamming floors (flagged-only share
-      0.74
+      0.75
       of the [15,9,3] floor).
     * *Unflagged bit flips, i.e. the flag efficiency (and which locations can raise flags).*  With
       f < 1 the remaining bit flips involve unflagged errors (shares in `limits.md`); the efficiency

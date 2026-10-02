@@ -30,7 +30,7 @@ this work's own.
   {{ pct(1 - ohv("this-work-pZL", "all|w0|f0.9") / ohv("this-work-pZL", "none|w0|f0.0")) }} fewer qubits):
   the higher-rate [15,9,3] becomes usable at η = 1e6.  §4.
 * **With flags, higher-rate outer codes take over.**  Over the codes tried (Hamming [15,11,3],
-  [31,26,3], [63,57,3], extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
+  [31,26,3], [63,57,3]{{ ", [127,120,3]" if "Hamming [127,120,3]" in N["headline"].get("codes_with_data", []) else "" }}, extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
   {{ ohs("paper-pZL", "all|w0|f0.99", "all_codes") }} (paper pZL) and
   {{ ohs("this-work-pZL", "all|w0|f0.99", "all_codes") }} (this-work pZL) —
   {{ pct(1 - ohv("paper-pZL", "all|w0|f0.99", "all_codes") / 88) }} fewer qubits than the published 88.  §7.
@@ -425,7 +425,7 @@ this work's own.
 
 17. **Higher-rate outer codes become usable with flags, and push the overhead towards the bare
     repetition-code floor.**  The frontier at p_Z = 1e-3, η = 1e6 over every code, decoder and flag
-    setting simulated — Hamming [15,11,3], [31,26,3], [63,57,3] and extended Hamming [16,11,4]
+    setting simulated — Hamming [15,11,3], [31,26,3], [63,57,3]{{ ", [127,120,3]" if "Hamming [127,120,3]" in N["headline"].get("codes_with_data", []) else "" }} and extended Hamming [16,11,4]
     besides the paper's codes — requiring p_L ≤ 1e-12 with the 95 % upper bound of p_XL
     (`frontier_*.md`; this-work pZL):
 

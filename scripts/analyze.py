@@ -243,7 +243,7 @@ def phase_floor_table():
              "| code | p_Z | target | d_Z (this work's model) | overhead | d_Z (ideal decoder bound) | overhead |",
              "|---|---|---|---|---|---|---|"]
     out = {}
-    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2), ("ham15", 1), ("ham31", 1), ("ham63", 1), ("ham127", 1)]:
+    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2), ("ham15", 1), ("ham31", 1), ("ham63", 1), ("ham127", 1), ("xham16", 1)]:
         for pz, tgt in [(1e-3, 1e-12), (1e-3, 1e-15), (1e-2, 1e-9), (1e-2, 1e-12)]:
             dm = next((d for d in range(3, 202, 2) if pzl_model(code[0], code[1], d, pz) <= tgt), None)
             di = next((d for d in range(3, 202, 2) if pzl_ideal(code[0], code[1], d, pz) <= tgt), None)
@@ -975,6 +975,7 @@ def headline():
                           xzzx=OH.min_overhead(1e-12, OH.candidates(1e-3, 1e7), "xzzx").overhead)
     rows = [r for r in flag_rows(("flag_main", "flag_supp", "flag_alt", "flag_ham63")) if r["idle"] == "edge,cnot"
             and r["p_x"] == 1e-9 and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
+    H["codes_with_data"] = sorted({CODE_LABEL[(r["code"], r["n_anc"])] for r in rows if (r["code"], r["n_anc"]) in CODE_LABEL})
 
     def byc(cls, w, f, codes):
         out = {(r["code"], r["n_anc"], r["d"]): r for r in rows if (r["code"], r["n_anc"]) in codes and r["f"] == f
@@ -1134,6 +1135,19 @@ def aux_checks():
         A["z_variants"] = {f"{c}|{v}": rng(c, v) for c in ("15_9_3", "15_6_5")
                            for v in ("full/all-idle", "full/no-op-idle", "full/cnot-idle-only", "span/all-idle")}
     NUMBERS["checks"] = A
+
+
+def frontier_floor_check():
+    """For every code on the p_Z = 1e-3 frontier: its phase-flip floor d_Z with this work's model and with
+    the ideal-decoder bound for the data blocks (equal: the floor holds for any decoder)."""
+    out = {}
+    for tag in ("this-work-pZL", "paper-pZL"):
+        for e in NUMBERS.get("frontier", {}).get(tag, {}).get("requirements", []):
+            pf = NUMBERS.get("phase_floor", {}).get(f"{e['code']}|a{e['n_anc']}|0.001|1e-12")
+            if pf:
+                out[CODE_LABEL[(e["code"], e["n_anc"])]] = dict(d_model=pf["d_model"], d_ideal=pf["d_ideal"],
+                                                               same=pf["d_model"] == pf["d_ideal"])
+    NUMBERS["frontier_floor_check"] = out
 
 
 def strata_caps_summary():
@@ -2043,5 +2057,6 @@ if __name__ == "__main__":
         headline()
         limits_table()
     strata_caps_summary()
+    frontier_floor_check()
     save_numbers()
     print("wrote", OUT)

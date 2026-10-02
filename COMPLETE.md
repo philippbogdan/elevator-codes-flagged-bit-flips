@@ -59,8 +59,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   14/16 ([15,6,5], two ancillas) and
   6/16 ([15,9,3], ratios
   1.43–3.76);
-  X memory ratios 0.37–0.47
-  counting a failure once, 0.95–1.30
+  X memory ratios 0.38–0.47
+  counting a failure once, 0.98–1.30
   counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
   2.6 measured on the same shots, `counting_convention.json`);
   the repetition code within 0.7–1.4× of the paper's repetition-code fit for d_Z ≤ 13.
@@ -110,9 +110,9 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   (FINDINGS §6, `pz1e2_floors.md`, `fig2_this_work_*.md`, `limits.md`): without
   flags 2.1e-11 ([15,6,5], two ancillas) and
   4.7e-9 ([15,9,3]) (paper pZL); with flags on all
-  locations at f = 0.99 5.3e-15 at
+  locations at f = 0.99 5.3e-15 ([15,6,5], two ancillas) at
   365.5 qubits and
-  4.4e-11 at
+  4.4e-11 ([15,9,3]) at
   165.3; with perfect flags
   8.6e-17 and
   2.2e-12.  1e-12 is reached with
@@ -151,7 +151,7 @@ without one).
   points: direct samples under flags 30/30
   and 30/30 (from the
   p_X = 1e-9 fractions); d_Z transfers 146/146
-  and 129/129; p_X transfers (bias)
+  and 132/132; p_X transfers (bias)
   24/24; held-out
   repetition-code points within 0.94–1.48×.
 * **Overhead against the published floors** — 88 → 58.7
@@ -181,14 +181,14 @@ without one).
 | 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.8 | all | 16 | 1e-08 |
 | 51.6 | [15,9,3] | 15 | 6.3e-13 | 0.8 | all | 4 | 1e-07 |
 | 51.6 | [15,9,3] | 15 | 4.7e-13 | 0.9 | all | 16 | 1e-07 |
-| 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.99 | all | 64 | 1e-06 |
+| 51.6 | [15,9,3] | 15 | 6.1e-13 | 0.99 | all | 64 | 1e-06 |
 | 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |
 
   pushed outward on the criterion furthest from its limit — overhead (higher-rate codes), then the
   timing window, then the efficiency — until each axis reached a limit of the problem (next item).
 * **Every remaining limit belongs to the problem** (`limits.md`, FINDINGS §8):
   * *overhead* — every frontier code sits at its phase-flip floor: one step lower in d_Z its phase
-    flips alone exceed 1e-12 ([15,9,3]: 3.19e-12
+    flips alone exceed 1e-12 ([15,9,3]: 3.20e-12
     at d_Z = 13), at the floor its bit flips are far below its phase flips
     (4.81e-18 vs
     1.10e-13); phase flips are errors flags cannot
@@ -198,7 +198,7 @@ without one).
     frontier's 32.6 is within 12 % of it, the rest being the outer code's rate);
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
-    0.74
+    0.75
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;

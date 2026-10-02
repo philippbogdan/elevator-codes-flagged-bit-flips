@@ -14,7 +14,7 @@ thin XZZX 145; at p_Z = 1e-2, η = 1e6 the fits bottom out near 2e-9 ([15,9,3]) 
 | Z memory [15,6,5], one ancilla, 16 sampled points | 15/16 within 2× (0.43–1.33×) | met |
 | Z memory [15,6,5], two ancillas | 14/16 within 2× (0.60–2.45×) | met at 14 of 16 points |
 | Z memory [15,9,3] | full sweep: 6/16 within 2× (1.43–3.76×); shortest-path ancilla: 4/4 (1.42–1.89×) | met with the shortest-path ancilla; the main study keeps the (pessimistic) full sweep — explained below |
-| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | 0.37–0.47× counting any of the k logical qubits; 0.95–1.30× counting each logical qubit's errors (measured multiplicity 2.6) | met in the per-qubit count, which the paper's X fit evidently uses |
+| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | 0.38–0.47× counting any of the k logical qubits; 0.98–1.30× counting each logical qubit's errors (measured multiplicity 2.6) | met in the per-qubit count, which the paper's X fit evidently uses |
 | Z memory [16,3,8] (needed only below η ≈ 7e4) | full sweep: 0/14 within 2× (2.6–17.8×); shortest-path ancilla: 1.47–1.93× (4 points) | met with the shortest-path ancilla (`schedule_comparison.md`); the main study keeps the full sweep — explained below |
 | repetition code (paper's fit, App. B) | 0.7–1.4× for d_Z ≤ 13 over p_Z = 1e-3 … 1.3e-2 (the fit was sampled to d_Z = 11) | met |
 
@@ -52,7 +52,7 @@ sampled failure fractions) and its held-out checks: 30/30
 direct-sampling points under flags agree with the stratified estimate at the same p_X and
 30/30 with the p_X = 1e-9
 failure fractions re-weighted; d_Z transfers 146/146
-(p_Z = 1e-3) and 129/129
+(p_Z = 1e-3) and 132/132
 (p_Z = 1e-2); p_X transfers 24/24.  Strata in which sampling saw no failure enter the upper bound
 at the smaller of their Wilson bound and an analytic bound from the code distance and the decoder's
 costs (FINDINGS 7b; 1139 sampled strata checked against it,
@@ -112,7 +112,7 @@ the paper-pZL version is in FINDINGS §7):
 | 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.8 | all | 16 | 1e-08 |
 | 51.6 | [15,9,3] | 15 | 6.3e-13 | 0.8 | all | 4 | 1e-07 |
 | 51.6 | [15,9,3] | 15 | 4.7e-13 | 0.9 | all | 16 | 1e-07 |
-| 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.99 | all | 64 | 1e-06 |
+| 51.6 | [15,9,3] | 15 | 6.1e-13 | 0.99 | all | 64 | 1e-06 |
 | 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |
 
 Pushed outward on the criterion furthest from its limit: overhead first (from 88 to the lowest
@@ -141,6 +141,6 @@ than the memory), then the flag efficiency.
   on held-out points); the paper's own extrapolation gives d_Z = 17 instead of 15.  Both are
   carried; every conclusion above holds under either.
 * At p_Z = 1e-2 with timing windows the 95 % bounds are set by sampling: flagged-only strata with no failure in their samples (no analytic bound covers windows there), so 1e-12 is reached only in the central estimate for windows of 1, 4, 16, 64, 256, 1024, 4096 ticks ([15,6,5], f = 0.99, paper pZL).
-* At p_Z = 1e-2 the floors with flags lie at d_Z = 39–123, beyond the largest elevator X memory sampled
+* At p_Z = 1e-2 the floors with flags lie at d_Z = 39–121, beyond the largest elevator X memory sampled
   there (d_Z = 25, fitted within a factor 2); they are model extrapolations, marked as such.
 

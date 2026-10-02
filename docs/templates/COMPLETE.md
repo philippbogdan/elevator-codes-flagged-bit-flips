@@ -110,9 +110,9 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   (FINDINGS §6, `pz1e2_floors.md`, `fig2_this_work_*.md`, `limits.md`): without
   flags {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas) and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]) (paper pZL); with flags on all
-  locations at f = 0.99 {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["pL"]) }} at
+  locations at f = 0.99 {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas) at
   {{ f1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["overhead"]) }} qubits and
-  {{ e1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["pL"]) }} at
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["pL"]) }} ([15,9,3]) at
   {{ f1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["overhead"]) }}; with perfect flags
   {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL"]["pL"]) }} and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }}.  1e-12 is reached with
@@ -163,7 +163,7 @@ without one).
   the published floors 2e-9 / 2e-11: §3.
 * **The frontier** — `frontier_*.md` (FINDINGS §7): non-dominated in overhead, p_L, flag efficiency,
   flag classes, timing window and false-flag rate over every code (the paper's plus Hamming
-  [15,11,3], [31,26,3], [63,57,3], extended Hamming [16,11,4]), decoder (exact MLE = ML; BP+OSD
+  [15,11,3], [31,26,3], [63,57,3]{{ ", [127,120,3]" if "Hamming [127,120,3]" in N["headline"].get("codes_with_data", []) else "" }}, extended Hamming [16,11,4]), decoder (exact MLE = ML; BP+OSD
   dominated) and flag setting; this-work pZL, p_L ≤ 1e-12 with the 95 % upper bound:
 
 {{ N["md"]["frontier_req_this-work-pZL"] }}
@@ -176,7 +176,7 @@ without one).
     at d_Z = 13), at the floor its bit flips are far below its phase flips
     ({{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pXL"]) }} vs
     {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL"]) }}); phase flips are errors flags cannot
-    reveal, the floor is the same for an ideal decoder of the data blocks, and no Elevator-type memory
+    reveal, the floor is the same for an ideal decoder of the data blocks{{ "" if all(v["same"] for v in N["frontier_floor_check"].values()) else " except for " + ", ".join(k + " (d_Z = " + str(v["d_ideal"]) + " with the ideal-decoder bound; open, REPORT §7)" for k, v in N["frontier_floor_check"].items() if not v["same"]) }}, and no Elevator-type memory
     can go below {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit here
     ({{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] }} n_b/k with the elevator's own phase flips, in either phase-flip model: the
     frontier's {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} is within {{ pct(N["headline"]["this-work-pZL:best_flagged_all_codes"] / N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] - 1) }} of it, the rest being the outer code's rate);
