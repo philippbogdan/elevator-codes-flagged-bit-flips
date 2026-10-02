@@ -112,9 +112,10 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ f1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["overhead"]) }}; with perfect flags
   {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL"]["pL"]) }} and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }}.  1e-12 is reached with
-  [15,6,5] from f ≈ 0.9 on all locations ({{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }}
-  qubits per logical qubit at f = 0.99, paper pZL); this work's phase-flip model places every floor
-  higher and at larger d_Z (both in the tables).
+  [15,6,5] from f ≈ 0.9 on all locations ({{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
+  qubits per logical qubit at f = 0.99, paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} with p_XL at
+  its 95 % upper bound, which the analytic stratum bounds make tight); this work's phase-flip model
+  places every floor higher and at larger d_Z (both in the tables).
 
 ## 4. Deliverable 4 — documents and one command
 
@@ -135,7 +136,11 @@ without one).
   d − 1 erased blocks (enumerated), and {{ N["checks"]["known_answers"]["KA2_circuit_15_9_3"]["patterns"] }}
   and {{ N["checks"]["known_answers"]["KA2_circuit_15_6_5"]["patterns"] }} circuit-level patterns.
 * **Statistics** — every rate carries a 95 % interval (Wilson per stratum; failures counted in the
-  tables).  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
+  tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
+  analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
+  {{ N["strata_caps"]["strata_checked"] }} sampled strata checked against it, {{ N["strata_caps"]["violations"] }} violations), or of the
+  false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
+  95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
   p_X with exact intensities; the phase-flip model), and the model predicts held-out sampled
   points: direct samples under flags {{ N["validation"]["agree"] }}/{{ N["validation"]["total"] }}

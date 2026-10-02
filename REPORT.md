@@ -53,8 +53,14 @@ direct-sampling points under flags agree with the stratified estimate at the sam
 30/30 with the p_X = 1e-9
 failure fractions re-weighted; d_Z transfers 146/146
 (p_Z = 1e-3) and 48/48
-(p_Z = 1e-2); p_X transfers 24/24.  Phase flips below ~1e-9 are model extrapolations (labelled; held-out checks in
-`phase_model.md`); the two phase-flip models (paper's fit, this work's) are carried side by side.
+(p_Z = 1e-2); p_X transfers 24/24.  Strata in which sampling saw no failure enter the upper bound
+at the smaller of their Wilson bound and an analytic bound from the code distance and the decoder's
+costs (FINDINGS 7b; 882 sampled strata checked against it,
+0 violations) or the false-flag pair bounds; strata never sampled enter
+at their bound or with failure probability one.  Overheads are stated from the central rate and,
+where it differs, from the 95 % upper bound.  Phase flips below ~1e-9 are model extrapolations
+(labelled; held-out checks in `phase_model.md`); the two phase-flip models (paper's fit, this
+work's) are carried side by side.
 
 ## 4. Overhead against the published floor
 
@@ -82,7 +88,8 @@ on all locations at f = 0.99 the floors fall to
 1.3e-14 ([15,6,5], two
 ancillas), and [15,6,5] reaches 1e-12 at 269.3
 qubits per logical qubit (paper pZL; 493.3
-this-work pZL).  Full table: FINDINGS §6.
+this-work pZL; with p_XL at its 95 % upper bound 280.0 and
+not reached).  Full table: FINDINGS §6.
 
 ## 5. The frontier
 

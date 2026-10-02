@@ -98,3 +98,36 @@ def test_perfect_flags_exact_below_distance():
     rng = np.random.default_rng(0)
     assert f0b(fm, 2, 20000, rng)[0] == 0.0
     assert f0b(fm, 3, 20000, rng)[0] > 0.0
+
+
+def test_strata_caps_against_decoder():
+    """Analytic stratum bounds (scripts/strata_caps.py): the merged DEM of [15,6,5] has no undetectable
+    logical of <= 4 columns, the class-count reconstruction gives the decoder's own column costs, and
+    no decoded sample of a stratum bounded by 0 fails."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+    import strata_caps as SC
+    from elevator.flagstudy import _build
+    from elevator.strata import StrataSampler
+    spec = dict(code="15_6_5", n_anc=1, d=9, mode="full", idle_ctx=["edge", "cnot"], n_outer=5, p_x=1e-8,
+                flag=dict(f=0.99, classes=["idle", "gate", "prep", "meas"], window=0, false_rate=0.0))
+    code, sched, bm, fm, dec, ss = _build(spec)
+    assert SC.dem_distance_at_least(bm) >= 5
+    rec = dict(code="15_6_5", n_anc=1, n_outer=5, idle="edge,cnot", d_code=5, d_dem_lb=5,
+               signature=SC.signature(bm), n_col=bm.n_col)
+    SC._DIRECT[("15_6_5", 1, 5, "edge,cnot", 9)] = (SC.col_counts(bm), 5)
+    eff = [0.99] * 4
+    caps = SC.caps_for(rec, 9, 1e-8, eff, [(1, 1), (1, 2), (2, 0)])
+    assert caps["1,1"] == 0.0 and caps["1,2"] == 0.0
+    # the decoder's background column costs equal the reconstruction from class counts
+    n, _ = SC.counts_at(rec, 9)
+    x = 1e-8 * SC.CLASS_X
+    xbg = x * (1 - np.array(eff)) / (1 - 2 * x * np.array(eff))
+    lg = n[:bm.n_col] @ np.log1p(-2 * xbg)
+    assert np.allclose(lg, dec.lg_col_bg, rtol=1e-6, atol=1e-12)
+    rng = np.random.default_rng(1)
+    for a, b in ((1, 1), (1, 2)):
+        for _ in range(60):
+            flips, wins = StrataSampler(fm).sample(a, b, rng)
+            det, obs = fm.syndrome(flips)
+            if det.any() or obs.any():
+                assert np.array_equal(dec.decode(det, wins), obs)

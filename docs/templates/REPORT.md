@@ -53,8 +53,14 @@ direct-sampling points under flags agree with the stratified estimate at the sam
 {{ N["validation_transfer"]["inside"] }}/{{ N["validation_transfer"]["total"] }} with the p_X = 1e-9
 failure fractions re-weighted; d_Z transfers {{ N["transfer_check_main"]["agree"] }}/{{ N["transfer_check_main"]["total"] }}
 (p_Z = 1e-3) and {{ N["pz1e2_transfer_checks"]["agree"] }}/{{ N["pz1e2_transfer_checks"]["total"] }}
-(p_Z = 1e-2); p_X transfers {{ N["transfer_check_px"]["agree"] }}/{{ N["transfer_check_px"]["total"] }}.  Phase flips below ~1e-9 are model extrapolations (labelled; held-out checks in
-`phase_model.md`); the two phase-flip models (paper's fit, this work's) are carried side by side.
+(p_Z = 1e-2); p_X transfers {{ N["transfer_check_px"]["agree"] }}/{{ N["transfer_check_px"]["total"] }}.  Strata in which sampling saw no failure enter the upper bound
+at the smaller of their Wilson bound and an analytic bound from the code distance and the decoder's
+costs (FINDINGS 7b; {{ N["strata_caps"]["strata_checked"] }} sampled strata checked against it,
+{{ N["strata_caps"]["violations"] }} violations) or the false-flag pair bounds; strata never sampled enter
+at their bound or with failure probability one.  Overheads are stated from the central rate and,
+where it differs, from the 95 % upper bound.  Phase flips below ~1e-9 are model extrapolations
+(labelled; held-out checks in `phase_model.md`); the two phase-flip models (paper's fit, this
+work's) are carried side by side.
 
 ## 4. Overhead against the published floor
 
@@ -80,9 +86,10 @@ with two ancillas, neither reaches 1e-12).  Without flags this work finds
 on all locations at f = 0.99 the floors fall to
 {{ e1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["pL"]) }} ([15,9,3]) and
 {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["pL"]) }} ([15,6,5], two
-ancillas), and [15,6,5] reaches 1e-12 at {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }}
-qubits per logical qubit (paper pZL; {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL"]["reach"]) }}
-this-work pZL).  Full table: FINDINGS §6.
+ancillas), and [15,6,5] reaches 1e-12 at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
+qubits per logical qubit (paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL") }}
+this-work pZL; with p_XL at its 95 % upper bound {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} and
+{{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL", True) }}).  Full table: FINDINGS §6.
 
 ## 5. The frontier
 

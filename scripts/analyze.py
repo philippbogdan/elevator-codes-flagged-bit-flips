@@ -1129,6 +1129,42 @@ def aux_checks():
     NUMBERS["checks"] = A
 
 
+def strata_caps_summary():
+    """The analytic stratum bounds (scripts/strata_caps.py): the DEM distance found, the check against
+    every sampled stratum they cover, and their values for [15,6,5] at the d_Z of the p_Z = 1e-2 scan."""
+    from elevator.decode import wilson
+    import strata_caps as SC
+    recs = SC.load()
+    out = dict(configs={f"{r['code']}|a{r['n_anc']}": dict(d_code=r["d_code"], d_dem_lb=r["d_dem_lb"], n_col=r["n_col"],
+                                                         check_err=r["check_err"]) for r in recs})
+    rows = [r for r in pool_runs(sum((load_strata(os.path.join(ROOT, "results", dd)) for dd in
+                                      ("flag_main", "flag_supp", "flag_pz1e2")), []))]
+    n_checked = n_viol = n_zero = 0
+    for r in rows:
+        caps = strata_caps_at(r, r["d"], r["p_x"])
+        for k, cap in caps.items():
+            f, n = r["strata"].get(k, (0, 0))
+            if n == 0:
+                continue
+            n_checked += 1
+            n_zero += cap == 0.0
+            if f > 0 and (cap == 0.0 or wilson(f, n)[0] > cap):
+                n_viol += 1
+    out.update(strata_checked=n_checked, strata_zero_bound=n_zero, violations=n_viol)
+    # [15,6,5] at p_X = 1e-8 over the scanned d_Z and the exactly timed flag settings
+    worst = {}
+    for (n_anc, f, cls) in [(na, f, c) for na in (1, 2) for (f, c) in
+                            [(0.0, "none"), (0.9, "idle"), (0.99, "idle"), (0.9, "all"), (0.99, "all"), (0.99, "idle+gate")]]:
+        rec = SC.record_for("15_6_5", n_anc, 5, "edge,cnot")
+        eff = [f if c in CLASSES_OF[cls] else 0.0 for c in CLASS_LIST]
+        for d in range(17, 130, 2):
+            for k, v in SC.caps_for(rec, d, 1e-8, eff, [(1, 1), (1, 2), (2, 0)]).items():
+                key = f"{k}|{cls}"
+                worst[key] = max(worst.get(key, 0.0), v)
+    out["pz1e2_worst_15_6_5"] = worst
+    NUMBERS["strata_caps"] = out
+
+
 def strata_split(row, d_target=None, p_x=None):
     """Split p_XL of a row (optionally transferred) into the part from strata with only flagged events
     (a = 0: limited by the code distance) and the part with unflagged errors (a >= 1: limited by the
@@ -1214,34 +1250,35 @@ def limits_table():
         refs[(r["code"], r["n_anc"], r["f"], r["classes"], r["window"])][r["d"]] = r
     for tag, fn in (("this-work-pZL", pzl_model), ("paper-pZL", pzl_paper)):
         for key, byd in sorted(refs.items(), key=str):
-            best = None
+            scan = []          # (d, reference row, central p_L, p_L with p_XL at its 95% upper bound)
             for d in range(15, 302, 2):
                 ref = byd[min(byd, key=lambda x: abs(x - d))]
                 t = transfer_pxl(ref, d)
                 if t is None:
                     continue
-                tot = t[0] + fn(key[0], key[1], d, 1e-2)
-                if best is None or tot < best[0]:
-                    best = (tot, d, ref, t[0], t[2] + fn(key[0], key[1], d, 1e-2))
-            if best is None:
+                pz_ = fn(key[0], key[1], d, 1e-2)
+                scan.append((d, ref, t[0] + pz_, t[2] + pz_))
+            if not scan:
                 continue
-            tot, d, ref, pxl, tot_hi = best
+            d, ref, tot, tot_hi = min(scan, key=lambda x: x[2])
+            dc, _, _, floor_hi = min(scan, key=lambda x: x[3])
             sp = strata_split(ref, d_target=d)
             pzl = fn(key[0], key[1], d, 1e-2)
             fo, wu = sp["flagged_only"], sp["with_unflagged"]
             fl = "none" if key[2] == 0 else f"f={key[2]} {key[3]} w={key[4] or 'exact'}"
+            # scan runs up in d_Z, so the first d_Z reaching 1e-12 is the cheapest
             L[f"p1e-2|{CODE_LABEL[key[:2]]}|{fl}|{tag}"] = dict(pL=tot, pL_hi=tot_hi, d=d, pZL=pzl, flagged_only=fo, with_unflagged=wu,
                                                                overhead=overhead(key[0], key[1], d),
-                                                               reach=next((overhead(key[0], key[1], dd) for dd in range(15, 302, 2)
-                                                                           if (transfer_pxl(byd[min(byd, key=lambda x: abs(x - dd))], dd) or [1])[0]
-                                                                           + fn(key[0], key[1], dd, 1e-2) <= 1e-12), None))
+                                                               floor_hi=floor_hi, d_hi=dc, overhead_hi=overhead(key[0], key[1], dc),
+                                                               reach=next((overhead(key[0], key[1], x[0]) for x in scan if x[2] <= 1e-12), None),
+                                                               reach_hi=next((overhead(key[0], key[1], x[0]) for x in scan if x[3] <= 1e-12), None))
             lines.append(f"| {CODE_LABEL[key[:2]]} | {fl} | {tag} | {tot:.2e} | {d} | {pzl / tot:.2f} | "
                          f"{fo / tot:.2f} | {wu / tot:.2f} |")
     NUMBERS["limits"] = L
     open(os.path.join(OUT, "limits.md"), "w").write("\n".join(lines) + "\n")
     # compact p_Z = 1e-2 table for the documents
-    md = ["| code | flags | lowest p_L [with p_XL at its 95% upper bound], paper pZL (d_Z, overhead) | this-work pZL | 1e-12 reached at overhead (paper / this work) | floor made of (this work: phase / flagged-only / unflagged) |",
-          "|---|---|---|---|---|---|"]
+    md = ["| code | flags | lowest p_L, paper pZL (d_Z, overhead) [lowest 95 % upper bound (d_Z, overhead)] | this-work pZL | 1e-12 reached at overhead, paper pZL (central / 95 % bound) | this-work pZL | floor made of (this work: phase / flagged-only / unflagged) |",
+          "|---|---|---|---|---|---|---|"]
     order = ["none", "f=0.9 idle w=exact", "f=0.99 idle w=exact", "f=0.9 all w=exact", "f=0.99 idle+gate w=exact",
              "f=0.99 all w=exact", "f=0.99 all w=64", "f=0.99 all w=1024", "f=1.0 all w=exact"]
     for code in ["[15,9,3]", "[15,6,5]", "[15,6,5] 2 anc", "Hamming [15,11,3]"]:
@@ -1250,12 +1287,13 @@ def limits_table():
             b = L.get(f"p1e-2|{code}|{fl}|this-work-pZL")
             if not a or not b:
                 continue
-            ra = f"{a['reach']:.0f}" if a.get("reach") else "no"
-            rb = f"{b['reach']:.0f}" if b.get("reach") else "no"
+            rch = lambda x, k_: f"{x[k_]:.0f}" if x.get(k_) else "no"
             ext = lambda x: " (extrap.)" if x["d"] > 25 else ""
-            md.append(f"| {code} | {fl} | {a['pL']:.1e} [≤ {a['pL_hi']:.1e}] ({a['d']}, {a['overhead']:.0f}){ext(a)} | "
-                      f"{b['pL']:.1e} [≤ {b['pL_hi']:.1e}] ({b['d']}, {b['overhead']:.0f}){ext(b)} | "
-                      f"{ra} / {rb} | {b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
+            cell = lambda x: (f"{x['pL']:.1e} ({x['d']}, {x['overhead']:.0f}){ext(x)} "
+                              f"[{x['floor_hi']:.1e} ({x['d_hi']}, {x['overhead_hi']:.0f})]")
+            md.append(f"| {code} | {fl} | {cell(a)} | {cell(b)} | {rch(a, 'reach')} / {rch(a, 'reach_hi')} | "
+                      f"{rch(b, 'reach')} / {rch(b, 'reach_hi')} | "
+                      f"{b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
     NUMBERS.setdefault("md", {})["pz1e2_table"] = "\n".join(md)
 
 
@@ -1911,5 +1949,6 @@ if __name__ == "__main__":
     if "two" in PHASE:
         headline()
         limits_table()
+    strata_caps_summary()
     save_numbers()
     print("wrote", OUT)

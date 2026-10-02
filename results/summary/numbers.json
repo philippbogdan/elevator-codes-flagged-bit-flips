@@ -22072,7 +22072,7 @@
   "frontier_rate_this-work-pZL": "| overhead | code | d_Z | lowest p_L | of which phase flips | without flags | least f within 1.5x | flags on | coarsest window |\n|---|---|---|---|---|---|---|---|---|\n| 28.1 | Hamming [63,57,3] | 13 | 1.4e-12 | 1.4e-12 | 4.0e-11 | 0.99 | all | 64 |\n| 30.8 | Hamming [31,26,3] | 13 | 1.8e-12 | 1.8e-12 | 1.1e-11 | 0.9 | all | exact |\n| 32.6 | Hamming [63,57,3] | 15 | 4.0e-14 | 4.0e-14 | 5.3e-11 | 1.0 | all | exact |\n| 35.7 | Hamming [31,26,3] | 15 | 5.5e-14 | 5.5e-14 | 1.3e-11 | 0.999 | all | exact |\n| 36.4 | Hamming [15,11,3] | 13 | 2.6e-12 | 2.6e-12 | 4.8e-12 | 0.5 | all | exact |\n| 37.1 | Hamming [63,57,3] | 17 | 1.6e-15 | 1.2e-15 | 6.8e-11 | 1.0 | all | exact |\n| 38.6 | ext. Hamming [16,11,4] | 13 | 2.7e-12 | 2.7e-12 | 4.9e-12 | 0.5 | all | exact |\n| 40.6 | Hamming [31,26,3] | 17 | 2.0e-15 | 1.9e-15 | 1.6e-11 | 1.0 | all | exact |\n| 41.5 | Hamming [63,57,3] | 19 | 5.3e-16 | 4.5e-17 | 8.5e-11 | 1.0 | all | exact |\n| 42.2 | Hamming [15,11,3] | 15 | 9.0e-14 | 9.0e-14 | 3.1e-12 | 0.99 | all | 16 |\n| 44.4 | [15,9,3] | 13 | 3.1e-12 | 3.1e-12 | 5.4e-12 | 0.5 | idle | 4096 |\n| 44.8 | ext. Hamming [16,11,4] | 15 | 9.2e-14 | 9.2e-14 | 3.0e-12 | 0.9 | all | exact |\n| 45.5 | Hamming [31,26,3] | 19 | 1.4e-16 | 7.9e-17 | 2.0e-11 | 1.0 | all | exact |\n| 46.0 | Hamming [63,57,3] | 21 | 6.5e-16 | 1.9e-18 | 1.0e-10 | 1.0 | all | exact |\n| 48.0 | Hamming [15,11,3] | 17 | 3.5e-15 | 3.5e-15 | 4.0e-12 | 1.0 | all | exact |\n| 50.5 | Hamming [31,26,3] | 21 | 9.2e-17 | 3.6e-18 | 2.5e-11 | 1.0 | all | exact |\n| 50.5 | Hamming [63,57,3] | 23 | 8.6e-16 | 8.5e-20 | 1.2e-10 | 1.0 | all | exact |\n| 51.0 | ext. Hamming [16,11,4] | 17 | 3.7e-15 | 3.7e-15 | 3.8e-12 | 0.98 | all | exact |\n| 51.6 | [15,9,3] | 15 | 1.1e-13 | 1.1e-13 | 3.2e-12 | 0.98 | idle+gate | 4 |\n| 53.8 | Hamming [15,11,3] | 19 | 1.5e-16 | 1.4e-16 | 5.5e-12 | 1.0 | all | exact |\n| 55.0 | Hamming [63,57,3] | 25 | 1.1e-15 | 4.2e-21 | 1.5e-10 | 1.0 | all | exact |\n| 55.4 | Hamming [31,26,3] | 23 | 6.1e-17 | 1.8e-19 | 2.2e-11 | 1.0 | all | exact |\n| 57.2 | ext. Hamming [16,11,4] | 19 | 1.5e-16 | 1.5e-16 | 5.2e-12 | 0.999 | all | exact |\n| 58.7 | [15,9,3] | 17 | 4.3e-15 | 4.3e-15 | 4.1e-12 | 1.0 | idle+gate | 16 |\n| 59.6 | Hamming [15,11,3] | 21 | 2.3e-17 | 6.2e-18 | 7.4e-12 | 1.0 | all | exact |\n| 66.7 | [15,6,5] | 13 | 4.7e-12 | 4.7e-12 | 4.7e-12 | 0.0 | none | any (no flags) |\n| 70.8 | [15,6,5] 2 anc | 13 | 6.6e-12 | 6.6e-12 | 6.6e-12 | 0.0 | none | any (no flags) |",
   "frontier_req_paper-pZL": "| overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |\n|---|---|---|---|---|---|---|---|\n| 32.6 | Hamming [63,57,3] | 15 | 9.1e-13 | 0.995 | all | exact | 0 |\n| 35.7 | Hamming [31,26,3] | 15 | 9.0e-13 | 0.99 | all | exact | 0 |\n| 40.6 | Hamming [31,26,3] | 17 (transferred) | 6.1e-13 | 0.95 | all | exact | 0 |\n| 40.6 | Hamming [31,26,3] | 17 (transferred) | 2.4e-13 | 0.99 | all | 64 | 0 |\n| 48.0 | Hamming [15,11,3] | 17 (transferred) | 7.0e-13 | 0.8 | all | exact | 0 |\n| 48.0 | Hamming [15,11,3] | 17 (transferred) | 5.0e-13 | 0.99 | all | 4096 | 0 |\n| 51.0 | ext. Hamming [16,11,4] | 17 (transferred) | 8.0e-13 | 0.9 | idle | 4 | 0 |\n| 51.0 | ext. Hamming [16,11,4] | 17 (transferred) | 7.1e-13 | 0.99 | idle | 64 | 0 |\n| 58.7 | [15,9,3] | 17 (transferred) | 5.2e-13 | 0.8 | idle+gate | exact | 0 |\n| 58.7 | [15,9,3] | 17 (transferred) | 5.7e-13 | 0.8 | all | 64 | 0 |\n| 58.7 | [15,9,3] | 17 (transferred) | 5.1e-13 | 0.9 | all | 4096 | 0 |\n| 88.0 | [15,6,5] | 17 | 7.5e-14 | 0.0 | none | any (no flags) | 0 |",
   "frontier_rate_paper-pZL": "| overhead | code | d_Z | lowest p_L | of which phase flips | without flags | least f within 1.5x | flags on | coarsest window |\n|---|---|---|---|---|---|---|---|---|\n| 28.1 | Hamming [63,57,3] | 13 | 1.8e-11 | 1.8e-11 | 5.6e-11 | 0.9 | all | exact |\n| 30.8 | Hamming [31,26,3] | 13 | 2.0e-11 | 2.0e-11 | 2.9e-11 | 0.0 | none | any (no flags) |\n| 32.6 | Hamming [63,57,3] | 15 | 7.5e-13 | 7.5e-13 | 5.4e-11 | 0.99 | all | exact |\n| 35.7 | Hamming [31,26,3] | 15 | 8.2e-13 | 8.2e-13 | 1.3e-11 | 0.98 | all | exact |\n| 36.4 | Hamming [15,11,3] | 13 | 2.3e-11 | 2.3e-11 | 2.5e-11 | 0.0 | none | any (no flags) |\n| 37.1 | Hamming [63,57,3] | 17 | 3.2e-14 | 3.2e-14 | 6.8e-11 | 1.0 | all | exact |\n| 38.6 | ext. Hamming [16,11,4] | 13 | 2.4e-11 | 2.4e-11 | 2.7e-11 | 0.0 | none | any (no flags) |\n| 40.6 | Hamming [31,26,3] | 17 | 3.5e-14 | 3.5e-14 | 1.6e-11 | 0.999 | all | exact |\n| 41.5 | Hamming [63,57,3] | 19 | 1.8e-15 | 1.3e-15 | 8.5e-11 | 1.0 | all | exact |\n| 42.2 | Hamming [15,11,3] | 15 | 9.7e-13 | 9.7e-13 | 3.9e-12 | 0.8 | all | exact |\n| 44.4 | [15,9,3] | 13 | 2.8e-11 | 2.8e-11 | 3.0e-11 | 0.0 | none | any (no flags) |\n| 44.8 | ext. Hamming [16,11,4] | 15 | 1.0e-12 | 1.0e-12 | 4.0e-12 | 0.8 | all | exact |\n| 45.5 | Hamming [31,26,3] | 19 | 1.5e-15 | 1.5e-15 | 2.0e-11 | 1.0 | all | exact |\n| 46.0 | Hamming [63,57,3] | 21 | 7.1e-16 | 5.6e-17 | 1.0e-10 | 1.0 | all | exact |\n| 48.0 | Hamming [15,11,3] | 17 | 4.1e-14 | 4.1e-14 | 4.1e-12 | 0.995 | all | exact |\n| 50.5 | Hamming [31,26,3] | 21 | 1.5e-16 | 6.1e-17 | 2.5e-11 | 1.0 | all | exact |\n| 50.5 | Hamming [63,57,3] | 23 | 8.6e-16 | 2.4e-18 | 1.2e-10 | 1.0 | all | exact |\n| 51.0 | ext. Hamming [16,11,4] | 17 | 4.3e-14 | 4.3e-14 | 3.8e-12 | 0.95 | all | exact |\n| 51.6 | [15,9,3] | 15 | 1.2e-12 | 1.2e-12 | 4.2e-12 | 0.8 | idle+gate | 64 |\n| 53.8 | Hamming [15,11,3] | 19 | 1.7e-15 | 1.7e-15 | 5.5e-12 | 1.0 | all | exact |\n| 55.0 | Hamming [63,57,3] | 25 | 1.1e-15 | 9.9e-20 | 1.5e-10 | 1.0 | all | exact |\n| 55.4 | Hamming [31,26,3] | 23 | 6.4e-17 | 2.6e-18 | 2.2e-11 | 1.0 | all | exact |\n| 57.2 | ext. Hamming [16,11,4] | 19 | 1.8e-15 | 1.8e-15 | 5.2e-12 | 0.99 | all | 64 |\n| 58.7 | [15,9,3] | 17 | 5.0e-14 | 5.0e-14 | 4.1e-12 | 0.98 | idle+gate | exact |\n| 59.6 | Hamming [15,11,3] | 21 | 8.9e-17 | 7.2e-17 | 7.4e-12 | 1.0 | all | exact |\n| 66.7 | [15,6,5] | 13 | 4.2e-11 | 4.2e-11 | 4.2e-11 | 0.0 | none | any (no flags) |\n| 70.8 | [15,6,5] 2 anc | 13 | 4.5e-11 | 4.5e-11 | 4.5e-11 | 0.0 | none | any (no flags) |",
-  "pz1e2_table": "| code | flags | lowest p_L [with p_XL at its 95% upper bound], paper pZL (d_Z, overhead) | this-work pZL | 1e-12 reached at overhead (paper / this work) | floor made of (this work: phase / flagged-only / unflagged) |\n|---|---|---|---|---|---|\n| [15,9,3] | none | 4.7e-09 [\u2264 4.9e-09] (37, 130) (extrap.) | 1.3e-08 [\u2264 1.4e-08] (51, 180) (extrap.) | no / no | 0.22 / 0.00 / 0.78 |\n| [15,9,3] | f=0.9 idle w=exact | 1.8e-09 [\u2264 2.0e-09] (39, 137) (extrap.) | 5.7e-09 [\u2264 6.1e-09] (55, 194) (extrap.) | no / no | 0.22 / 0.00 / 0.77 |\n| [15,9,3] | f=0.99 idle w=exact | 1.6e-09 [\u2264 1.7e-09] (39, 137) (extrap.) | 5.1e-09 [\u2264 5.6e-09] (57, 201) (extrap.) | no / no | 0.17 / 0.00 / 0.83 |\n| [15,9,3] | f=0.9 all w=exact | 3.4e-10 [\u2264 3.8e-10] (43, 151) (extrap.) | 1.2e-09 [\u2264 1.4e-09] (63, 222) (extrap.) | no / no | 0.20 / 0.00 / 0.79 |\n| [15,9,3] | f=0.99 idle+gate w=exact | 4.5e-11 [\u2264 6.1e-11] (47, 165) (extrap.) | 2.0e-10 [\u2264 4.4e-10] (73, 258) (extrap.) | no / no | 0.17 / 0.17 / 0.66 |\n| [15,9,3] | f=0.99 all w=exact | 4.4e-11 [\u2264 4.9e-11] (47, 165) (extrap.) | 1.8e-10 [\u2264 2.1e-10] (73, 258) (extrap.) | no / no | 0.18 / 0.05 / 0.77 |\n| [15,9,3] | f=0.99 all w=64 | 1.1e-10 [\u2264 2.1e-10] (45, 158) (extrap.) | 4.0e-10 [\u2264 9.0e-10] (69, 244) (extrap.) | no / no | 0.18 / 0.48 / 0.34 |\n| [15,9,3] | f=0.99 all w=1024 | 2.9e-10 [\u2264 4.3e-10] (43, 151) (extrap.) | 1.0e-09 [\u2264 1.6e-09] (65, 229) (extrap.) | no / no | 0.16 / 0.67 / 0.17 |\n| [15,9,3] | f=1.0 all w=exact | 2.2e-12 [\u2264 2.4e-12] (53, 187) (extrap.) | 2.3e-11 [\u2264 2.5e-11] (81, 286) (extrap.) | no / no | 0.28 / 0.72 / 0.00 |\n| [15,6,5] | none | 5.6e-11 [\u2264 8.7e-11] (47, 248) (extrap.) | 4.4e-10 [\u2264 5.7e-10] (69, 365) (extrap.) | no / no | 0.25 / 0.00 / 0.75 |\n| [15,6,5] | f=0.9 idle w=exact | 1.4e-11 [\u2264 4.4e-11] (49, 259) (extrap.) | 1.3e-10 [\u2264 3.2e-10] (75, 397) (extrap.) | no / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] | f=0.99 idle w=exact | 1.3e-11 [\u2264 4.1e-11] (49, 259) (extrap.) | 1.2e-10 [\u2264 3.0e-10] (75, 397) (extrap.) | no / no | 0.27 / 0.00 / 0.73 |\n| [15,6,5] | f=0.9 all w=exact | 2.3e-13 [\u2264 1.1e-11] (57, 301) (extrap.) | 4.6e-12 [\u2264 1.5e-10] (91, 483) (extrap.) | 269 / no | 0.28 / 0.00 / 0.72 |\n| [15,6,5] | f=0.99 idle+gate w=exact | 7.2e-15 [\u2264 7.2e-12] (65, 344) (extrap.) | 2.1e-13 [\u2264 6.8e-10] (107, 568) (extrap.) | 269 / 493 | 0.27 / 0.00 / 0.73 |\n| [15,6,5] | f=0.99 all w=exact | 8.5e-15 [\u2264 1.3e-12] (63, 333) (extrap.) | 2.4e-13 [\u2264 3.8e-11] (107, 568) (extrap.) | 269 / 493 | 0.23 / 0.04 / 0.74 |\n| [15,6,5] | f=0.99 all w=64 | 4.0e-14 [\u2264 4.8e-10] (61, 323) (extrap.) | 6.8e-13 [\u2264 3.7e-09] (101, 536) (extrap.) | 269 / 504 | 0.26 / 0.00 / 0.74 |\n| [15,6,5] | f=0.99 all w=1024 | 5.3e-14 [\u2264 4.4e-10] (59, 312) (extrap.) | 2.5e-12 [\u2264 2.6e-09] (93, 493) (extrap.) | 269 / no | 0.35 / 0.00 / 0.65 |\n| [15,6,5] | f=1.0 all w=exact | 3.3e-16 [\u2264 5.6e-15] (71, 376) (extrap.) | 2.8e-14 [\u2264 1.2e-11] (117, 621) (extrap.) | 269 / 493 | 0.27 / 0.73 / 0.00 |\n| [15,6,5] 2 anc | none | 2.1e-11 [\u2264 3.8e-11] (49, 275) (extrap.) | 2.1e-10 [\u2264 3.0e-10] (77, 434) (extrap.) | no / no | 0.20 / 0.00 / 0.80 |\n| [15,6,5] 2 anc | f=0.9 idle w=exact | 4.4e-12 [\u2264 1.9e-11] (51, 286) (extrap.) | 5.1e-11 [\u2264 1.7e-10] (83, 468) (extrap.) | no / no | 0.25 / 0.00 / 0.75 |\n| [15,6,5] 2 anc | f=0.99 idle w=exact | 5.1e-12 [\u2264 1.8e-11] (51, 286) (extrap.) | 5.8e-11 [\u2264 1.6e-10] (83, 468) (extrap.) | no / no | 0.22 / 0.00 / 0.78 |\n| [15,6,5] 2 anc | f=0.9 all w=exact | 1.3e-13 [\u2264 2.8e-12] (59, 332) (extrap.) | 3.0e-12 [\u2264 5.6e-11] (97, 547) (extrap.) | 286 / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] 2 anc | f=0.99 idle+gate w=exact | 2.1e-16 [\u2264 1.7e-12] (71, 400) (extrap.) | 1.7e-14 [\u2264 1.9e-10] (123, 694) (extrap.) | 286 / 547 | 0.28 / 0.00 / 0.72 |\n| [15,6,5] 2 anc | f=0.99 all w=exact | 1.3e-14 [\u2264 2.6e-13] (63, 354) (extrap.) | 1.8e-13 [\u2264 1.1e-11] (113, 638) (extrap.) | 286 / 547 | 0.19 / 0.02 / 0.80 |\n| [15,6,5] 2 anc | f=0.99 all w=64 | 8.3e-15 [\u2264 3.1e-10] (65, 366) (extrap.) | 1.5e-13 [\u2264 2.7e-09] (115, 649) (extrap.) | 286 / 547 | 0.15 / 0.00 / 0.85 |\n| [15,6,5] 2 anc | f=0.99 all w=1024 | 1.7e-13 [\u2264 1.9e-10] (57, 320) (extrap.) | 6.5e-12 [\u2264 1.2e-09] (93, 524) (extrap.) | 286 / no | 0.27 / 0.38 / 0.35 |\n| [15,6,5] 2 anc | f=1.0 all w=exact | 8.6e-17 [\u2264 3.2e-16] (73, 411) (extrap.) | 1.0e-14 [\u2264 4.6e-13] (127, 717) (extrap.) | 286 / 547 | 0.21 / 0.79 / 0.00 |\n| Hamming [15,11,3] | none | 4.4e-09 [\u2264 4.5e-09] (37, 106) (extrap.) | 1.2e-08 [\u2264 1.3e-08] (51, 147) (extrap.) | no / no | 0.19 / 0.00 / 0.81 |\n| Hamming [15,11,3] | f=0.9 idle w=exact | 2.1e-09 [\u2264 2.2e-09] (39, 112) (extrap.) | 6.2e-09 [\u2264 6.5e-09] (53, 153) (extrap.) | no / no | 0.25 / 0.00 / 0.75 |\n| Hamming [15,11,3] | f=0.99 idle w=exact | 1.7e-09 [\u2264 1.8e-09] (39, 112) (extrap.) | 5.2e-09 [\u2264 5.5e-09] (55, 159) (extrap.) | no / no | 0.20 / 0.00 / 0.80 |\n| Hamming [15,11,3] | f=0.9 all w=exact | 4.8e-10 [\u2264 5.1e-10] (41, 118) (extrap.) | 1.6e-09 [\u2264 1.8e-09] (61, 176) (extrap.) | no / no | 0.19 / 0.00 / 0.81 |\n| Hamming [15,11,3] | f=0.99 idle+gate w=exact | 5.9e-11 [\u2264 6.6e-11] (45, 129) (extrap.) | 2.2e-10 [\u2264 2.9e-10] (71, 205) (extrap.) | no / no | 0.18 / 0.01 / 0.82 |\n| Hamming [15,11,3] | f=0.99 all w=exact | 6.0e-11 [\u2264 6.4e-11] (45, 129) (extrap.) | 2.4e-10 [\u2264 2.6e-10] (71, 205) (extrap.) | no / no | 0.16 / 0.03 / 0.81 |\n| Hamming [15,11,3] | f=0.99 all w=64 | 1.3e-10 [\u2264 2.0e-10] (45, 129) (extrap.) | 4.7e-10 [\u2264 7.4e-10] (67, 193) (extrap.) | no / no | 0.19 / 0.38 / 0.43 |\n| Hamming [15,11,3] | f=0.99 all w=1024 | 6.2e-10 [\u2264 7.4e-10] (41, 118) (extrap.) | 2.1e-09 [\u2264 2.5e-09] (59, 170) (extrap.) | no / no | 0.22 / 0.70 / 0.08 |\n| Hamming [15,11,3] | f=1.0 all w=exact | 1.8e-12 [\u2264 1.9e-12] (53, 153) (extrap.) | 1.9e-11 [\u2264 1.9e-11] (83, 240) (extrap.) | no / no | 0.19 / 0.81 / 0.00 |"
+  "pz1e2_table": "| code | flags | lowest p_L, paper pZL (d_Z, overhead) [lowest 95 % upper bound (d_Z, overhead)] | this-work pZL | 1e-12 reached at overhead, paper pZL (central / 95 % bound) | this-work pZL | floor made of (this work: phase / flagged-only / unflagged) |\n|---|---|---|---|---|---|---|\n| [15,9,3] | none | 4.7e-09 (37, 130) (extrap.) [4.9e-09 (37, 130)] | 1.3e-08 (51, 180) (extrap.) [1.4e-08 (51, 180)] | no / no | no / no | 0.22 / 0.00 / 0.78 |\n| [15,9,3] | f=0.9 idle w=exact | 1.8e-09 (39, 137) (extrap.) [2.0e-09 (39, 137)] | 5.7e-09 (55, 194) (extrap.) [6.1e-09 (55, 194)] | no / no | no / no | 0.22 / 0.00 / 0.77 |\n| [15,9,3] | f=0.99 idle w=exact | 1.6e-09 (39, 137) (extrap.) [1.7e-09 (39, 137)] | 5.1e-09 (57, 201) (extrap.) [5.5e-09 (55, 194)] | no / no | no / no | 0.17 / 0.00 / 0.83 |\n| [15,9,3] | f=0.9 all w=exact | 3.4e-10 (43, 151) (extrap.) [3.8e-10 (43, 151)] | 1.2e-09 (63, 222) (extrap.) [1.4e-09 (63, 222)] | no / no | no / no | 0.20 / 0.00 / 0.79 |\n| [15,9,3] | f=0.99 idle+gate w=exact | 4.5e-11 (47, 165) (extrap.) [6.0e-11 (45, 158)] | 2.0e-10 (73, 258) (extrap.) [3.7e-10 (67, 236)] | no / no | no / no | 0.17 / 0.17 / 0.66 |\n| [15,9,3] | f=0.99 all w=exact | 4.4e-11 (47, 165) (extrap.) [4.9e-11 (47, 165)] | 1.8e-10 (73, 258) (extrap.) [2.1e-10 (73, 258)] | no / no | no / no | 0.18 / 0.05 / 0.77 |\n| [15,9,3] | f=0.99 all w=64 | 1.1e-10 (45, 158) (extrap.) [2.0e-10 (43, 151)] | 4.0e-10 (69, 244) (extrap.) [8.3e-10 (65, 229)] | no / no | no / no | 0.18 / 0.48 / 0.34 |\n| [15,9,3] | f=0.99 all w=1024 | 2.9e-10 (43, 151) (extrap.) [4.3e-10 (43, 151)] | 1.0e-09 (65, 229) (extrap.) [1.6e-09 (61, 215)] | no / no | no / no | 0.16 / 0.67 / 0.17 |\n| [15,9,3] | f=1.0 all w=exact | 2.2e-12 (53, 187) (extrap.) [2.4e-12 (51, 180)] | 2.3e-11 (81, 286) (extrap.) [2.5e-11 (81, 286)] | no / no | no / no | 0.28 / 0.72 / 0.00 |\n| [15,6,5] | none | 5.6e-11 (47, 248) (extrap.) [8.4e-11 (45, 237)] | 4.4e-10 (69, 365) (extrap.) [5.7e-10 (67, 355)] | no / no | no / no | 0.25 / 0.00 / 0.75 |\n| [15,6,5] | f=0.9 idle w=exact | 1.4e-11 (49, 259) (extrap.) [4.2e-11 (47, 248)] | 1.3e-10 (75, 397) (extrap.) [2.9e-10 (71, 376)] | no / no | no / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] | f=0.99 idle w=exact | 1.3e-11 (49, 259) (extrap.) [3.8e-11 (47, 248)] | 1.2e-10 (75, 397) (extrap.) [2.8e-10 (71, 376)] | no / no | no / no | 0.27 / 0.00 / 0.73 |\n| [15,6,5] | f=0.9 all w=exact | 2.3e-13 (57, 301) (extrap.) [6.8e-12 (51, 269)] | 4.6e-12 (91, 483) (extrap.) [7.8e-11 (77, 408)] | 269 / no | no / no | 0.28 / 0.00 / 0.72 |\n| [15,6,5] | f=0.99 idle+gate w=exact | 7.2e-15 (65, 344) (extrap.) [1.6e-12 (53, 280)] | 2.1e-13 (107, 568) (extrap.) [5.3e-11 (77, 408)] | 269 / no | 493 / no | 0.27 / 0.00 / 0.73 |\n| [15,6,5] | f=0.99 all w=exact | 8.5e-15 (63, 333) (extrap.) [6.5e-13 (55, 291)] | 2.4e-13 (107, 568) (extrap.) [1.3e-11 (87, 461)] | 269 / 280 | 493 / no | 0.23 / 0.04 / 0.74 |\n| [15,6,5] | f=0.99 all w=64 | 4.0e-14 (61, 323) (extrap.) [1.8e-10 (45, 237)] | 6.8e-13 (101, 536) (extrap.) [8.5e-10 (67, 355)] | 269 / no | 504 / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] | f=0.99 all w=1024 | 5.3e-14 (59, 312) (extrap.) [1.9e-10 (45, 237)] | 2.5e-12 (93, 493) (extrap.) [8.6e-10 (67, 355)] | 269 / no | no / no | 0.35 / 0.00 / 0.65 |\n| [15,6,5] | f=1.0 all w=exact | 3.3e-16 (71, 376) (extrap.) [2.4e-15 (65, 344)] | 2.8e-14 (117, 621) (extrap.) [1.0e-12 (97, 515)] | 269 / 269 | 493 / no | 0.27 / 0.73 / 0.00 |\n| [15,6,5] 2 anc | none | 2.1e-11 (49, 275) (extrap.) [3.7e-11 (47, 264)] | 2.1e-10 (77, 434) (extrap.) [2.9e-10 (75, 422)] | no / no | no / no | 0.20 / 0.00 / 0.80 |\n| [15,6,5] 2 anc | f=0.9 idle w=exact | 4.4e-12 (51, 286) (extrap.) [1.8e-11 (49, 275)] | 5.1e-11 (83, 468) (extrap.) [1.5e-10 (79, 445)] | no / no | no / no | 0.25 / 0.00 / 0.75 |\n| [15,6,5] 2 anc | f=0.99 idle w=exact | 5.1e-12 (51, 286) (extrap.) [1.8e-11 (49, 275)] | 5.8e-11 (83, 468) (extrap.) [1.5e-10 (79, 445)] | no / no | no / no | 0.22 / 0.00 / 0.78 |\n| [15,6,5] 2 anc | f=0.9 all w=exact | 1.3e-13 (59, 332) (extrap.) [1.9e-12 (53, 298)] | 3.0e-12 (97, 547) (extrap.) [3.3e-11 (85, 479)] | 286 / no | no / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] 2 anc | f=0.99 idle+gate w=exact | 2.1e-16 (71, 400) (extrap.) [3.4e-13 (57, 320)] | 1.7e-14 (123, 694) (extrap.) [1.5e-11 (89, 502)] | 286 / 298 | 547 / no | 0.28 / 0.00 / 0.72 |\n| [15,6,5] 2 anc | f=0.99 all w=exact | 1.3e-14 (63, 354) (extrap.) [1.8e-13 (57, 320)] | 1.8e-13 (113, 638) (extrap.) [4.8e-12 (95, 536)] | 286 / 286 | 547 / no | 0.19 / 0.02 / 0.80 |\n| [15,6,5] 2 anc | f=0.99 all w=64 | 8.3e-15 (65, 366) (extrap.) [1.1e-10 (45, 252)] | 1.5e-13 (115, 649) (extrap.) [5.6e-10 (73, 411)] | 286 / no | 547 / no | 0.15 / 0.00 / 0.85 |\n| [15,6,5] 2 anc | f=0.99 all w=1024 | 1.7e-13 (57, 320) (extrap.) [1.1e-10 (45, 252)] | 6.5e-12 (93, 524) (extrap.) [5.6e-10 (73, 411)] | 286 / no | no / no | 0.27 / 0.38 / 0.35 |\n| [15,6,5] 2 anc | f=1.0 all w=exact | 8.6e-17 (73, 411) (extrap.) [2.7e-16 (71, 400)] | 1.0e-14 (127, 717) (extrap.) [1.1e-13 (111, 626)] | 286 / 286 | 547 / 547 | 0.21 / 0.79 / 0.00 |\n| Hamming [15,11,3] | none | 4.4e-09 (37, 106) (extrap.) [4.5e-09 (37, 106)] | 1.2e-08 (51, 147) (extrap.) [1.3e-08 (51, 147)] | no / no | no / no | 0.19 / 0.00 / 0.81 |\n| Hamming [15,11,3] | f=0.9 idle w=exact | 2.1e-09 (39, 112) (extrap.) [2.2e-09 (39, 112)] | 6.2e-09 (53, 153) (extrap.) [6.5e-09 (53, 153)] | no / no | no / no | 0.25 / 0.00 / 0.75 |\n| Hamming [15,11,3] | f=0.99 idle w=exact | 1.7e-09 (39, 112) (extrap.) [1.8e-09 (39, 112)] | 5.2e-09 (55, 159) (extrap.) [5.5e-09 (55, 159)] | no / no | no / no | 0.20 / 0.00 / 0.80 |\n| Hamming [15,11,3] | f=0.9 all w=exact | 4.8e-10 (41, 118) (extrap.) [5.1e-10 (41, 118)] | 1.6e-09 (61, 176) (extrap.) [1.8e-09 (61, 176)] | no / no | no / no | 0.19 / 0.00 / 0.81 |\n| Hamming [15,11,3] | f=0.99 idle+gate w=exact | 5.9e-11 (45, 129) (extrap.) [6.6e-11 (45, 129)] | 2.2e-10 (71, 205) (extrap.) [2.8e-10 (69, 199)] | no / no | no / no | 0.18 / 0.01 / 0.82 |\n| Hamming [15,11,3] | f=0.99 all w=exact | 6.0e-11 (45, 129) (extrap.) [6.4e-11 (45, 129)] | 2.4e-10 (71, 205) (extrap.) [2.6e-10 (71, 205)] | no / no | no / no | 0.16 / 0.03 / 0.81 |\n| Hamming [15,11,3] | f=0.99 all w=64 | 1.3e-10 (45, 129) (extrap.) [1.9e-10 (43, 124)] | 4.7e-10 (67, 193) (extrap.) [7.2e-10 (65, 188)] | no / no | no / no | 0.19 / 0.38 / 0.43 |\n| Hamming [15,11,3] | f=0.99 all w=1024 | 6.2e-10 (41, 118) (extrap.) [7.4e-10 (41, 118)] | 2.1e-09 (59, 170) (extrap.) [2.5e-09 (59, 170)] | no / no | no / no | 0.22 / 0.70 / 0.08 |\n| Hamming [15,11,3] | f=1.0 all w=exact | 1.8e-12 (53, 153) (extrap.) [1.9e-12 (51, 147)] | 1.9e-11 (83, 240) (extrap.) [1.9e-11 (81, 234)] | no / no | no / no | 0.19 / 0.81 / 0.00 |"
  },
  "assumptions": {
   "classes|idle|w0|f0.99|r0|erasure": "51.6 ([15,9,3], d=15)",
@@ -27454,7 +27454,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.3212384991022947e-10,
    "overhead": 365.3333333333333,
-   "reach": null
+   "floor_hi": 5.661724958302842e-10,
+   "d_hi": 67,
+   "overhead_hi": 354.6666666666667,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.9 all w=exact|this-work-pZL": {
    "pL": 4.646225890736457e-12,
@@ -27462,9 +27466,13 @@
    "d": 91,
    "pZL": 1.3120314078774902e-12,
    "flagged_only": 6.848884154536553e-16,
-   "with_unflagged": 3.3335095944435138e-12,
+   "with_unflagged": 3.3335095944435134e-12,
    "overhead": 482.6666666666667,
-   "reach": null
+   "floor_hi": 7.827682144449321e-11,
+   "d_hi": 77,
+   "overhead_hi": 408.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 1.265714390028593e-10,
@@ -27474,7 +27482,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 9.418103050121787e-11,
    "overhead": 397.3333333333333,
-   "reach": null
+   "floor_hi": 2.933656833073836e-10,
+   "d_hi": 71,
+   "overhead_hi": 376.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 2.4285274477212436e-13,
@@ -27482,9 +27494,13 @@
    "d": 107,
    "pZL": 5.4841557621870216e-14,
    "flagged_only": 9.172172321541081e-15,
-   "with_unflagged": 1.788390148287131e-13,
+   "with_unflagged": 1.7883901482871313e-13,
    "overhead": 568.0,
-   "reach": 493.3333333333333
+   "floor_hi": 1.315223077503468e-11,
+   "d_hi": 87,
+   "overhead_hi": 461.3333333333333,
+   "reach": 493.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=1024|this-work-pZL": {
    "pL": 2.5460235424715794e-12,
@@ -27492,9 +27508,13 @@
    "d": 93,
    "pZL": 8.80929527413084e-13,
    "flagged_only": 0.0,
-   "with_unflagged": 1.665094015058495e-12,
+   "with_unflagged": 1.6650940150584953e-12,
    "overhead": 493.3333333333333,
-   "reach": null
+   "floor_hi": 8.636055544340205e-10,
+   "d_hi": 67,
+   "overhead_hi": 354.6666666666667,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=64|this-work-pZL": {
    "pL": 6.830618834282828e-13,
@@ -27502,9 +27522,13 @@
    "d": 101,
    "pZL": 1.79827749593035e-13,
    "flagged_only": 0.0,
-   "with_unflagged": 5.032341338352479e-13,
+   "with_unflagged": 5.032341338352478e-13,
    "overhead": 536.0,
-   "reach": 504.0
+   "floor_hi": 8.460254471995978e-10,
+   "d_hi": 67,
+   "overhead_hi": 354.6666666666667,
+   "reach": 504.0,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 1.1980331622142924e-10,
@@ -27512,9 +27536,13 @@
    "d": 75,
    "pZL": 3.239040850164143e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 8.74129077197878e-11,
+   "with_unflagged": 8.741290771978781e-11,
    "overhead": 397.3333333333333,
-   "reach": null
+   "floor_hi": 2.801095574130168e-10,
+   "d_hi": 71,
+   "overhead_hi": 376.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 2.0585239458018747e-13,
@@ -27524,7 +27552,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.5101083695831725e-13,
    "overhead": 568.0,
-   "reach": 493.3333333333333
+   "floor_hi": 5.3167221229260035e-11,
+   "d_hi": 77,
+   "overhead_hi": 408.0,
+   "reach": 493.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 2.807554427239301e-14,
@@ -27534,7 +27566,11 @@
    "flagged_only": 2.0445972609499283e-14,
    "with_unflagged": 0.0,
    "overhead": 621.3333333333334,
-   "reach": 493.3333333333333
+   "floor_hi": 1.02705822820414e-12,
+   "d_hi": 97,
+   "overhead_hi": 514.6666666666666,
+   "reach": 493.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|none|this-work-pZL": {
    "pL": 2.1189846541921257e-10,
@@ -27544,7 +27580,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.686017001584158e-10,
    "overhead": 433.5,
-   "reach": null
+   "floor_hi": 2.9302359425418173e-10,
+   "d_hi": 75,
+   "overhead_hi": 422.1666666666667,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 all w=exact|this-work-pZL": {
    "pL": 3.048970024617449e-12,
@@ -27554,7 +27594,11 @@
    "flagged_only": 5.316961375865715e-18,
    "with_unflagged": 2.2536127381328066e-12,
    "overhead": 546.8333333333334,
-   "reach": null
+   "floor_hi": 3.2645055732547596e-11,
+   "d_hi": 85,
+   "overhead_hi": 478.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 5.145220925006079e-11,
@@ -27564,7 +27608,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.847493270547778e-11,
    "overhead": 467.5,
-   "reach": null
+   "floor_hi": 1.535888370029561e-10,
+   "d_hi": 79,
+   "overhead_hi": 444.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|this-work-pZL": {
    "pL": 1.790672744846466e-13,
@@ -27574,7 +27622,11 @@
    "flagged_only": 2.8703611920463448e-15,
    "with_unflagged": 1.426416549539537e-13,
    "overhead": 637.5,
-   "reach": 546.8333333333334
+   "floor_hi": 4.825241936436831e-12,
+   "d_hi": 95,
+   "overhead_hi": 535.5,
+   "reach": 546.8333333333334,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=1024|this-work-pZL": {
    "pL": 6.483967661812307e-12,
@@ -27582,9 +27634,13 @@
    "d": 93,
    "pZL": 1.76185905482615e-12,
    "flagged_only": 2.4818400452253785e-12,
-   "with_unflagged": 2.2402685617607785e-12,
+   "with_unflagged": 2.240268561760779e-12,
    "overhead": 524.1666666666666,
-   "reach": null
+   "floor_hi": 5.621545078705297e-10,
+   "d_hi": 73,
+   "overhead_hi": 410.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=64|this-work-pZL": {
    "pL": 1.5267428811673938e-13,
@@ -27594,7 +27650,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.3004975208412476e-13,
    "overhead": 648.8333333333334,
-   "reach": 546.8333333333334
+   "floor_hi": 5.608331048691691e-10,
+   "d_hi": 73,
+   "overhead_hi": 410.8333333333333,
+   "reach": 546.8333333333334,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 5.811074152427179e-11,
@@ -27604,7 +27664,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 4.513346497968876e-11,
    "overhead": 467.5,
-   "reach": null
+   "floor_hi": 1.468672757039967e-10,
+   "d_hi": 79,
+   "overhead_hi": 444.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 1.6700314942745366e-14,
@@ -27612,9 +27676,13 @@
    "d": 123,
    "pZL": 4.689498251332253e-15,
    "flagged_only": 0.0,
-   "with_unflagged": 1.2010816691413112e-14,
+   "with_unflagged": 1.201081669141311e-14,
    "overhead": 694.1666666666666,
-   "reach": 546.8333333333334
+   "floor_hi": 1.4524581209382648e-11,
+   "d_hi": 89,
+   "overhead_hi": 501.5,
+   "reach": 546.8333333333334,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|this-work-pZL": {
    "pL": 1.0127402490102586e-14,
@@ -27624,7 +27692,11 @@
    "flagged_only": 7.988924658568825e-15,
    "with_unflagged": 0.0,
    "overhead": 716.8333333333334,
-   "reach": 546.8333333333334
+   "floor_hi": 1.0851755587829912e-13,
+   "d_hi": 111,
+   "overhead_hi": 626.1666666666666,
+   "reach": 546.8333333333334,
+   "reach_hi": 546.8333333333334
   },
   "p1e-2|[15,9,3]|none|this-work-pZL": {
    "pL": 1.3457249554311107e-08,
@@ -27634,17 +27706,25 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.0542812598265824e-08,
    "overhead": 179.55555555555554,
-   "reach": null
+   "floor_hi": 1.3967486552300043e-08,
+   "d_hi": 51,
+   "overhead_hi": 179.55555555555554,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.9 all w=exact|this-work-pZL": {
    "pL": 1.2177510336712243e-09,
    "pL_hi": 1.3625429038036749e-09,
    "d": 63,
    "pZL": 2.462719397439911e-10,
-   "flagged_only": 3.5831064161877267e-12,
+   "flagged_only": 3.5831064161877263e-12,
    "with_unflagged": 9.678959875110457e-10,
    "overhead": 222.22222222222223,
-   "reach": null
+   "floor_hi": 1.3625429038036749e-09,
+   "d_hi": 63,
+   "overhead_hi": 222.22222222222223,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 5.659124054281955e-09,
@@ -27654,7 +27734,11 @@
    "flagged_only": 3.90473994042948e-12,
    "with_unflagged": 4.382774716137701e-09,
    "overhead": 193.77777777777777,
-   "reach": null
+   "floor_hi": 6.1465938961959585e-09,
+   "d_hi": 55,
+   "overhead_hi": 193.77777777777777,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 1.8395561662613556e-10,
@@ -27664,7 +27748,11 @@
    "flagged_only": 9.729916540385977e-12,
    "with_unflagged": 1.4189425787621553e-10,
    "overhead": 257.77777777777777,
-   "reach": null
+   "floor_hi": 2.073777061230563e-10,
+   "d_hi": 73,
+   "overhead_hi": 257.77777777777777,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=1024|this-work-pZL": {
    "pL": 1.0128539801041766e-09,
@@ -27674,7 +27762,11 @@
    "flagged_only": 6.81478821334382e-10,
    "with_unflagged": 1.6758771138753165e-10,
    "overhead": 229.33333333333334,
-   "reach": null
+   "floor_hi": 1.5571126561049735e-09,
+   "d_hi": 61,
+   "overhead_hi": 215.11111111111111,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=64|this-work-pZL": {
    "pL": 4.04116282066568e-10,
@@ -27684,7 +27776,11 @@
    "flagged_only": 1.9485542635060063e-10,
    "with_unflagged": 1.3661315669584857e-10,
    "overhead": 243.55555555555554,
-   "reach": null
+   "floor_hi": 8.262428379138588e-10,
+   "d_hi": 65,
+   "overhead_hi": 229.33333333333334,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 5.06496231904455e-09,
@@ -27692,9 +27788,13 @@
    "d": 57,
    "pZL": 8.424908131494926e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 4.222471505895057e-09,
+   "with_unflagged": 4.222471505895056e-09,
    "overhead": 200.88888888888889,
-   "reach": null
+   "floor_hi": 5.519143670313212e-09,
+   "d_hi": 55,
+   "overhead_hi": 193.77777777777777,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 1.9572790565170415e-10,
@@ -27704,7 +27804,11 @@
    "flagged_only": 3.4191140271728546e-11,
    "with_unflagged": 1.2920532317044158e-10,
    "overhead": 257.77777777777777,
-   "reach": null
+   "floor_hi": 3.662284970152695e-10,
+   "d_hi": 67,
+   "overhead_hi": 236.44444444444446,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 2.3307753980554338e-11,
@@ -27714,7 +27818,11 @@
    "flagged_only": 1.6847986491691684e-11,
    "with_unflagged": 0.0,
    "overhead": 286.22222222222223,
-   "reach": null
+   "floor_hi": 2.5106664810202677e-11,
+   "d_hi": 81,
+   "overhead_hi": 286.22222222222223,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|none|this-work-pZL": {
    "pL": 1.2354632758174966e-08,
@@ -27724,7 +27832,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 9.970093430501556e-09,
    "overhead": 146.9090909090909,
-   "reach": null
+   "floor_hi": 1.2676776575341336e-08,
+   "d_hi": 51,
+   "overhead_hi": 146.9090909090909,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 all w=exact|this-work-pZL": {
    "pL": 1.6305096297133672e-09,
@@ -27734,7 +27846,11 @@
    "flagged_only": 2.3407906179168578e-12,
    "with_unflagged": 1.324893581107824e-09,
    "overhead": 176.0,
-   "reach": null
+   "floor_hi": 1.774821253606964e-09,
+   "d_hi": 61,
+   "overhead_hi": 176.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 6.22331986953106e-09,
@@ -27742,9 +27858,13 @@
    "d": 53,
    "pZL": 1.5744798693342432e-09,
    "flagged_only": 0.0,
-   "with_unflagged": 4.648840000196817e-09,
+   "with_unflagged": 4.648840000196818e-09,
    "overhead": 152.72727272727272,
-   "reach": null
+   "floor_hi": 6.5474173310915864e-09,
+   "d_hi": 53,
+   "overhead_hi": 152.72727272727272,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 2.40890867070999e-10,
@@ -27754,7 +27874,11 @@
    "flagged_only": 6.6655340478707895e-12,
    "with_unflagged": 1.9458831980788643e-10,
    "overhead": 205.0909090909091,
-   "reach": null
+   "floor_hi": 2.571909449467037e-10,
+   "d_hi": 71,
+   "overhead_hi": 205.0909090909091,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=1024|this-work-pZL": {
    "pL": 2.075052417792375e-09,
@@ -27764,7 +27888,11 @@
    "flagged_only": 1.4464876060801904e-09,
    "with_unflagged": 1.7160677593302147e-10,
    "overhead": 170.1818181818182,
-   "reach": null
+   "floor_hi": 2.4640597706033773e-09,
+   "d_hi": 59,
+   "overhead_hi": 170.1818181818182,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=64|this-work-pZL": {
    "pL": 4.686877499543478e-10,
@@ -27772,9 +27900,13 @@
    "d": 67,
    "pZL": 8.920875616579118e-11,
    "flagged_only": 1.7597882680083179e-10,
-   "with_unflagged": 2.0350016698772476e-10,
+   "with_unflagged": 2.035001669877248e-10,
    "overhead": 193.45454545454547,
-   "reach": null
+   "floor_hi": 7.242828757634546e-10,
+   "d_hi": 65,
+   "overhead_hi": 187.63636363636363,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 5.218504352925788e-09,
@@ -27782,9 +27914,13 @@
    "d": 55,
    "pZL": 1.0410910348940375e-09,
    "flagged_only": 0.0,
-   "with_unflagged": 4.177413318031749e-09,
+   "with_unflagged": 4.17741331803175e-09,
    "overhead": 158.54545454545453,
-   "reach": null
+   "floor_hi": 5.5466755723224994e-09,
+   "d_hi": 55,
+   "overhead_hi": 158.54545454545453,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 2.2448303291893095e-10,
@@ -27792,9 +27928,13 @@
    "d": 71,
    "pZL": 3.963701321524177e-11,
    "flagged_only": 1.6087876625640365e-12,
-   "with_unflagged": 1.8323723204112516e-10,
+   "with_unflagged": 1.8323723204112513e-10,
    "overhead": 205.0909090909091,
-   "reach": null
+   "floor_hi": 2.829510190724541e-10,
+   "d_hi": 69,
+   "overhead_hi": 199.27272727272728,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 1.8526369123460995e-11,
@@ -27804,7 +27944,11 @@
    "flagged_only": 1.498711188402692e-11,
    "with_unflagged": 0.0,
    "overhead": 240.0,
-   "reach": null
+   "floor_hi": 1.930806314261768e-11,
+   "d_hi": 81,
+   "overhead_hi": 234.1818181818182,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|none|paper-pZL": {
    "pL": 5.646493726752722e-11,
@@ -27814,7 +27958,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 5.0154913871326714e-11,
    "overhead": 248.0,
-   "reach": null
+   "floor_hi": 8.378326391988764e-11,
+   "d_hi": 45,
+   "overhead_hi": 237.33333333333334,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.9 all w=exact|paper-pZL": {
    "pL": 2.3090593231598665e-13,
@@ -27822,9 +27970,13 @@
    "d": 57,
    "pZL": 4.1865439003219256e-14,
    "flagged_only": 4.9488107236807174e-18,
-   "with_unflagged": 1.8903554450204374e-13,
+   "with_unflagged": 1.8903554450204372e-13,
    "overhead": 301.3333333333333,
-   "reach": 269.3333333333333
+   "floor_hi": 6.750591688698206e-12,
+   "d_hi": 51,
+   "overhead_hi": 269.3333333333333,
+   "reach": 269.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.9 idle w=exact|paper-pZL": {
    "pL": 1.3808931715918664e-11,
@@ -27832,9 +27984,13 @@
    "d": 49,
    "pZL": 2.3141734437149512e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 1.1494758272203711e-11,
+   "with_unflagged": 1.1494758272203708e-11,
    "overhead": 258.6666666666667,
-   "reach": null
+   "floor_hi": 4.170549695303033e-11,
+   "d_hi": 47,
+   "overhead_hi": 248.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL": {
    "pL": 8.47473407201876e-15,
@@ -27842,9 +27998,13 @@
    "d": 63,
    "pZL": 2.0651445600464894e-15,
    "flagged_only": 9.973917014294634e-17,
-   "with_unflagged": 6.309850341829324e-15,
+   "with_unflagged": 6.309850341829323e-15,
    "overhead": 333.3333333333333,
-   "reach": 269.3333333333333
+   "floor_hi": 6.510402787116103e-13,
+   "d_hi": 55,
+   "overhead_hi": 290.6666666666667,
+   "reach": 269.3333333333333,
+   "reach_hi": 280.0
   },
   "p1e-2|[15,6,5]|f=0.99 all w=1024|paper-pZL": {
    "pL": 5.26013583079243e-14,
@@ -27854,7 +28014,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.724739191707773e-14,
    "overhead": 312.0,
-   "reach": 269.3333333333333
+   "floor_hi": 1.857059016832273e-10,
+   "d_hi": 45,
+   "overhead_hi": 237.33333333333334,
+   "reach": 269.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=64|paper-pZL": {
    "pL": 3.955570524447104e-14,
@@ -27864,7 +28028,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.39247053184194e-14,
    "overhead": 322.6666666666667,
-   "reach": 269.3333333333333
+   "floor_hi": 1.8042528993444395e-10,
+   "d_hi": 45,
+   "overhead_hi": 237.33333333333334,
+   "reach": 269.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 idle w=exact|paper-pZL": {
    "pL": 1.3165780212070294e-11,
@@ -27872,9 +28040,13 @@
    "d": 49,
    "pZL": 2.3141734437149512e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 1.0851606768355345e-11,
+   "with_unflagged": 1.0851606768355343e-11,
    "overhead": 258.6666666666667,
-   "reach": null
+   "floor_hi": 3.832076746745197e-11,
+   "d_hi": 47,
+   "overhead_hi": 248.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 7.166882501619993e-15,
@@ -27884,7 +28056,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 6.409499779208908e-15,
    "overhead": 344.0,
-   "reach": 269.3333333333333
+   "floor_hi": 1.6498648943247788e-12,
+   "d_hi": 53,
+   "overhead_hi": 280.0,
+   "reach": 269.3333333333333,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5]|f=1.0 all w=exact|paper-pZL": {
    "pL": 3.3165763364552704e-16,
@@ -27894,7 +28070,11 @@
    "flagged_only": 2.9429734682421403e-16,
    "with_unflagged": 0.0,
    "overhead": 376.0,
-   "reach": 269.3333333333333
+   "floor_hi": 2.439024999343026e-15,
+   "d_hi": 65,
+   "overhead_hi": 344.0,
+   "reach": 269.3333333333333,
+   "reach_hi": 269.3333333333333
   },
   "p1e-2|[15,6,5] 2 anc|none|paper-pZL": {
    "pL": 2.1085225788662868e-11,
@@ -27904,7 +28084,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.862641650471573e-11,
    "overhead": 274.8333333333333,
-   "reach": null
+   "floor_hi": 3.662672222956255e-11,
+   "d_hi": 47,
+   "overhead_hi": 263.5,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 all w=exact|paper-pZL": {
    "pL": 1.2700441120354086e-13,
@@ -27914,7 +28098,11 @@
    "flagged_only": 1.0176248634509258e-20,
    "with_unflagged": 1.1069081173701774e-13,
    "overhead": 331.5,
-   "reach": 286.1666666666667
+   "floor_hi": 1.8930794047236867e-12,
+   "d_hi": 53,
+   "overhead_hi": 297.5,
+   "reach": 286.1666666666667,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 idle w=exact|paper-pZL": {
    "pL": 4.411250819188788e-12,
@@ -27924,17 +28112,25 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.509493283472443e-12,
    "overhead": 286.1666666666667,
-   "reach": null
+   "floor_hi": 1.8236815299651208e-11,
+   "d_hi": 49,
+   "overhead_hi": 274.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL": {
    "pL": 1.2752169674266707e-14,
    "pL_hi": 2.638100448644368e-13,
    "d": 63,
    "pZL": 2.1942160950493952e-15,
-   "flagged_only": 1.8899134130864028e-17,
+   "flagged_only": 1.889913413086403e-17,
    "with_unflagged": 1.0539054445086447e-14,
    "overhead": 354.1666666666667,
-   "reach": 286.1666666666667
+   "floor_hi": 1.8258899563503815e-13,
+   "d_hi": 57,
+   "overhead_hi": 320.1666666666667,
+   "reach": 286.1666666666667,
+   "reach_hi": 286.1666666666667
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=1024|paper-pZL": {
    "pL": 1.734604241305822e-13,
@@ -27942,9 +28138,13 @@
    "d": 57,
    "pZL": 4.448202894092046e-14,
    "flagged_only": 3.7954241971037153e-14,
-   "with_unflagged": 9.102415321862462e-14,
+   "with_unflagged": 9.102415321862461e-14,
    "overhead": 320.1666666666667,
-   "reach": 286.1666666666667
+   "floor_hi": 1.0589788574742265e-10,
+   "d_hi": 45,
+   "overhead_hi": 252.16666666666666,
+   "reach": 286.1666666666667,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=64|paper-pZL": {
    "pL": 8.297784100729269e-15,
@@ -27952,9 +28152,13 @@
    "d": 65,
    "pZL": 8.047191425617779e-16,
    "flagged_only": 0.0,
-   "with_unflagged": 7.49306495816749e-15,
+   "with_unflagged": 7.493064958167492e-15,
    "overhead": 365.5,
-   "reach": 286.1666666666667
+   "floor_hi": 1.0586002804114268e-10,
+   "d_hi": 45,
+   "overhead_hi": 252.16666666666666,
+   "reach": 286.1666666666667,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle w=exact|paper-pZL": {
    "pL": 5.098573459302003e-12,
@@ -27964,7 +28168,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 4.196815923585659e-12,
    "overhead": 286.1666666666667,
-   "reach": null
+   "floor_hi": 1.7953704943957567e-11,
+   "d_hi": 49,
+   "overhead_hi": 274.8333333333333,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 2.0923805357635828e-16,
@@ -27972,9 +28180,13 @@
    "d": 71,
    "pZL": 3.969530474764513e-17,
    "flagged_only": 0.0,
-   "with_unflagged": 1.6954274882871312e-16,
+   "with_unflagged": 1.6954274882871315e-16,
    "overhead": 399.5,
-   "reach": 286.1666666666667
+   "floor_hi": 3.4345998477142744e-13,
+   "d_hi": 57,
+   "overhead_hi": 320.1666666666667,
+   "reach": 286.1666666666667,
+   "reach_hi": 297.5
   },
   "p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL": {
    "pL": 8.616809329886351e-17,
@@ -27984,7 +28196,11 @@
    "flagged_only": 7.161001414142564e-17,
    "with_unflagged": 0.0,
    "overhead": 410.8333333333333,
-   "reach": 286.1666666666667
+   "floor_hi": 2.74266236243925e-16,
+   "d_hi": 71,
+   "overhead_hi": 399.5,
+   "reach": 286.1666666666667,
+   "reach_hi": 286.1666666666667
   },
   "p1e-2|[15,9,3]|none|paper-pZL": {
    "pL": 4.731770392373404e-09,
@@ -27994,7 +28210,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 4.097732767567318e-09,
    "overhead": 129.77777777777777,
-   "reach": null
+   "floor_hi": 4.922645678269806e-09,
+   "d_hi": 37,
+   "overhead_hi": 129.77777777777777,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.9 all w=exact|paper-pZL": {
    "pL": 3.426456200195398e-10,
@@ -28002,9 +28222,13 @@
    "d": 43,
    "pZL": 3.127590162454525e-11,
    "flagged_only": 5.396208611059623e-13,
-   "with_unflagged": 3.108300975338885e-10,
+   "with_unflagged": 3.108300975338886e-10,
    "overhead": 151.11111111111111,
-   "reach": null
+   "floor_hi": 3.8148640102013004e-10,
+   "d_hi": 43,
+   "overhead_hi": 151.11111111111111,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.9 idle w=exact|paper-pZL": {
    "pL": 1.8229809901656523e-09,
@@ -28014,7 +28238,11 @@
    "flagged_only": 7.415526478698439e-13,
    "with_unflagged": 1.589708915598347e-09,
    "overhead": 136.88888888888889,
-   "reach": null
+   "floor_hi": 1.9615434006289307e-09,
+   "d_hi": 39,
+   "overhead_hi": 136.88888888888889,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL": {
    "pL": 4.381243513151787e-11,
@@ -28024,7 +28252,11 @@
    "flagged_only": 1.0909430265011746e-12,
    "with_unflagged": 3.8514809840883016e-11,
    "overhead": 165.33333333333334,
-   "reach": null
+   "floor_hi": 4.919786843959506e-11,
+   "d_hi": 47,
+   "overhead_hi": 165.33333333333334,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=1024|paper-pZL": {
    "pL": 2.914487644284853e-10,
@@ -28034,7 +28266,11 @@
    "flagged_only": 2.1111697432592207e-10,
    "with_unflagged": 4.905588847801796e-11,
    "overhead": 151.11111111111111,
-   "reach": null
+   "floor_hi": 4.325080268909183e-10,
+   "d_hi": 43,
+   "overhead_hi": 151.11111111111111,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=64|paper-pZL": {
    "pL": 1.056644226077119e-10,
@@ -28042,9 +28278,13 @@
    "d": 45,
    "pZL": 1.1470299937611244e-11,
    "flagged_only": 5.5915105969053394e-11,
-   "with_unflagged": 3.8279016701047256e-11,
+   "with_unflagged": 3.827901670104726e-11,
    "overhead": 158.22222222222223,
-   "reach": null
+   "floor_hi": 2.0052341027144238e-10,
+   "d_hi": 43,
+   "overhead_hi": 151.11111111111111,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle w=exact|paper-pZL": {
    "pL": 1.6163296773458514e-09,
@@ -28052,9 +28292,13 @@
    "d": 39,
    "pZL": 2.3253052191943556e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 1.383799155426416e-09,
+   "with_unflagged": 1.3837991554264161e-09,
    "overhead": 136.88888888888889,
-   "reach": null
+   "floor_hi": 1.7381151688713848e-09,
+   "d_hi": 39,
+   "overhead_hi": 136.88888888888889,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 4.476138759096095e-11,
@@ -28064,7 +28308,11 @@
    "flagged_only": 3.76908113683087e-12,
    "with_unflagged": 3.6785624189996405e-11,
    "overhead": 165.33333333333334,
-   "reach": null
+   "floor_hi": 6.040481614639152e-11,
+   "d_hi": 45,
+   "overhead_hi": 158.22222222222223,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL": {
    "pL": 2.2496314518090287e-12,
@@ -28074,7 +28322,11 @@
    "flagged_only": 2.0421236076191786e-12,
    "with_unflagged": 0.0,
    "overhead": 186.66666666666666,
-   "reach": null
+   "floor_hi": 2.3953721201738383e-12,
+   "d_hi": 51,
+   "overhead_hi": 179.55555555555554,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|none|paper-pZL": {
    "pL": 4.387954461549483e-09,
@@ -28084,7 +28336,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 3.869196404889959e-09,
    "overhead": 106.18181818181819,
-   "reach": null
+   "floor_hi": 4.510952772193709e-09,
+   "d_hi": 37,
+   "overhead_hi": 106.18181818181819,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 all w=exact|paper-pZL": {
    "pL": 4.774024579170365e-10,
@@ -28092,9 +28348,13 @@
    "d": 41,
    "pZL": 6.977417765675058e-11,
    "flagged_only": 3.255583795130421e-13,
-   "with_unflagged": 4.0730272188077296e-10,
+   "with_unflagged": 4.073027218807729e-10,
    "overhead": 117.81818181818181,
-   "reach": null
+   "floor_hi": 5.108495872209096e-10,
+   "d_hi": 41,
+   "overhead_hi": 117.81818181818181,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 idle w=exact|paper-pZL": {
    "pL": 2.0706495536989635e-09,
@@ -28104,7 +28364,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.8803973084921528e-09,
    "overhead": 112.0,
-   "reach": null
+   "floor_hi": 2.191960635288062e-09,
+   "d_hi": 39,
+   "overhead_hi": 112.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=exact|paper-pZL": {
    "pL": 6.032964369829838e-11,
@@ -28112,9 +28376,13 @@
    "d": 45,
    "pZL": 9.384790858045563e-12,
    "flagged_only": 6.891064571860768e-13,
-   "with_unflagged": 5.025574638306675e-11,
+   "with_unflagged": 5.0255746383066743e-11,
    "overhead": 129.45454545454547,
-   "reach": null
+   "floor_hi": 6.402696747611169e-11,
+   "d_hi": 45,
+   "overhead_hi": 129.45454545454547,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=1024|paper-pZL": {
    "pL": 6.200215578034041e-10,
@@ -28122,9 +28390,13 @@
    "d": 41,
    "pZL": 6.977417765675058e-11,
    "flagged_only": 4.930705490743605e-10,
-   "with_unflagged": 5.717683107229327e-11,
+   "with_unflagged": 5.717683107229326e-11,
    "overhead": 117.81818181818181,
-   "reach": null
+   "floor_hi": 7.383254611393122e-10,
+   "d_hi": 41,
+   "overhead_hi": 117.81818181818181,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=64|paper-pZL": {
    "pL": 1.2925466172382718e-10,
@@ -28134,7 +28406,11 @@
    "flagged_only": 5.699037153327944e-11,
    "with_unflagged": 6.287949933250216e-11,
    "overhead": 129.45454545454547,
-   "reach": null
+   "floor_hi": 1.893915297595579e-10,
+   "d_hi": 43,
+   "overhead_hi": 123.63636363636364,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle w=exact|paper-pZL": {
    "pL": 1.7048374073761547e-09,
@@ -28144,7 +28420,11 @@
    "flagged_only": 0.0,
    "with_unflagged": 1.5145851621693438e-09,
    "overhead": 112.0,
-   "reach": null
+   "floor_hi": 1.8110767576820048e-09,
+   "d_hi": 39,
+   "overhead_hi": 112.0,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 5.88367758147552e-11,
@@ -28152,9 +28432,13 @@
    "d": 45,
    "pZL": 9.384790858045563e-12,
    "flagged_only": 7.263878903245762e-14,
-   "with_unflagged": 4.937934616767718e-11,
+   "with_unflagged": 4.937934616767719e-11,
    "overhead": 129.45454545454547,
-   "reach": null
+   "floor_hi": 6.575304113961162e-11,
+   "d_hi": 45,
+   "overhead_hi": 129.45454545454547,
+   "reach": null,
+   "reach_hi": null
   },
   "p1e-2|Hamming [15,11,3]|f=1.0 all w=exact|paper-pZL": {
    "pL": 1.7719090213421642e-12,
@@ -28164,7 +28448,44 @@
    "flagged_only": 1.6021298760959235e-12,
    "with_unflagged": 0.0,
    "overhead": 152.72727272727272,
-   "reach": null
+   "floor_hi": 1.8616792012562096e-12,
+   "d_hi": 51,
+   "overhead_hi": 146.9090909090909,
+   "reach": null,
+   "reach_hi": null
+  }
+ },
+ "strata_caps": {
+  "configs": {
+   "15_6_5|a1": {
+    "d_code": 5,
+    "d_dem_lb": 5,
+    "n_col": 815,
+    "check_err": 8.003553375601768e-11
+   },
+   "15_6_5|a2": {
+    "d_code": 5,
+    "d_dem_lb": 5,
+    "n_col": 815,
+    "check_err": 6.184563972055912e-11
+   }
+  },
+  "strata_checked": 882,
+  "strata_zero_bound": 271,
+  "violations": 0,
+  "pz1e2_worst_15_6_5": {
+   "1,1|none": 0.0,
+   "1,2|none": 0.005991113182113199,
+   "2,0|none": 0.012225281659464444,
+   "1,1|idle": 0.0,
+   "1,2|idle": 0.008030317123915155,
+   "2,0|idle": 0.016273758412003007,
+   "1,1|all": 0.0,
+   "1,2|all": 0.0021636045652056327,
+   "2,0|all": 0.004326764793455693,
+   "1,1|idle+gate": 0.0,
+   "1,2|idle+gate": 0.0,
+   "2,0|idle+gate": 0.0004857538089022628
   }
  }
 }

@@ -113,8 +113,9 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   8.6e-17 and
   2.2e-12.  1e-12 is reached with
   [15,6,5] from f ≈ 0.9 on all locations (269.3
-  qubits per logical qubit at f = 0.99, paper pZL); this work's phase-flip model places every floor
-  higher and at larger d_Z (both in the tables).
+  qubits per logical qubit at f = 0.99, paper pZL; 280.0 with p_XL at
+  its 95 % upper bound, which the analytic stratum bounds make tight); this work's phase-flip model
+  places every floor higher and at larger d_Z (both in the tables).
 
 ## 4. Deliverable 4 — documents and one command
 
@@ -135,7 +136,11 @@ without one).
   d − 1 erased blocks (enumerated), and 1353
   and 77793 circuit-level patterns.
 * **Statistics** — every rate carries a 95 % interval (Wilson per stratum; failures counted in the
-  tables).  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
+  tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
+  analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
+  882 sampled strata checked against it, 0 violations), or of the
+  false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
+  95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
   p_X with exact intensities; the phase-flip model), and the model predicts held-out sampled
   points: direct samples under flags 30/30

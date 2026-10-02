@@ -71,7 +71,7 @@ this work's own.
   {{ e1(first_eta("paper-pZL", "all|w0|f0.99", "[15,9,3]")) }} (f = 0.99) and to the whole range
   η ≥ 4e4 with perfect flags (paper pZL).  §5.
 * **p_Z = 1e-2.**  Flags push the memory past the bit-flip wall: [15,6,5] reaches 1e-12, which no
-  code reaches without flags, at {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }}
+  code reaches without flags, at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
   qubits per logical qubit (f = 0.99, paper pZL); [15,9,3] bottoms out at
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }} even with perfect flags (its
   distance).  §6.
@@ -199,7 +199,25 @@ this work's own.
    (d_Z = 17 → 25, 33).  Exactly timed perfect flags need no decoding at all: their failure
    probability is the probability that the flagged events contain an undetectable logical, computed
    from 4e6 event sets per point (`perfect_flags_exact.json`; [15,9,3]: F(0,3) =
-   {{ e2(N["checks"]["perfect_flags_exact"]["15_9_3|a1|d15"]["3"]) }}).
+   {{ e2(N["checks"]["perfect_flags_exact"]["15_9_3|a1|d15"]["3"]) }}); the same values hold for every
+   setting that flags all classes at one f < 1 with exact timing (same event distribution, the decoder
+   choosing among the zero-cost flag explanations), and replace the sampled ones there.
+
+7b. **Where sampling sees no failure, the code distance bounds the failure probability without
+   decoding.**  With exactly timed erasure flags every flag explanation costs the decoder nothing, so a
+   failure in stratum (a, b) needs at least d − a − b further unflagged columns that together cost no
+   more than the a true ones (methods §5).  From the exact column costs (per-column fault counts,
+   exact quadratics in d_Z) and the distance of the merged block-level DEM — at least
+   {{ N["strata_caps"]["configs"]["15_6_5|a1"]["d_dem_lb"] }} for [15,6,5] with one and two ancillas,
+   by exhaustive search over all sets of up to four of its {{ N["strata_caps"]["configs"]["15_6_5|a1"]["n_col"] }}
+   columns — this bounds F(1,1) by {{ g(max(v for k, v in N["strata_caps"]["pz1e2_worst_15_6_5"].items() if k.startswith("1,1"))) }}
+   and F(1,2), F(2,0) by at most {{ e1(max(v for k, v in N["strata_caps"]["pz1e2_worst_15_6_5"].items() if not k.startswith("1,1"))) }}
+   for every flag setting and every d_Z up to 129 at p_Z = 1e-2 (mostly 0 for F(1,2)).  No sampled
+   stratum contradicts its bound ({{ N["strata_caps"]["strata_checked"] }} strata checked,
+   {{ N["strata_caps"]["violations"] }} violations; {{ N["strata_caps"]["strata_zero_bound"] }} of them
+   bounded by 0, all without a failure).  The bounds replace the Wilson upper ends of zero-failure
+   strata where they are tighter, which is what makes the 95 % upper bounds of [15,6,5] at p_Z = 1e-2
+   informative (§6).
 
 ## 3. Phase flips: the floor that flags cannot lower
 
@@ -369,9 +387,14 @@ this work's own.
 {{ N["md"]["pz1e2_table"] }}
 
     With flags on all locations [15,6,5] reaches 1e-12 — which neither code reaches without flags —
-    at {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }} qubits per logical
-    qubit (paper pZL; {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL"]["reach"]) }}
-    with this work's phase-flip model), and its floor drops by 3–4 orders of magnitude.  [15,9,3]
+    at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }} qubits per logical
+    qubit (paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL") }}
+    with this work's phase-flip model), or {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} and
+    {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL", True) }} with p_XL at its 95 % upper bound
+    (two ancillas: {{ reach("p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL", True) }} and
+    {{ reach("p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|this-work-pZL", True) }}), and its floor drops by 3–4 orders
+    of magnitude.  The upper bounds rest on the analytic stratum bounds of item 7b (F(1,1) = 0,
+    F(1,2) and F(2,0) small) and on deeper sampling of the strata those bounds leave open.  [15,9,3]
     stays above 1e-12 even with perfect flags: there its floor is made of sets of ≥ 3 flagged events
     that contain an undetectable logical — its distance.
 

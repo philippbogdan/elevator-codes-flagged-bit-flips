@@ -87,6 +87,13 @@ def first_eta(tag, key, code_label):
     return None
 
 
+def reach(key, hi=False):
+    """overhead at which 1e-12 is reached at p_Z = 1e-2 (limits entry 'p1e-2|code|flags|tag'), from the
+    central p_XL or from its 95 % upper bound"""
+    v = N["limits"][key].get("reach_hi" if hi else "reach")
+    return f1(v) if v else "not reached"
+
+
 def floor2(tag, key):
     """lowest reachable p_L at p_Z = 1e-2 (Fig. 2 from this work's simulations) for flag setting key"""
     return N["fig2_this_work"][tag][f"pz=0.01|{key}"]
@@ -109,7 +116,7 @@ def pxl3(key):
 
 
 ENV = dict(N=N, H=H, asm=asm, pxl3=pxl3, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
-           round=round, sorted=sorted, ohv=ohv, ohs=ohs, ohc=ohc, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
+           round=round, sorted=sorted, ohv=ohv, ohs=ohs, ohc=ohc, reqf=reqf, first_eta=first_eta, floor2=floor2, reach=reach, pfloor=pfloor,
            abs=abs, str=str, int=int, float=float, zip=zip, list=list, dict=dict, any=any, all=all)
 PAT = re.compile(r"\{\{(.+?)\}\}", re.S)
 
