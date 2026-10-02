@@ -154,17 +154,23 @@ p_X if available, else p_X = 1e-9).  Checked: p_X transfer against the held-out 
 ## 6. Phase flips, `elevator/repcode.py`, `elevator/phasemodel.py`
 
 * p_rep(d, p): the isolated repetition code with the elevator's inner round (PyMatching, equal
-  to ML for this code within statistics), sampled down to ~1e-9 per round (p_Z = 1e-3, d_Z = 9)
-  and up to d_Z = 69 at p_Z >= 1.25e-2, fitted with log p_rep = a0 + a1 log p + h (b0 + b1 log p
-  + b2 log^2 p), h = (d+1)/2; the largest-d point of every p is held out and predicted.
+  to ML for this code within statistics), sampled down to ~1e-9 per round (p_Z = 1e-3) and out to
+  d_Z = 69 at p_Z >= 1.25e-2.  At each sampled p, log p_rep is a straight line in h = (d+1)/2
+  through the large-d points (weighted least squares, covariance inflated by chi^2), interpolated
+  linearly in log p between sampled p (`RepModel`); the largest-d point of every p is held out and
+  predicted.
 * Elevator X memory (BP+LSD): p_ZL k = n a p_rep(d, p) + n_anc g s(d) p_rep(d, kappa p),
-  s(d) = min(1, (n+1)/d): the data blocks behave like isolated repetition codes (switching the
-  logical ancilla's and the logical CNOTs' noise off leaves c = 1.0-1.8), the moving ancilla like a
-  repetition code at kappa ~ 2 times the noise, active for the sweep fraction of its lifetime.
-  Held-out test: fit on p_Z >= 3e-3, predict p_Z < 3e-3.
+  s(d) = min(1, (n+1)/d): the data blocks behave like isolated repetition codes up to the factor a,
+  the moving ancilla like a repetition code at kappa ~ 2 times the noise, active for the sweep
+  fraction of its lifetime.  Held-out test: fit on p_Z >= 3e-3, predict p_Z < 3e-3.
+* Decoder-independent part of a (`scripts/op_noise_penalty.py`): a decoder told every other block's
+  and the ancilla's errors still faces an isolated repetition code with the gate noise of the
+  logical operations the block takes part in (three transversal CNOT layers per check, Z with
+  2p/3 each), measured relative to the plain repetition code (Stim + PyMatching) at p_Z where both
+  have many failures.
 * The phase-flip floor of a code is the smallest d_Z whose phase-flip rate alone is below the
-  target; an 'ideal decoder' bound (data blocks at the ML repetition-code rate, a = 1) is
-  reported next to it.  Flags cannot lower it.
+  target; the 'ideal decoder' bound (data blocks at that decoder-independent factor instead of a,
+  the ancilla term kept) is reported next to it.  Flags cannot lower it.
 
 ## 6b. Counting logical errors
 
