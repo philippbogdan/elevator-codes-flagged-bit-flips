@@ -9,8 +9,8 @@ Non-dominated in overhead, flag efficiency f, flag classes needed, timing window
 
 | overhead | code | d_Z | p_L | p_XL 95% upper | f | flags on | window (ticks) | false flags tolerated |
 |---|---|---|---|---|---|---|---|---|
-| 35.7 | Hamming [31,26,3] | 15 | 8.21e-13 | 3.5e-17 | 1.0 | all | exact | 0 |
-| 37.1 | Hamming [63,57,3] | 17 | 4.45e-13 | 4.8e-13 | 0.99 | all | exact | 0 | (transferred)
+| 32.6 | Hamming [63,57,3] | 15 | 9.07e-13 | 1.8e-13 | 0.995 | all | exact | 0 | (transferred)
+| 35.7 | Hamming [31,26,3] | 15 | 9.04e-13 | 9.2e-14 | 0.99 | all | exact | 0 |
 | 40.6 | Hamming [31,26,3] | 17 | 6.10e-13 | 6.3e-13 | 0.95 | all | exact | 0 | (transferred)
 | 40.6 | Hamming [31,26,3] | 17 | 2.35e-13 | 3.9e-13 | 0.99 | all | 64 | 0 | (transferred)
 | 48.0 | Hamming [15,11,3] | 17 | 6.96e-13 | 7.4e-13 | 0.8 | all | exact | 0 | (transferred)
@@ -27,27 +27,27 @@ For every simulated (or transferred) code and d_Z: the lowest p_L of any flag se
 
 | overhead | code | d_Z | lowest p_L | of which p_ZL | p_L without flags | f needed | flags on | coarsest window |
 |---|---|---|---|---|---|---|---|---|
-| 28.1 | Hamming [63,57,3] | 13 | 1.80e-11 | 1.78e-11 | 5.63e-11 | 0.9 | all | exact |
+| 28.1 | Hamming [63,57,3] | 13 | 1.79e-11 | 1.78e-11 | 5.63e-11 | 0.9 | all | exact |
 | 30.8 | Hamming [31,26,3] | 13 | 1.95e-11 | 1.95e-11 | 2.91e-11 | 0.0 | none | any (no flags) |
-| 32.6 | Hamming [63,57,3] | 15 | 1.07e-12 | 7.49e-13 | 5.18e-11 | 0.99 | all | exact |
+| 32.6 | Hamming [63,57,3] | 15 | 9.07e-13 | 7.49e-13 | 5.18e-11 | 0.99 | all | exact |
 | 35.7 | Hamming [31,26,3] | 15 | 8.21e-13 | 8.21e-13 | 1.35e-11 | 0.98 | all | exact |
 | 36.4 | Hamming [15,11,3] | 13 | 2.30e-11 | 2.30e-11 | - | 0.5 | all | exact |
-| 37.1 | Hamming [63,57,3] | 17 | 4.45e-13 | 3.15e-14 | 6.54e-11 | 0.99 | all | exact |
+| 37.1 | Hamming [63,57,3] | 17 | 2.34e-13 | 3.15e-14 | 6.54e-11 | 0.995 | all | exact |
 | 38.6 | ext. Hamming [16,11,4] | 13 | 2.45e-11 | 2.45e-11 | 2.67e-11 | 0.0 | none | any (no flags) |
 | 40.6 | Hamming [31,26,3] | 17 | 3.46e-14 | 3.46e-14 | 1.63e-11 | 1.0 | all | exact |
-| 41.5 | Hamming [63,57,3] | 19 | 5.18e-13 | 1.33e-15 | 8.14e-11 | 0.99 | all | exact |
+| 41.5 | Hamming [63,57,3] | 19 | 2.54e-13 | 1.33e-15 | 8.14e-11 | 0.995 | all | exact |
 | 42.2 | Hamming [15,11,3] | 15 | 9.70e-13 | 9.70e-13 | - | 0.8 | all | exact |
 | 44.4 | [15,9,3] | 13 | 2.82e-11 | 2.82e-11 | 3.05e-11 | 0.0 | none | any (no flags) |
 | 44.8 | ext. Hamming [16,11,4] | 15 | 1.03e-12 | 1.03e-12 | 3.99e-12 | 0.95 | all | exact |
 | 45.5 | Hamming [31,26,3] | 19 | 1.52e-15 | 1.46e-15 | 2.02e-11 | 1.0 | all | exact |
-| 46.0 | Hamming [63,57,3] | 21 | 6.30e-13 | 5.59e-17 | 9.92e-11 | 0.99 | all | exact |
+| 46.0 | Hamming [63,57,3] | 21 | 3.08e-13 | 5.59e-17 | 9.92e-11 | 0.995 | all | exact |
 | 48.0 | Hamming [15,11,3] | 17 | 4.09e-14 | 4.09e-14 | - | 0.995 | all | exact |
 | 50.5 | Hamming [31,26,3] | 21 | 1.50e-16 | 6.13e-17 | 2.47e-11 | 1.0 | all | exact |
-| 50.5 | Hamming [63,57,3] | 23 | 7.55e-13 | 2.35e-18 | 1.19e-10 | 0.99 | all | exact |
+| 50.5 | Hamming [63,57,3] | 23 | 3.69e-13 | 2.35e-18 | 1.19e-10 | 0.995 | all | exact |
 | 51.0 | ext. Hamming [16,11,4] | 17 | 4.34e-14 | 4.34e-14 | 3.83e-12 | 0.95 | all | exact |
 | 51.6 | [15,9,3] | 15 | 1.19e-12 | 1.19e-12 | 4.25e-12 | 0.8 | idle+gate | 64 |
 | 53.8 | Hamming [15,11,3] | 19 | 1.73e-15 | 1.72e-15 | - | 1.0 | all | exact |
-| 55.0 | Hamming [63,57,3] | 25 | 8.92e-13 | 9.92e-20 | 1.40e-10 | 0.99 | all | exact |
+| 55.0 | Hamming [63,57,3] | 25 | 4.36e-13 | 9.92e-20 | 1.40e-10 | 0.995 | all | exact |
 | 55.4 | Hamming [31,26,3] | 23 | 6.38e-17 | 2.58e-18 | 2.16e-11 | 1.0 | all | exact |
 | 57.2 | ext. Hamming [16,11,4] | 19 | 1.83e-15 | 1.83e-15 | 5.23e-12 | 0.99 | all | 64 |
 | 58.7 | [15,9,3] | 17 | 4.99e-14 | 4.99e-14 | 4.15e-12 | 0.98 | idle+gate | exact |

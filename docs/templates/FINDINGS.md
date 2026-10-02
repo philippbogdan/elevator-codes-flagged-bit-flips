@@ -285,11 +285,12 @@ this work's own.
     reading the [15,9,3] bit flips are ×{{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} higher
     without flags (d_Z = 17), the repetition code's phase flips ×4–30 (extra idle ticks,
     `literal_reading.md`) and the phase-flip floor moves to d_Z =
-    {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }}.  At d_Z = 17 the minimum overhead is then
-    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|none|w0|f0.0")) }} without flags and
-    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|all|w0|f0.99")) }} with flags on all
+    {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }} ([15,9,3]) and {{ N["literal"]["floor|[15,6,5]"]["d_literal"] }}
+    ([15,6,5]).  The minimum overhead is then
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead|none|w0|f0.0")) }} without flags and
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead|all|w0|f0.99")) }} with flags on all
     locations at f = 0.99 (idle-only, f = 0.99:
-    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|idle|w0|f0.99")) }}).
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead|idle|w0|f0.99")) }}).
 
 13e. **The counting convention does not change the conclusion.**  Counting each logical qubit's
     errors separately multiplies the phase-flip rates by {{ f1(N["convention"]["mX"]["15_9_3"]) }}

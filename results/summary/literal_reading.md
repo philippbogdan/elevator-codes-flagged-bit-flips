@@ -13,9 +13,10 @@ Isolated repetition code with the extra idle ticks of the literal reading (2.73 
 | 2.0e-03 | 7 | 6.30e-06 | 9.61e-07 | 6.55 |
 | 2.0e-03 | 9 | 3.65e-07 | 4.34e-08 | 8.41 |
 | 2.0e-03 | 11 | 3.59e-08 | 1.96e-09 | 18.34 |
-| 2.0e-03 | 13 | 4.89e-09 | 8.85e-11 | 55.32 |
+| 2.0e-03 | 13 | 3.91e-09 | 8.85e-11 | 44.17 |
+| 2.0e-03 | 15 | 1.60e-10 | 3.99e-12 | 40.12 |
 | 3.0e-03 | 5 | 2.50e-04 | 4.72e-05 | 5.29 |
-| 3.0e-03 | 17 | 8.59e-10 | 1.19e-11 | 71.92 |
+| 3.0e-03 | 17 | 8.57e-10 | 1.19e-11 | 71.71 |
 | 5.0e-03 | 5 | 1.12e-03 | 2.30e-04 | 4.87 |
 | 5.0e-03 | 7 | 2.18e-04 | 3.11e-05 | 7.02 |
 | 5.0e-03 | 9 | 3.90e-05 | 4.19e-06 | 9.30 |
@@ -29,15 +30,15 @@ Phase-flip floor at p_Z = 1e-3, 1e-12 under the literal reading (two-component m
 | code | d_Z noop | d_Z literal | overhead literal |
 |---|---|---|---|
 | [15,9,3] | 15 | 17 | 58.7 |
-| [15,6,5] | 15 | 19 | 98.7 |
+| [15,6,5] | 15 | 17 | 88.0 |
 | [15,6,5] 2 anc | 15 | 19 | 104.8 |
 
-Overhead at p_Z = 1e-3, eta = 1e6, 1e-12 under the literal reading (d_Z = 17 runs):
+Overhead at p_Z = 1e-3, eta = 1e6, 1e-12 under the literal reading (runs at d_Z = 17, transferred to other d_Z with the literal reading's fault sums; p_XL shown at d_Z = 17):
 
 | flags | [15,9,3] p_XL | [15,6,5] p_XL | minimum overhead |
 |---|---|---|---|
-| none|w0|f0.0 | 1.12e-11 | 1.67e-15 | not reached at d_Z = 17 |
-| idle|w0|f0.99 | 1.62e-12 | 9.58e-17 | not reached at d_Z = 17 |
-| all|w0|f0.9 | 1.12e-11 | 1.67e-15 | not reached at d_Z = 17 |
-| all|w0|f0.99 | 1.12e-11 | 1.67e-15 | not reached at d_Z = 17 |
-| all|w1024|f0.99 | 3.92e-13 | 1.67e-15 | not reached at d_Z = 17 |
+| none|w0|f0.0 | 1.12e-11 | 1.67e-15 | 88.0 ([15,6,5], d_Z = 17) |
+| idle|w0|f0.99 | 1.62e-12 | 9.58e-17 | 88.0 ([15,6,5], d_Z = 17) |
+| all|w0|f0.9 | 2.29e-12 | 1.49e-16 | 88.0 ([15,6,5], d_Z = 17) |
+| all|w0|f0.99 | 9.90e-14 | 9.58e-17 | 58.7 ([15,9,3], d_Z = 17) |
+| all|w1024|f0.99 | 3.92e-13 | 1.67e-15 | 58.7 ([15,9,3], d_Z = 17) |

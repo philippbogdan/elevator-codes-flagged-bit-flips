@@ -13,7 +13,7 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 | all | exact | 0.99 | 0 | erasure | 2.03e-14 [1.1e-14, 3.8e-14] | 2.06e-22 [9.5e-23, 2.1e-14] | 7.21e-21 [1.3e-21, 1.4e-14] | 51.6 ([15,9,3], d=15) |
 | idle | exact | 0.9 | 0 | erasure | 1.05e-12 [9.7e-13, 1.2e-12] | 3.99e-17 [1.4e-17, 4.4e-14] | - | 77.3 ([15,6,5], d=15) |
 | idle+gate | exact | 0.9 | 0 | erasure | 1.68e-13 [1.5e-13, 1.8e-13] | 3.88e-18 [1.1e-18, 1.4e-14] | 7.87e-19 [1.6e-19, 9.0e-15] (transferred) | 51.6 ([15,9,3], d=15) |
-| all | exact | 0.9 | 0 | erasure | 1.61e-13 [1.5e-13, 1.8e-13] | 5.42e-18 [1.9e-18, 1.3e-14] | 7.42e-19 [1.6e-19, 8.5e-15] (transferred) | 51.6 ([15,9,3], d=15) |
+| all | exact | 0.9 | 0 | erasure | 1.61e-13 [1.5e-13, 1.8e-13] | 5.42e-18 [1.9e-18, 1.3e-14] | 1.23e-19 [7.1e-20, 8.6e-15] | 51.6 ([15,9,3], d=15) |
 
 ### timing window (ticks; one inner round = 4, one outer round ~600-1100)
 
@@ -36,7 +36,7 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 | flags on | window | f | false flags | alternative | [15,9,3] | [15,6,5] | [15,6,5] 2 anc | minimum overhead |
 |---|---|---|---|---|---|---|---|---|
 | idle | exact | 0.99 | 0 | erasure | 8.69e-13 [8.0e-13, 9.6e-13] | 5.57e-17 [2.3e-17, 4.1e-14] | 4.88e-18 [2.2e-18, 2.7e-14] (transferred) | 51.6 ([15,9,3], d=15) |
-| idle | exact | 0.99 | 0 | herald | - | 3.48e-17 [2.2e-17, 4.1e-14] | - | 77.3 ([15,6,5], d=15) |
+| idle | exact | 0.99 | 0 | herald | - | 3.48e-17 [2.2e-17, 4.1e-14] | 2.44e-18 [8.3e-19, 2.8e-14] | 77.3 ([15,6,5], d=15) |
 | all | exact | 0.99 | 0 | erasure | 2.03e-14 [1.1e-14, 3.8e-14] | 2.06e-22 [9.5e-23, 2.1e-14] | 7.21e-21 [1.3e-21, 1.4e-14] | 51.6 ([15,9,3], d=15) |
 | all | exact | 0.99 | 0 | herald | - | - | 6.17e-23 [2.8e-23, 6.9e-15] | 82.2 ([15,6,5] 2 anc, d=15) |
 | all | 64 | 0.99 | 0 | erasure | 3.52e-14 [1.6e-14, 8.4e-14] | 3.84e-20 [1.1e-20, 8.5e-14] | 1.44e-20 [4.0e-21, 8.9e-14] | 51.6 ([15,9,3], d=15) |
@@ -59,9 +59,9 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 
 | flags on | window | f | false flags | alternative | [15,9,3] | [15,6,5] | [15,6,5] 2 anc | minimum overhead |
 |---|---|---|---|---|---|---|---|---|
-| idle | 4 | 0.8 | 1e-09 | erasure | - | - | - | - |
-| idle | 4 | 0.8 | 1e-07 | erasure | - | - | - | - |
-| idle | 4 | 0.8 | 1e-06 | erasure | - | - | - | - |
+| idle | 4 | 0.8 | 1e-09 | erasure | 1.24e-12 [1.1e-12, 1.4e-12] | - | - | not reached |
+| idle | 4 | 0.8 | 1e-07 | erasure | 1.48e-12 [1.4e-12, 2.2e-12] | - | - | not reached |
+| idle | 4 | 0.8 | 1e-06 | erasure | 1.71e-12 [1.1e-12, 4.2e-11] | - | - | not reached |
 | all | 4 | 0.8 | 1e-09 | erasure | - | - | - | - |
 | all | 4 | 0.8 | 1e-07 | erasure | - | - | - | - |
 | all | 4 | 0.8 | 1e-06 | erasure | - | - | - | - |

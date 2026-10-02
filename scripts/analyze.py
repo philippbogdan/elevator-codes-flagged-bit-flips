@@ -281,11 +281,11 @@ def class_sums_table():
     return _CS["t"]
 
 
-def class_sums_for(code, n_anc, d, n_outer=5):
+def class_sums_for(code, n_anc, d, n_outer=5, literal=False):
     """Exact per-class fault sums at d_Z; beyond the computed distances (d_Z >= 17) from the exact
     quadratic in d_Z through three computed distances (checked to 1e-9 at d_Z = 37 ... 61)."""
     t = class_sums_table()
-    sfx = "" if n_outer == 5 else f":o{n_outer}"
+    sfx = ("" if n_outer == 5 else f":o{n_outer}") + (":lit" if literal else "")
     k = f"{code}:a{n_anc}:d{d}{sfx}"
     if k in t:
         return t[k]
@@ -309,7 +309,8 @@ def transfer_pxl(row, d_target, p_x=None):
     Returns (central, lo, hi)."""
     from elevator.decode import wilson
     from elevator.strata import pois
-    sums = class_sums_for(row["code"], row["n_anc"], d_target, row.get("n_outer", 5))
+    sums = class_sums_for(row["code"], row["n_anc"], d_target, row.get("n_outer", 5),
+                          literal=(row.get("idle") == "edge,cnot,op"))
     if sums is None:
         return None
     p_x = row["p_x"] if p_x is None else p_x
@@ -843,6 +844,21 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
     open(os.path.join(OUT, "assumptions.md"), "w").write("\n".join(lines) + "\n")
 
 
+_RANK = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
+
+
+def emulable(a, b):
+    """Can flag setting b = (classes, window, f) emulate setting a?  (Drop flags at random, ignore a
+    class, coarsen aligned windows; a flag-free setting is emulated by everything.)"""
+    if a[2] == 0:
+        return True
+    if b[2] == 0:
+        return False
+    wa, wb = a[1], b[1]
+    return (_RANK[a[0]] <= _RANK[b[0]] and a[2] <= b[2]
+            and (wa == wb or wb == 0 or (wa > 0 and wa % wb == 0)))
+
+
 HEAD_SETTINGS = [("idle", 0, 0.9), ("idle", 0, 0.99), ("idle", 0, 1.0), ("idle+gate", 0, 0.99), ("all", 0, 0.5),
                  ("all", 0, 0.8), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 0, 1.0), ("all", 1, 0.99), ("all", 64, 0.99),
                  ("all", 1024, 0.99), ("all", 4096, 0.99), ("all", 4096, 1.0), ("all", 4096, 0.9), ("idle", 64, 0.99),
@@ -1182,31 +1198,32 @@ def literal_reading():
         lines.append(f"| {CODE_LABEL[code]} | {dn} | {dl} | {overhead(code[0], code[1], dl):.1f} |" if dl else f"| {CODE_LABEL[code]} | {dn} | - | - |")
     # overhead under the literal reading at d_Z = 17 (the literal flag runs; no transfer, since the
     # literal reading has its own fault sums): bit flips from flag_literal, phase flips as above
-    lrows = [r for r in flag_rows(("flag_literal",), transfers=False) if r["idle"] == "edge,cnot,op" and r["p_x"] == 1e-9]
-    lines += ["\nOverhead at p_Z = 1e-3, eta = 1e6, 1e-12 under the literal reading (d_Z = 17 runs):\n",
+    lrows = [r for r in flag_rows(("flag_literal",)) if r["idle"] == "edge,cnot,op" and r["p_x"] == 1e-9]
+    lines += ["\nOverhead at p_Z = 1e-3, eta = 1e6, 1e-12 under the literal reading (runs at d_Z = 17, transferred "
+              "to other d_Z with the literal reading's fault sums; p_XL shown at d_Z = 17):\n",
               "| flags | [15,9,3] p_XL | [15,6,5] p_XL | minimum overhead |", "|---|---|---|---|"]
     for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 1024, 0.99)]:
         cand = {}
-        for r in lrows:
-            if r["f"] == f and (f == 0 or (r["classes"] == cls and r["window"] == w)) and r["d"] == 17:
-                cand[(r["code"], r["n_anc"])] = r
-        if f > 0:                       # flags can be ignored: flag-free rate as fallback
-            for r in lrows:
-                if r["f"] == 0 and r["d"] == 17:
-                    cand.setdefault((r["code"], r["n_anc"]), r)
+        for r in lrows:                 # every run whose setting this one can emulate (lowest p_XL)
+            st = (r["classes"], r["window"], r["f"]) if r["f"] > 0 else ("none", 0, 0.0)
+            if emulable(st, (cls, w, f)):
+                k_ = (r["code"], r["n_anc"], r["d"])
+                if k_ not in cand or r["pL"] < cand[k_]["pL"]:
+                    cand[k_] = r
         best = None
-        for code, r in cand.items():
-            tot = r["pL"] + pzl_lit(code[0], code[1], 17, 1e-3)
+        for (c0, c1, d), r in cand.items():
+            tot = r["pL"] + pzl_lit(c0, c1, d, 1e-3)
             if tot <= 1e-12:
-                oh = overhead(code[0], code[1], 17)
+                oh = overhead(c0, c1, d)
                 if best is None or oh < best[0]:
-                    best = (oh, CODE_LABEL[code])
+                    best = (oh, f"{CODE_LABEL[(c0, c1)]}, d_Z = {d}")
+        cand = {k_[:2]: v for k_, v in cand.items() if k_[2] == 17}
         key = f"{cls}|w{w}|f{f}"
-        out[f"overhead17|{key}"] = dict(overhead=best[0], code=best[1]) if best else None
+        out[f"overhead|{key}"] = dict(overhead=best[0], code=best[1]) if best else None
         p93 = cand.get(("15_9_3", 1))
         p65 = cand.get(("15_6_5", 1))
         lines.append(f"| {key} | {p93['pL']:.2e} | " if p93 else f"| {key} | - | ")
-        lines[-1] += (f"{p65['pL']:.2e} | " if p65 else "- | ") + (f"{best[0]:.1f} ({best[1]}) |" if best else "not reached at d_Z = 17 |")
+        lines[-1] += (f"{p65['pL']:.2e} | " if p65 else "- | ") + (f"{best[0]:.1f} ({best[1]}) |" if best else "not reached |")
     NUMBERS["literal"] = out
     open(os.path.join(OUT, "literal_reading.md"), "w").write("\n".join(lines) + "\n")
 
