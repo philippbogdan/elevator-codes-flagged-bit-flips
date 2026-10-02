@@ -139,11 +139,31 @@ class OuterCode:
             words.append(c)
         return np.array(words, dtype=np.uint8)
 
+    def low_weight_codewords(self, wmax: int) -> dict[int, list]:
+        """All codewords of weight <= wmax, found as sets of dependent columns of H."""
+        cols = [int("".join(map(str, self.H[:, j][::-1])), 2) for j in range(self.n)]
+        out: dict[int, list] = {}
+        for w in range(1, wmax + 1):
+            for S in itertools.combinations(range(self.n), w):
+                acc = 0
+                for j in S:
+                    acc ^= cols[j]
+                if acc == 0:
+                    out.setdefault(w, []).append(S)
+        return out
+
     def min_distance(self) -> int:
-        w = self.codewords().sum(axis=1)
-        return int(w[w > 0].min())
+        if self.k <= 16:
+            w = self.codewords().sum(axis=1)
+            return int(w[w > 0].min())
+        lw = self.low_weight_codewords(6)
+        if not lw:
+            raise ValueError("distance > 6 with k > 16: not supported")
+        return min(lw)
 
     def weight_distribution(self) -> dict[int, int]:
+        if self.k > 16:
+            return {w: len(v) for w, v in self.low_weight_codewords(min(self.d + 1, 6)).items()}
         w = self.codewords().sum(axis=1)
         out: dict[int, int] = {}
         for x in w:
@@ -155,11 +175,34 @@ class OuterCode:
         return f"[{self.n},{self.k},{self.d}]"
 
 
+def hamming_H(r: int) -> np.ndarray:
+    """Parity-check matrix of the [2^r - 1, 2^r - 1 - r, 3] Hamming code (columns = binary 1..n)."""
+    n = 2 ** r - 1
+    return np.array([[(c >> i) & 1 for c in range(1, n + 1)] for i in range(r)], dtype=np.uint8)
+
+
+def extended_hamming_H(r: int) -> np.ndarray:
+    """[2^r, 2^r - 1 - r, 4] extended Hamming code."""
+    H = hamming_H(r)
+    n = H.shape[1]
+    H2 = np.zeros((r + 1, n + 1), dtype=np.uint8)
+    H2[:r, :n] = H
+    H2[r, :] = 1
+    return H2
+
+
 def load_code(name: str) -> OuterCode:
-    """name in {'15_9_3', '15_6_5', '16_3_8'} (also accepts '[15,9,3]' style)."""
+    """name in {'15_9_3', '15_6_5', '16_3_8', 'ham7', 'ham15', 'ham31', 'xham16'}
+    (also accepts '[15,9,3]' style).  Hamming codes are alternatives tried for the frontier."""
     key = name.strip("[]").replace(",", "_")
     if key == "16_3_8":
         return OuterCode("16_3_8", _parse(H_16_3_8))
+    if key.startswith("ham"):
+        r = {"ham7": 3, "ham15": 4, "ham31": 5, "ham63": 6}[key]
+        return OuterCode(key, hamming_H(r))
+    if key.startswith("xham"):
+        r = {"xham8": 3, "xham16": 4, "xham32": 5}[key]
+        return OuterCode(key, extended_hamming_H(r))
     path = os.path.join(ROOT, "data", "outer-codes", f"H_{key}.txt")
     with open(path) as fh:
         return OuterCode(key, _parse(fh.read()))
