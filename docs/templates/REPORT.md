@@ -14,7 +14,8 @@ thin XZZX 145; at p_Z = 1e-2, η = 1e6 the fits bottom out near 2e-9 ([15,9,3]) 
 | Z memory [15,6,5], one ancilla, 16 sampled points | {{ int(N["repro"]["Z:15_6_5:a1:full/noop"]["within"]) }}/16 within 2× ({{ f2(N["repro"]["Z:15_6_5:a1:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_6_5:a1:full/noop"]["ratio_max"]) }}×) | met |
 | Z memory [15,6,5], two ancillas | {{ int(N["repro"]["Z:15_6_5:a2:full/noop"]["within"]) }}/16 within 2× ({{ f2(N["repro"]["Z:15_6_5:a2:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_6_5:a2:full/noop"]["ratio_max"]) }}×) | met at 14 of 16 points |
 | Z memory [15,9,3] | {{ int(N["repro"]["Z:15_9_3:a1:full/noop"]["within"]) }}/16 within 2× ({{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×) | **not met at low p_X** — explained below |
-| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}× | **just outside 2×** — explained below |
+| X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}× counting any of the k logical qubits; {{ f2(N["convention"]["x_repro_marginal"][0]) }}–{{ f2(N["convention"]["x_repro_marginal"][1]) }}× counting each logical qubit's errors (measured multiplicity {{ f1(N["convention"]["mX"]["15_9_3"]) }}) | met in the per-qubit count, which the paper's X fit evidently uses |
+| Z memory [16,3,8] (needed only below η ≈ 7e4) | {{ int(N["repro"]["Z:16_3_8:a1:full/noop"]["within"]) }}/{{ int(N["repro"]["Z:16_3_8:a1:full/noop"]["n"]) }} within 2× ({{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_max"]) }}×) | **not met** — explained below |
 | repetition code (paper's fit, App. B) | 0.7–1.5× for d_Z ≤ 13 over p_Z = 1e-3 … 1.3e-2 (the fit was sampled to d_Z = 11) | met |
 
 Disagreements explained by evidence, not tuned away (FINDINGS §1):
@@ -22,12 +23,20 @@ Disagreements explained by evidence, not tuned away (FINDINGS §1):
   block) is 2–9× above every published fit; without idle noise on blocks waiting during
   logical-operation ticks ("noop") [15,6,5] and the repetition code agree.  Every result is
   computed with the noop reading; the literal reading is kept as a sensitivity case.
-* [15,9,3] Z memory 1.4–3.8× above its fit, the X memory ≈ 0.4–0.5×: not the decoder (exact ML;
-  BP+OSD-CS7, BP+OSD-0, BP+LSD equal on the same X-memory shots), not the check order, the number
-  of outer rounds or the schedule variant.  The published fits lie between readings of the
-  unstated idle-noise placement for both (cnot-only idle noise: [15,9,3] at 0.55–0.85×; literal:
-  X memory at 2.3–2.5×).  The exact circuit is not recoverable from the text.  Impact: this work's
-  [15,9,3] bit-flip baseline is pessimistic, so flag gains measured against it are not inflated.
+* The X memory: a counting convention.  A failure flips {{ f1(N["convention"]["mX"]["15_9_3"]) }} of the
+  9 logical qubits on average; counting each logical qubit's errors separately puts the same shots
+  at {{ f2(N["convention"]["x_ratio_sum"][0]) }}–{{ f2(N["convention"]["x_ratio_sum"][1]) }}× the fit.  The
+  paper's Z-memory fits instead match counting a failure once.  Every rate of this work counts a
+  failure once (any of the k logical qubits) and divides by k; the per-qubit count changes no
+  conclusion (FINDINGS 13e).  Decoders are ruled out (BP+OSD-CS7, BP+OSD-0, BP+LSD fail equally
+  often on the same shots).
+* [15,9,3] and [16,3,8] bit flips above their fits: not the decoder (exact ML), not the check order
+  or the number of outer rounds.  The unstated ancilla path and idle-noise placement span the fits
+  (a shortest-path ancilla halves the [15,9,3] excess but pushes [15,6,5] to ≈ 0.4×; idle noise
+  only during CNOT layers puts [15,9,3] at 0.55–0.85×); no single reading matches all three
+  Z-memory fits, and the paper's circuits are not public.  Impact: this work's [15,9,3] baseline is
+  pessimistic, so flag gains measured against it are not inflated; [16,3,8] enters only Fig. 1
+  below η ≈ 7e4.
 
 ## 2. Known answers
 
@@ -99,9 +108,10 @@ than the memory), then the flag efficiency.
 
 ## 7. What failed, what remains open
 
-* The fit-level reproduction of [15,9,3] (Z memory at p_X ≤ 4.5e-6) and of the X memory (≈ 0.45×)
-  — bracketed by readings of the text, not resolved; the paper's circuits are not public.  The
-  published overheads themselves are reproduced.
+* The fit-level reproduction of the [15,9,3] and [16,3,8] Z memories at low p_X — bracketed by
+  readings of the text (ancilla path, idle-noise placement), not resolved; the paper's circuits are
+  not public.  The published overheads themselves are reproduced; the X-memory gap is explained
+  (counting convention).
 * Whether flags exist during gates, preparation and measurement is a physics question this work
   cannot settle; it decides between the idle-only and all-location results above
   (arXiv:2607.01375 establishes idle flags only).

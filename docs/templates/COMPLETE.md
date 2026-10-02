@@ -12,7 +12,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 | requirement | status | evidence |
 |---|---|---|
 | 1. Simulation and decoder (both codes, X and Z memory, flag efficiency, false flags, timing; flags used as erasures; every assumption stated and its effect measured) | holds | §1 below; `docs/methods.md`, `results/summary/assumptions.md` |
-| 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds for the published overheads and for [15,6,5]; two fit-level disagreements ([15,9,3] Z memory ≤ {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×, X memory ≈ {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_min"]) }}×) explained by evidence | §2 |
+| 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds: the published overheads (88, the [15,9,3] threshold, the p_Z = 1e-2 floor of [15,6,5]) and the [15,6,5] and X-memory fits (the latter in the per-qubit count it uses); [15,9,3] (≤ {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×) and [16,3,8] bit-flip fits not matched, explained by evidence (unstated ancilla path and idle-noise placement span them) | §2 |
 | 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors | holds | §3 |
 | 4. FINDINGS.md, REPORT.md, one command (`./reproduce.sh`) | holds | §4 |
 | Fidelity, known answers, statistics, overhead, frontier, limits (GOAL.md "Measurable") | hold | §5 |
@@ -57,7 +57,10 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ int(N["repro"]["Z:15_6_5:a2:full/noop"]["within"]) }}/16 ([15,6,5], two ancillas) and
   {{ int(N["repro"]["Z:15_9_3:a1:full/noop"]["within"]) }}/16 ([15,9,3], ratios
   {{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }});
-  X memory ratios {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }};
+  X memory ratios {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}
+  counting a failure once, {{ f2(N["convention"]["x_repro_marginal"][0]) }}–{{ f2(N["convention"]["x_repro_marginal"][1]) }}
+  counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
+  {{ f1(N["convention"]["mX"]["15_9_3"]) }} measured on the same shots, `counting_convention.json`);
   the repetition code within 0.7–1.5× of the paper's repetition-code fit for d_Z ≤ 13.
 * **Figures 1 and 2** from the paper's fits: identical (steps
   {{ " → ".join(f1(s["overhead"]) for s in N["fig1_elevator_steps"]) }}; p_Z = 1e-2 floors
@@ -71,12 +74,13 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas, d_Z =
   {{ N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["d"] }}; published 2.08e-11 at 49) and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]; published 1.94e-9).
-* **Disagreements, explained by evidence** (FINDINGS §1 item 4): neither the decoder (exact ML;
-  BP+OSD-CS7, BP+OSD-0 and BP+LSD equal on the same X-memory shots), nor check order, number of
-  rounds or schedule variant; both residuals lie inside the range spanned by the readings of the
-  unstated idle-noise placement (published fits bracketed for every code and memory).  They do not
-  reach the conclusions: the flag gain is measured against this work's own flag-free simulation,
-  which reproduces the published operating point.
+* **Disagreements, explained by evidence** (FINDINGS §1 item 4): the X memory by the counting
+  convention (measured); the [15,9,3] and [16,3,8] bit-flip excesses are not the decoder (exact
+  ML), the check order or the number of rounds, and lie inside the range spanned by readings of the
+  unstated ancilla path and idle-noise placement (`schedule_comparison.md`, `z_variants_v1.json`).
+  They do not reach the conclusions: the flag gain is measured against this work's own flag-free
+  simulation, which reproduces the published operating point, and holds in either counting
+  convention (FINDINGS 13e).
 
 ## 3. Deliverable 3 — the overhead, measured
 

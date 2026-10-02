@@ -88,31 +88,46 @@ this work's own.
    fit within 0.7–1.5× for d_Z ≤ 13 (`phase_model.md`).  Evidence: `reproduction.md`,
    `results/variants/z_variants_v1.json`.
 
-4. **Two residual disagreements, bracketed by the unstated details.**  (i) [15,9,3] bit flips are
-   {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×
-   above the published fit ({{ int(N["repro"]["Z:15_9_3:a1:full/noop"]["within"]) }}/16 points within
-   2×, the excess growing towards p_X = 1e-6); (ii) the X memory is
-   {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×
-   the published fit.  Neither is the decoder: exact maximum likelihood still leaves [15,9,3] at
-   {{ f1(N["checks"]["sensitivity_summary"]["mle_min"]) }}–{{ f1(N["checks"]["sensitivity_summary"]["mle_max"]) }}×
-   (`sensitivity_15_9_3.json`), and on the same X-memory shots BP+OSD-CS7, BP+OSD-0 and BP+LSD fail
-   equally often ({{ ", ".join(f"{k}: {v['fails']}" for k, v in N["checks"]["decoder_variants_flagfree"][0]["decoders"].items()) }}
-   of {{ N["checks"]["decoder_variants_flagfree"][0]["shots"] }} shots at d_Z = 9, p_Z = 1e-2;
-   `decoder_variants_flagfree.json`).  Neither is the check order
-   (≤ {{ pct(N["checks"]["sensitivity_summary"]["order_dev"]) }}), the number of outer rounds
-   (≤ {{ pct(N["checks"]["sensitivity_summary"]["rounds_dev"]) }}) or the schedule ('compress', 'span').
-   Both are bracketed by the unstated idle-noise placement: idle noise only during CNOT layers puts
-   [15,9,3] at {{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][0]) }}–{{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][1]) }}×
-   of its fit and the literal reading at {{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][0]) }}–{{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][1]) }}×
-   (`z_variants_v1.json`); the X memory lies between the noop
-   ({{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×)
-   and literal ({{ f1(N["repro"]["X:15_9_3:a1:full/all bplsd"]["ratio_min"]) }}–{{ f1(N["repro"]["X:15_9_3:a1:full/all bplsd"]["ratio_max"]) }}×)
-   readings.  The published fits thus sit
-   inside the range spanned by readings of the text; the paper's exact circuit is not recoverable
-   from it.  Consequence for this work: its [15,9,3] bit-flip baseline is pessimistic by up to
-   3.8× at p_X ~ 1e-6 (but within {{ f2(N["headline"]["sim_15_9_3_d15"]["none|w0|f0.0"]["pXL"] / (15 ** 2.33 * (37.18e-9) ** 1.94)) }}× of the fit
-   at p_X = 1e-9), so flag gains measured against it are not inflated; every flagged result is
-   compared with this work's own flag-free baseline as well as the published one.
+4. **The X-memory gap is a counting convention; the [15,9,3] bit-flip excess is bracketed by the
+   unstated circuit details.**
+   * *X memory.*  Counting a failure when any of the k logical observables is wrong and dividing by
+     k (this work's convention throughout) puts the X memory at
+     {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×
+     the published fit, at every d_Z and p_Z alike.  A phase flip of a block flips every logical X̄
+     that contains it: a failure hits {{ f1(N["convention"]["mX"]["15_9_3"]) }} logical qubits on average
+     ([15,6,5]: {{ f1(N["convention"]["mX"]["15_6_5"]) }}).  Counting each logical qubit's errors
+     separately (the per-qubit marginal) the same shots give
+     {{ f2(N["convention"]["x_ratio_sum"][0]) }}–{{ f2(N["convention"]["x_ratio_sum"][1]) }}× the fit, and all
+     X-memory points {{ f2(N["convention"]["x_repro_marginal"][0]) }}–{{ f2(N["convention"]["x_repro_marginal"][1]) }}×
+     (`counting_convention.json`).  The paper's Z-memory fits, by contrast, match the
+     any-of-k convention ([15,6,5]: {{ f2([r["ratio_any"] for r in N["convention"]["rows"] if r["memory"] == "Z" and r["code"] == "15_6_5" and r["n_anc"] == 1][0]) }}×
+     any-of-k, {{ f2([r["ratio_sum"] for r in N["convention"]["rows"] if r["memory"] == "Z" and r["code"] == "15_6_5" and r["n_anc"] == 1][0]) }}× per-qubit).
+     Decoders are ruled out on the same shots: BP+OSD-CS7, BP+OSD-0 and BP+LSD fail equally often
+     ({{ ", ".join(f"{k}: {v['fails']}" for k, v in N["checks"]["decoder_variants_flagfree"][0]["decoders"].items()) }}
+     of {{ N["checks"]["decoder_variants_flagfree"][0]["shots"] }} shots, `decoder_variants_flagfree.json`).
+     Every rate below uses the any-of-k convention; in the per-qubit convention all rates rise by
+     these multiplicities and the conclusions of §4 hold (item 13e).
+   * *[15,9,3] bit flips* are {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×
+     above the published fit ({{ int(N["repro"]["Z:15_9_3:a1:full/noop"]["within"]) }}/16 points within
+     2×, the excess growing towards p_X = 1e-6).  Not the decoder: exact maximum likelihood leaves
+     {{ f1(N["checks"]["sensitivity_summary"]["mle_min"]) }}–{{ f1(N["checks"]["sensitivity_summary"]["mle_max"]) }}×
+     (`sensitivity_15_9_3.json`); not the check order (≤ {{ pct(N["checks"]["sensitivity_summary"]["order_dev"]) }})
+     or the number of outer rounds (≤ {{ pct(N["checks"]["sensitivity_summary"]["rounds_dev"]) }}).  The
+     ancilla path matters at d_Z < n + 1: a shortest-path ancilla instead of a full sweep brings
+     [15,9,3] to {{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["max"]) }}×
+     but [15,6,5] to {{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["max"]) }}×
+     (`schedule_comparison.md`), and the idle-noise placement brackets it (idle noise only during
+     CNOT layers: {{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][0]) }}–{{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][1]) }}×;
+     literal: {{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][0]) }}–{{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][1]) }}×).
+     No single reading of the text matches all three published Z-memory fits (the paper's
+     [16,3,8] fit, needed only below η ≈ 7e4, is
+     {{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_max"]) }}× below
+     this work's full-sweep rates, {{ f1(N["schedule_comparison"]["16_3_8|a1|local"]["min"]) }}–{{ f1(N["schedule_comparison"]["16_3_8|a1|local"]["max"]) }}×
+     with the shortest path).  Consequence: this work's [15,9,3] baseline is pessimistic, by up to
+     {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}× at p_X ~ 1e-6 (within
+     {{ f2(N["headline"]["sim_15_9_3_d15"]["none|w0|f0.0"]["pXL"] / (15 ** 2.33 * (37.18e-9) ** 1.94)) }}× of the
+     fit at p_X = 1e-9), so flag gains measured against it are not inflated, and every flagged
+     result is compared with this work's own flag-free baseline as well as the published one.
 
 ## 2. The decoder is optimal for its flag model; the estimator predicts held-out samples
 
@@ -182,7 +197,8 @@ this work's own.
     {{ f1(pfloor("15_6_5|a1", 1e-3, 1e-12, "oh_model")) }} for [15,6,5],
     {{ f1(pfloor("15_6_5|a2", 1e-3, 1e-12, "oh_model")) }} with two ancillas), the same with an
     ideal decoder for the data blocks; the paper's extrapolated fit puts it at d_Z = 17.  The
-    difference is an extrapolation question below sampling reach: the paper's elevator fit decays by
+    difference is a factor ≈ {{ f1(N["convention"]["mX"]["15_9_3"]) }} of counting convention (item 4)
+    and an extrapolation question below sampling reach: the paper's elevator fit decays by
     0.042 per step of d_Z at p_Z = 1e-3, while the repetition code sampled at p_Z = 1e-3 decays by
     {{ f2([t["step_ratio"] for t in N["phase_rep_fit"]["table"] if t["p"] == 0.001][0]) }} per step (and the
     paper's own repetition-code fit by 0.026).  Evidence: `phase_floor.md`, `phase_model.md`.
@@ -250,6 +266,18 @@ this work's own.
     `literal_reading.md`) and the phase-flip floor moves to d_Z =
     {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }}: flag-free {{ f1(N["literal"]["floor|[15,6,5]"]["overhead_literal"]) }},
     flagged {{ f1(N["literal"]["floor|[15,9,3]"]["overhead_literal"]) }} — the same one-third saving.
+
+13e. **The counting convention does not change the conclusion.**  Counting each logical qubit's
+    errors separately multiplies the phase-flip rates by {{ f1(N["convention"]["mX"]["15_9_3"]) }}
+    ([15,9,3]) and {{ f1(N["convention"]["mX"]["15_6_5"]) }} ([15,6,5]) and the bit-flip rates by
+    {{ f1(N["convention"]["mZ"]["15_9_3|a1"]) }} and {{ f1(N["convention"]["mZ"]["15_6_5|a1"]) }}
+    (measured, item 4); with every rate counted that way the minimum overhead (this-work pZL) is
+    {{ f1(N["convention"]["headline_marginal"]["none|w0|f0.0"]["overhead"]) }} without flags,
+    {{ f1(N["convention"]["headline_marginal"]["idle|w0|f1.0"]["overhead"]) }} with idle-only flags at f = 1,
+    {{ f1(N["convention"]["headline_marginal"]["all|w0|f0.8"]["overhead"]) }} at f = 0.8 and
+    {{ f1(N["convention"]["headline_marginal"]["all|w0|f0.9"]["overhead"]) }} at f = 0.9 on all locations
+    ({{ f1(N["convention"]["headline_marginal"]["all|w4096|f0.99"]["overhead"]) }} with 4096-tick windows at
+    f = 0.99): the efficiency needed rises from ≈ 0.6 to ≈ 0.85, the saving is the same.
 
 ## 5. Bias from 4e4 to 1e7
 
