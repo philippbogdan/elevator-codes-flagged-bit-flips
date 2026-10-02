@@ -622,14 +622,16 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
                     lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {dd} | "
                                  f"{r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {t[0]:.2e} [{t[1]:.2e}, {t[2]:.2e}] {'' if ok else '(outside)'} |")
     NUMBERS[f"pz1e2_transfer_checks"] = dict(agree=int(sum(checks)), total=len(checks))
-    lines += ["\n### Floor per code and flag setting\n",
-              "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there |", "|---|---|---|---|---|---|---|"]
+    lines += ["\n### Floor per code and flag setting (d_Z <= 101) and overhead to reach given rates\n",
+              "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there | overhead for 1e-9 | 1e-10 | 1e-11 | 1e-12 |",
+              "|---|---|---|---|---|---|---|---|---|---|---|"]
     out = {}
     for key, byd in sorted(refs.items()):
         if key[:2] not in codes:
             continue
         best = None
-        for d in range(15, 62, 2):
+        reach = {}
+        for d in range(15, 102, 2):
             ref_d = min(byd, key=lambda x: abs(x - d))
             t = transfer_pxl(byd[ref_d], d)
             if t is None:
@@ -638,11 +640,16 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
             tot = t[0] + pzl
             if best is None or tot < best[0]:
                 best = (tot, d, overhead(key[0], key[1], d), t[0], pzl)
+            for tg in (1e-9, 1e-10, 1e-11, 1e-12):
+                if tot <= tg and tg not in reach:
+                    reach[tg] = overhead(key[0], key[1], d)
         if best:
-            out[key] = best
+            out[key] = best + (reach,)
+            rc = " | ".join(f"{reach[tg]:.1f}" if tg in reach else "-" for tg in (1e-9, 1e-10, 1e-11, 1e-12))
             lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {best[0]:.2e} | {best[1]} | "
-                         f"{best[2]:.1f} | {best[3]:.2e} | {best[4]:.2e} |")
-    NUMBERS.setdefault("pz1e2", {})[tag] = {f"{k[0]}|a{k[1]}|f{k[2]}|{k[3]}|w{k[4]}": dict(pL=v[0], d=v[1], overhead=v[2]) for k, v in out.items()}
+                         f"{best[2]:.1f} | {best[3]:.2e} | {best[4]:.2e} | {rc} |")
+    NUMBERS.setdefault("pz1e2", {})[tag] = {f"{k[0]}|a{k[1]}|f{k[2]}|{k[3]}|w{k[4]}": dict(pL=v[0], d=v[1], overhead=v[2],
+                                              reach={f"{tg:g}": oh for tg, oh in v[5].items()}) for k, v in out.items()}
     open(os.path.join(OUT, f"pz1e2_{tag}.md"), "w").write("\n".join(lines) + "\n")
     return out
 
