@@ -36,7 +36,8 @@ this work's own.
   than the whole simulated memory (five outer rounds), i.e. a flag that only says *which qubit*
   flipped (this-work pZL; paper pZL at d_Z = 17: {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 0) }}
   and {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 4096) }}).  Counting each logical qubit's errors
-  separately raises the requirement to between 0.8 and 0.9 (item 13e).  §4.
+  separately raises the requirement to between {{ N["convention"]["f_bracket_marginal"][0] }} and
+  {{ N["convention"]["f_bracket_marginal"][1] }} (item 13e).  §4.
 * **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**
   {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
   inside CNOTs (the rest while idle; preparation and measurement
@@ -286,7 +287,8 @@ this work's own.
     {{ f1(N["convention"]["headline_marginal"]["all|w0|f0.8"]["overhead"]) }} at f = 0.8 and
     {{ f1(N["convention"]["headline_marginal"]["all|w0|f0.9"]["overhead"]) }} at f = 0.9 on all locations
     ({{ f1(N["convention"]["headline_marginal"]["all|w4096|f0.99"]["overhead"]) }} with 4096-tick windows at
-    f = 0.99): the efficiency needed rises from ≈ 0.6 to ≈ 0.85, the saving is the same.
+    f = 0.99): the efficiency needed rises to between {{ N["convention"]["f_bracket_marginal"][0] }} and
+    {{ N["convention"]["f_bracket_marginal"][1] }}, the saving is the same.
 
 ## 5. Bias from 4e4 to 1e7
 

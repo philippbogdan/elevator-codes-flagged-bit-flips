@@ -1222,8 +1222,8 @@ def counting_convention():
     rows = [r for r in flag_rows(("flag_main", "flag_supp")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9
             and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
     out = {}
-    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("idle", 0, 1.0), ("all", 0, 0.8), ("all", 0, 0.9),
-                        ("all", 0, 0.99), ("all", 4096, 0.99)]:
+    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("idle", 0, 1.0), ("all", 0, 0.5), ("all", 0, 0.8),
+                        ("all", 0, 0.9), ("all", 0, 0.95), ("all", 0, 0.99), ("all", 4096, 0.99)]:
         best = None
         for r in rows:
             code = (r["code"], r["n_anc"])
@@ -1236,6 +1236,9 @@ def counting_convention():
                     best = (oh, CODE_LABEL[code], r["d"])
         out[f"{cls}|w{w}|f{f}"] = dict(overhead=best[0], code=best[1], d=best[2]) if best else None
     C["headline_marginal"] = out
+    fs = [0.0, 0.5, 0.8, 0.9, 0.95, 0.99]
+    first = next((f for f in fs[1:] if (out.get(f"all|w0|f{f}") or {}).get("code") == "[15,9,3]"), None)
+    C["f_bracket_marginal"] = [fs[fs.index(first) - 1], first] if first else None
     # the phase-flip floor at p_Z = 1e-3 under both models in both conventions
     pc = {}
     for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]:
