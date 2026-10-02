@@ -14,10 +14,11 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | all | 16 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 |
 | all | 64 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 2.93e-14 | 51.6 |
 | all | 256 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 8.02e-14 | 51.6 |
+| all | 1024 | 0.99 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 3.90e-20 | 104.8 |
 | all | 1024 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 1.06e-13 | 51.6 |
 | all | 4096 | 0.99 | 0 | 58.7 | [15,9,3], 17 | 2.32e-13 | 58.7 |
 | all | 4096 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 1.50e-13 | 51.6 |
 | idle | exact | 0.5 | 0 | not reached | - | - | not reached |
 | idle | exact | 0.8 | 0 | not reached | - | - | not reached |
 | idle | exact | 0.9 | 0 | not reached | - | - | not reached |
-| idle | exact | 0.99 | 0 | 51.6 | [15,9,3], 15 | 8.69e-13 | 51.6 |
+| idle | exact | 0.99 | 0 | not reached | - | - | not reached |

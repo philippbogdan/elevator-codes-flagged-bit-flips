@@ -90,7 +90,8 @@ class RepModel:
 
     def predict(self, d, p):
         mu, _ = self.log_predict(d, p)
-        return np.exp(mu)
+        out = np.exp(mu)
+        return float(out[0]) if np.ndim(d) == 0 and np.ndim(p) == 0 else out
 
 
 def fit_ratio(elev_rows, rep_model: RepModel, nb_over_k: dict):

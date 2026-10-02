@@ -468,19 +468,81 @@ def frontier(pzl_fn, tag):
     return nd
 
 
+# ------------------------------------------------------------------ 8. figures
+def plot_overheads(pzl_fn, tag):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    rows = [r for r in flag_rows(("flag_main", "flag_supp")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9 and r["r"] == 0]
+    f0 = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == 0}
+
+    def oh_for(cls, w, f, codes=CODES_MAIN):
+        if f == 0:
+            byc = f0
+        else:
+            byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == f and r["classes"] == cls and r["window"] == w}
+        b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", codes)
+        return b[0] if b else np.nan
+
+    fs = [0.0, 0.5, 0.8, 0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 1.0]
+    fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+    ax = axs[0]
+    for cls, lab in [("idle", "flags on idle locations"), ("idle+gate", "idle + gates"), ("all", "idle + gates + prep/meas")]:
+        ys = [oh_for(cls, 0, f) for f in fs]
+        ax.plot(fs, ys, "o-", label=lab)
+    ax.axhline(88, color="gray", ls="--", label="published (no flags): 88")
+    ax.set_xlabel("flag efficiency f"); ax.set_ylabel("qubit overhead per logical qubit")
+    ax.set_title("p_Z=1e-3, eta=1e6, target 1e-12, exact timing"); ax.legend(fontsize=8); ax.set_ylim(40, 100)
+    ax = axs[1]
+    ws = [0, 1, 4, 16, 64, 256, 1024, 4096]
+    for f in [0.8, 0.9, 0.95, 0.99, 1.0]:
+        for cls, ls in [("all", "-"), ("idle", ":")]:
+            ys = [oh_for(cls, w, f) for w in ws]
+            if np.all(np.isnan(ys)):
+                continue
+            ax.plot([max(w, 0.5) for w in ws], ys, "o" + ls, label=f"f={f} ({cls})")
+    ax.axhline(88, color="gray", ls="--")
+    ax.set_xscale("log"); ax.set_xlabel("timing window (CNOT-layer ticks; 0.5 = exact)"); ax.set_ylim(40, 100)
+    ax.set_title("overhead vs flag timing precision"); ax.legend(fontsize=7, ncol=2)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, f"overhead_vs_flags_{tag}.png"), dpi=130); plt.close(fig)
+
+
+def plot_bias(out, tag):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    if not out:
+        return
+    etas = sorted({k[0] for k in out})
+    fig, ax = plt.subplots(figsize=(6, 4))
+    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 1024, 0.99), ("all", 0, 1.0)]:
+        ys = [(out.get((e, cls, w, f)) or [np.nan])[0] for e in etas]
+        ax.step(etas, ys, where="post", label=f"{'no flags' if f == 0 else f'f={f} {cls} w={w or chr(101)+chr(120)+chr(97)+chr(99)+chr(116)}'}")
+    etas_f = np.logspace(np.log10(4e4), 7, 200)
+    pub = []
+    for e in etas_f:
+        c = OH.min_overhead(1e-12, OH.candidates(1e-3, e), "elevator")
+        pub.append(c.overhead if c else np.nan)
+    ax.step(etas_f, pub, where="post", color="gray", ls="--", label="published (fits)")
+    ax.set_xscale("log"); ax.set_xlabel("noise bias eta (p_Z = 1e-3)"); ax.set_ylabel("qubit overhead"); ax.set_ylim(40, 200)
+    ax.legend(fontsize=7); fig.tight_layout(); fig.savefig(os.path.join(OUT, f"overhead_vs_bias_{tag}.png"), dpi=130); plt.close(fig)
+
+
 if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
     flag_tables(dirs=("flag_main", "flag_supp"))
     flag_tables(dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
     validation_table()
-    bias_sweep(pzl_paper, "paper-pZL")
+    plot_bias(bias_sweep(pzl_paper, "paper-pZL"), "paper-pZL")
+    plot_overheads(pzl_paper, "paper-pZL")
     if phase_model() is not None:
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_main", "flag_supp"))
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt",), label="alt",
                     codes=[("ham15", 1), ("ham31", 1), ("xham16", 1)])
-        bias_sweep(pzl_model, "this-work-pZL")
+        plot_bias(bias_sweep(pzl_model, "this-work-pZL"), "this-work-pZL")
+        plot_overheads(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
     pz1e2(pzl_paper, "paper-pZL")
