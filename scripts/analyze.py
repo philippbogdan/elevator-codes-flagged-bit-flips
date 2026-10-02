@@ -32,11 +32,17 @@ def repro_tables():
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
     from summarize_repro import load
     out = []
-    for mem, dds in [("Z", ["repro_z", "repro_16_3_8"]), ("X", ["repro_x"])]:
+    for mem, dds in [("Z", ["repro_z", "repro_16_3_8"]), ("X", ["repro_x", "phase_xlow", "phase_ancdiag"])]:
         rows = []
         for dd in dds:
             if os.path.isdir(os.path.join(ROOT, "results", dd)):
                 rows += load(os.path.join(ROOT, "results", dd))
+        if mem == "X":
+            # the paper's sampled region of the X memory: [15,9,3], one outer round, d_Z = 9, 11, 13,
+            # 5e-3 <= p_Z <= 1e-2 (runs of the phase-flip study at those points count as well)
+            rows = [r for r in rows if r["anc_scale"] == 1.0 and r["d"] in (9, 11, 13) and 5e-3 <= r["p"] <= 1e-2]
+            for r in rows:
+                r["variant"] = f"{r['variant']} {r['decoder']}"
         rows.sort(key=lambda r: (r["code"], r["n_anc"], r["variant"], r["d"], r["p"]))
         by_var = defaultdict(list)
         for r in rows:
@@ -265,9 +271,36 @@ CLASS_LIST = ["idle", "gate", "prep", "meas"]
 CLASSES_OF = {"none": [], "idle": ["idle"], "idle+gate": ["idle", "gate"], "all": CLASS_LIST}
 
 
+_CS = {}
+
+
 def class_sums_table():
-    fn = os.path.join(OUT, "class_sums.json")
-    return json.load(open(fn)) if os.path.exists(fn) else {}
+    if "t" not in _CS:
+        fn = os.path.join(OUT, "class_sums.json")
+        _CS["t"] = json.load(open(fn)) if os.path.exists(fn) else {}
+    return _CS["t"]
+
+
+def class_sums_for(code, n_anc, d, n_outer=5):
+    """Exact per-class fault sums at d_Z; beyond the computed distances (d_Z >= 17) from the exact
+    quadratic in d_Z through three computed distances (checked to 1e-9 at d_Z = 37 ... 61)."""
+    t = class_sums_table()
+    sfx = "" if n_outer == 5 else f":o{n_outer}"
+    k = f"{code}:a{n_anc}:d{d}{sfx}"
+    if k in t:
+        return t[k]
+    have = sorted(int(x.split(":")[2][1:]) for x in t
+                  if x.startswith(f"{code}:a{n_anc}:d") and (x.endswith(sfx) if sfx else x.count(":") == 2))
+    big = [x for x in have if x >= 17]
+    if d < 17 or len(big) < 3:
+        return None
+    ds = big[-3:]
+    rows = [t[f"{code}:a{n_anc}:d{x}{sfx}"] for x in ds]
+    out = {"sums": {}, "k": rows[0]["k"]}
+    for c in rows[0]["sums"]:
+        out["sums"][c] = [float(np.polyval(np.polyfit(ds, [r["sums"][c][j] for r in rows], 2), d)) for j in (0, 1)]
+    out["rounds"] = int(round(np.polyval(np.polyfit(ds, [r["rounds"] for r in rows], 1), d)))
+    return out
 
 
 def transfer_pxl(row, d_target, p_x=None):
@@ -276,7 +309,7 @@ def transfer_pxl(row, d_target, p_x=None):
     Returns (central, lo, hi)."""
     from elevator.decode import wilson
     from elevator.strata import pois
-    sums = class_sums_table().get(f"{row['code']}:a{row['n_anc']}:d{d_target}")
+    sums = class_sums_for(row["code"], row["n_anc"], d_target, row.get("n_outer", 5))
     if sums is None:
         return None
     p_x = row["p_x"] if p_x is None else p_x
@@ -313,12 +346,56 @@ def pzl_paper(code, n_anc, d, pz):
     return OH.paper_pzl(code, n_anc, d, pz)
 
 
+_PERFECT = {}
+
+
+def perfect_exact():
+    """Exact F(0, b) for exactly timed perfect flags (scripts/perfect_flags_exact.py)."""
+    if "t" not in _PERFECT:
+        fn = os.path.join(ROOT, "results", "perfect_flags_exact.json")
+        _PERFECT["t"] = json.load(open(fn)) if os.path.exists(fn) else []
+    return _PERFECT["t"]
+
+
+def apply_perfect_exact(r):
+    """Rows with f = 1 on every class, exact timing, no false flags: replace the sampled F(0, b) by the
+    exact values at the nearest computed d_Z (U = 0, so these are the only strata)."""
+    if not (r["f"] == 1.0 and r["classes"] == "all" and r["window"] == 0 and r["r"] == 0
+            and r.get("mode", "erasure") == "erasure" and r["U"] == 0):
+        return r
+    recs = [x for x in perfect_exact() if (x["code"], x["n_anc"], x["n_outer"]) == (r["code"], r["n_anc"], r.get("n_outer", 5))]
+    if not recs:
+        return r
+    rec = min(recs, key=lambda x: abs(x["d"] - r["d"]))
+    from elevator.strata import pois
+    ex = dict(r["exact"])
+    for b, v in rec["F"].items():
+        ex[f"0,{b}"] = v["F"]
+    r = dict(r)
+    r["exact"] = ex
+    r["exact_F_source_d"] = rec["d"]
+    # recompute the row's own estimate (the exact strata replace the sampled ones; b beyond the table
+    # enters the upper bound with weight one)
+    bmax = max(int(b) for b in rec["F"])
+    est = sum(pois(int(k.split(",")[1]), r["S"]) * v for k, v in ex.items() if k.startswith("0,"))
+    tail = 1.0 - sum(pois(b, r["S"]) for b in range(bmax + 1))
+    R, k = r["rounds"], r["k"]
+    r["P"] = est
+    r["pL"], r["lo"], r["hi"] = est / (R * k), est / (R * k), (est + max(tail, 0.0)) / (R * k)
+    st = dict(r["strata"])
+    for b in rec["F"]:
+        st.setdefault(f"0,{b}", [0, 0])          # (the exact value is used wherever the key appears)
+    r["strata"] = st
+    return r
+
+
 def flag_rows(dirs, transfers=True):
     rows = []
     for dd in dirs:
         p = os.path.join(ROOT, "results", dd)
         if os.path.isdir(p):
             rows += load_strata(p)
+    rows = [apply_perfect_exact(r) for r in rows]
     for r in rows:
         r.setdefault("transferred", False)
     if transfers:
@@ -326,7 +403,7 @@ def flag_rows(dirs, transfers=True):
     return rows
 
 
-TRANSFER_D = [13, 15, 17, 19, 21]
+TRANSFER_D = [13, 15, 17, 19, 21, 23, 25]
 TRANSFER_P = [2.5e-8, 1e-8, 4e-9, 2e-9, 1e-9, 5e-10, 2e-10, 1e-10]
 
 
@@ -412,26 +489,43 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
         for code in codes:
             sub = {k: v for k, v in byc.items() if (k[0], k[1]) == code}
             b = best_overhead(sub, 1e-3, 1e-12, pzl_fn, "pL", [code])
-            per_code[code] = b
+            per_code[code] = b if b else ("n.r." if sub else "-")
         res[(cls, w, f, rr, "per_code")] = per_code
+        # the simulated (not transferred) d_Z = 15 rows with their 95% intervals and failure counts
+        sim = {}
+        for code in codes:
+            r15 = [r for r in byc.values() if (r["code"], r["n_anc"]) == code and r["d"] == 15 and not r.get("transferred")]
+            if r15:
+                r = r15[0]
+                nf = sum(v[0] for k, v in r["strata"].items() if k not in r["exact"])
+                sim[code] = (r["pL"], r["lo"], r["hi"], nf)
+        res[(cls, w, f, rr, "sim15")] = sim
     # table: overhead vs f (exact timing)
     lines.append("### Minimum qubit overhead at p_Z = 1e-3, eta = 1e6, target 1e-12 per round per logical qubit\n")
     lines.append("Central estimate (conservative: bit-flip rate at its 95% upper bound) and the chosen code/d_Z.\n")
     hdr_codes = " | ".join(CODE_LABEL[c] for c in codes)
-    lines.append(f"| flags on | window (ticks) | f | false flags /qubit/tick | best overhead (central) | code, d_Z | p_XL | best (conservative) | {hdr_codes} |")
-    lines.append("|---|---|---|---|---|---|---|---|" + "---|" * len(codes))
+    lines.append("Per code: minimum overhead ('n.r.' = simulated but not reaching the target, '-' = not simulated), "
+                 "then p_XL at d_Z = 15 per round per logical qubit [95% CI] (sampled logical failures behind it); "
+                 "these p_X = 1e-9 values lie below direct-sampling reach and come from the stratified estimator "
+                 "(model: Poisson strata, held-out check in validation.md).\n")
+    lines.append(f"| flags on | window (ticks) | f | false flags /qubit/tick | best overhead (central) | code, d_Z | p_XL | best (conservative) | {hdr_codes} | "
+                 + " | ".join(f"{CODE_LABEL[c]} p_XL(d=15)" for c in codes) + " |")
+    lines.append("|---|---|---|---|---|---|---|---|" + "---|" * (2 * len(codes)))
     for key in [("none", 0, 0.0, 0.0)] + settings:
         b = res[key + ("pL",)]
         bh = res[key + ("hi",)]
         cell = (f"{b[0]:.1f} | {CODE_LABEL[(b[1], b[2])]}, {b[3]} | {b[4]:.2e}" if b else "not reached | - | -")
         cellh = f"{bh[0]:.1f}" if bh else "not reached"
         pc = res[key + ("per_code",)]
-        cells = " | ".join((f"{pc[c][0]:.1f} (d={pc[c][3]})" if pc.get(c) else "n.r.") for c in codes)
-        lines.append(f"| {key[0]} | {'exact' if key[1] == 0 else key[1]} | {key[2]} | {key[3]:g} | {cell} | {cellh} | {cells} |")
+        cells = " | ".join((f"{pc[c][0]:.1f} (d={pc[c][3]})" if isinstance(pc.get(c), tuple) else pc.get(c, "-")) for c in codes)
+        sim = res[key + ("sim15",)]
+        cells2 = " | ".join((f"{sim[c][0]:.2e} [{sim[c][1]:.1e}, {sim[c][2]:.1e}] ({sim[c][3]})" if c in sim else "-") for c in codes)
+        lines.append(f"| {key[0]} | {'exact' if key[1] == 0 else key[1]} | {key[2]} | {key[3]:g} | {cell} | {cellh} | {cells} | {cells2} |")
     open(os.path.join(OUT, f"flags_{label}_{tag}.md"), "w").write("\n".join(lines) + "\n")
     NUMBERS.setdefault("flags", {})[f"{label}:{tag}"] = {
-        f"{k[0]}|w{k[1]}|f{k[2]}|r{k[3]}|{k[4]}": (None if v is None else (v if k[4] != "per_code" else
-                                                     {CODE_LABEL[c]: (None if bb is None else bb[0]) for c, bb in v.items()}))
+        f"{k[0]}|w{k[1]}|f{k[2]}|r{k[3]}|{k[4]}": (None if v is None else (
+            {CODE_LABEL[c]: (bb[0] if isinstance(bb, tuple) else bb) for c, bb in v.items()} if k[4] == "per_code" else
+            ({CODE_LABEL[c]: list(bb) for c, bb in v.items()} if k[4] == "sim15" else v)))
         for k, v in res.items()}
     return res, rows
 
@@ -622,7 +716,7 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
                     lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {dd} | "
                                  f"{r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {t[0]:.2e} [{t[1]:.2e}, {t[2]:.2e}] {'' if ok else '(outside)'} |")
     NUMBERS[f"pz1e2_transfer_checks"] = dict(agree=int(sum(checks)), total=len(checks))
-    lines += ["\n### Floor per code and flag setting (d_Z <= 101) and overhead to reach given rates\n",
+    lines += ["\n### Floor per code and flag setting (d_Z <= 121) and overhead to reach given rates\n",
               "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there | overhead for 1e-9 | 1e-10 | 1e-11 | 1e-12 |",
               "|---|---|---|---|---|---|---|---|---|---|---|"]
     out = {}
@@ -631,7 +725,7 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
             continue
         best = None
         reach = {}
-        for d in range(15, 102, 2):
+        for d in range(15, 122, 2):
             ref_d = min(byd, key=lambda x: abs(x - d))
             t = transfer_pxl(byd[ref_d], d)
             if t is None:
@@ -773,6 +867,138 @@ def plot_maps(pzl_fn, tag):
     fig.tight_layout(); fig.savefig(os.path.join(OUT, f"map_f_window_{tag}.png"), dpi=130); plt.close(fig)
 
 
+FIG_SETTINGS = [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 1024, 0.99), ("all", 0, 1.0)]
+
+
+def _source_rows(px_pref, codes, settings=FIG_SETTINGS, dirs=("flag_main", "flag_supp", "flag_alt", "flag_16_3_8", "flag_pz1e2")):
+    """Directly simulated rows (no synthesized ones) per (code, setting): the one at d_Z = 15 (else
+    the smallest d_Z) and p_X closest to px_pref (in log)."""
+    rows = [r for r in flag_rows(dirs, transfers=False) if r["idle"] == "edge,cnot" and r["r"] == 0
+            and r.get("mode", "erasure") == "erasure"]
+    out = {}
+    for code in codes:
+        for (cls, w, f) in settings:
+            cand = [r for r in rows if (r["code"], r["n_anc"]) == code and r["f"] == f
+                    and (f == 0 or (r["classes"] == cls and r["window"] == w))]
+            if not cand:
+                continue
+            out[(code, cls, w, f)] = min(cand, key=lambda r: (abs(math.log(r["p_x"] / px_pref)), abs(r["d"] - 15), r["d"]))
+    return out
+
+
+def fig1_this_work(pzl_fn, tag, codes=CODES_MAIN + [("16_3_8", 1)]):
+    """Figure 1 of arXiv:2601.10786 (overhead vs bias at p_Z = 1e-3, 1e-12) from this work's bit-flip
+    simulations: stratum failure fractions of one simulated (d_Z, p_X) per code and flag setting,
+    re-weighted with the exact fault intensities at every (d_Z, p_X) (transfer)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    src = _source_rows(1e-9, codes)
+    etas = np.logspace(np.log10(4e4), 7, 120)
+    curves, steps = {}, {}
+    for (cls, w, f) in FIG_SETTINGS:
+        ys, prev, st = [], None, []
+        for eta in etas:
+            px = 1e-3 / eta
+            best = None
+            for code in codes:
+                r = src.get((code, cls, w, f))
+                if r is None:
+                    continue
+                for d in range(13, 42, 2):
+                    t = transfer_pxl(r, d, p_x=px)
+                    if t is None:
+                        continue
+                    if t[0] + pzl_fn(code[0], code[1], d, 1e-3) <= 1e-12:
+                        oh = overhead(code[0], code[1], d)
+                        if best is None or oh < best[0]:
+                            best = (oh, code, d)
+                        break
+            ys.append(best[0] if best else np.nan)
+            lab = (round(best[0], 1), CODE_LABEL[best[1]], best[2]) if best else None
+            if lab != prev:
+                st.append(dict(eta=float(eta), overhead=lab[0] if lab else None, code=lab[1] if lab else None,
+                               d=lab[2] if lab else None))
+                prev = lab
+        curves[(cls, w, f)] = ys
+        steps[f"{cls}|w{w}|f{f}"] = st
+    NUMBERS.setdefault("fig1_this_work", {})[tag] = steps
+    fig, ax = plt.subplots(figsize=(6, 4))
+    pub = [(OH.min_overhead(1e-12, OH.candidates(1e-3, e), "elevator") or type("x", (), {"overhead": np.nan})).overhead
+           for e in etas]
+    ax.step(etas, pub, where="post", color="gray", ls="--", label="published (paper's fits)")
+    for (cls, w, f), ys in curves.items():
+        lab = "no flags (this work)" if f == 0 else f"f={f}, {cls}, {'exact' if w == 0 else str(w) + ' ticks'}"
+        ax.step(etas, ys, where="post", label=lab)
+    ax.set_xscale("log"); ax.set_ylim(0, 200); ax.set_xlabel("noise bias eta (p_Z = 1e-3)")
+    ax.set_ylabel("qubits per logical qubit (1e-12)"); ax.legend(fontsize=7)
+    ax.set_title(f"Fig. 1 from this work's simulations (phase flips: {tag})", fontsize=9)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, f"fig1_this_work_{tag}.png"), dpi=130); plt.close(fig)
+    lines = [f"\n## Figure 1 from this work's bit-flip simulations (phase flips: {tag})\n",
+             "Steps of the minimum overhead (p_Z = 1e-3, target 1e-12) as the bias grows; bit flips from the "
+             "simulated stratum failure fractions re-weighted to each p_X (transfer, validated in validation.md).\n",
+             "| flags | from eta | overhead | code | d_Z |", "|---|---|---|---|---|"]
+    for k, st in steps.items():
+        for x in st:
+            lines.append(f"| {k} | {x['eta']:.3g} | {x['overhead'] if x['overhead'] else 'not reached'} | {x['code'] or '-'} | {x['d'] or '-'} |")
+    open(os.path.join(OUT, f"fig1_this_work_{tag}.md"), "w").write("\n".join(lines) + "\n")
+
+
+def fig2_this_work(pzl_fn, tag, codes=CODES_MAIN):
+    """Figure 2 (overhead vs target at eta = 1e6) and the reachable floors from this work's simulations."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+    res = {}
+    for ax, pz, px in [(axs[0], 1e-3, 1e-9), (axs[1], 1e-2, 1e-8)]:
+        src = _source_rows(px, codes)
+        dmax = 41 if pz == 1e-3 else 121
+        targets = np.logspace(-18 if pz == 1e-3 else -14, -5 if pz == 1e-3 else -3, 300)
+        cs = OH.candidates(pz, 1e6)
+        ys = [(OH.min_overhead(t, cs, "elevator").overhead if OH.min_overhead(t, cs, "elevator") else np.nan) for t in targets]
+        ax.step(targets, ys, where="post", color="gray", ls="--", label="published (paper's fits)")
+        for (cls, w, f) in FIG_SETTINGS:
+            tab = []
+            floor = None
+            for code in codes:
+                r = src.get((code, cls, w, f))
+                if r is None:
+                    continue
+                for d in range(13, dmax + 1, 2):
+                    t = transfer_pxl(r, d, p_x=px)
+                    if t is None:
+                        continue
+                    tot = t[0] + pzl_fn(code[0], code[1], d, pz)
+                    tab.append((tot, overhead(code[0], code[1], d), code, d, t[0]))
+                    if floor is None or tot < floor[0]:
+                        floor = (tot, overhead(code[0], code[1], d), CODE_LABEL[code], d, t[0], t[2])
+            if not tab:
+                continue
+            ys = []
+            for T in targets:
+                ok = [x[1] for x in tab if x[0] <= T]
+                ys.append(min(ok) if ok else np.nan)
+            lab = "no flags" if f == 0 else f"f={f}, {cls}, {'exact' if w == 0 else str(w) + ' ticks'}"
+            ax.step(targets, ys, where="post", label=lab)
+            res[f"pz={pz:g}|{cls}|w{w}|f{f}"] = dict(floor_pL=floor[0], overhead=floor[1], code=floor[2], d=floor[3],
+                                                      pXL=floor[4], pXL_hi=floor[5])
+        ax.set_xscale("log"); ax.set_ylim(0, 400 if pz == 1e-2 else 200)
+        ax.set_xlabel("target logical error rate per round"); ax.set_ylabel("qubits per logical qubit")
+        ax.set_title(f"p_Z = {pz:g}, eta = 1e6 (phase flips: {tag})", fontsize=9)
+    axs[0].legend(fontsize=7)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, f"fig2_this_work_{tag}.png"), dpi=130); plt.close(fig)
+    NUMBERS.setdefault("fig2_this_work", {})[tag] = res
+    lines = [f"\n## Figure 2 from this work's simulations: lowest reachable rate per flag setting (phase flips: {tag})\n",
+             "| p_Z | flags | lowest p_L (d_Z <= 41 / 121) | code | d_Z | overhead | p_XL there [95% upper] |",
+             "|---|---|---|---|---|---|---|"]
+    for k, v in res.items():
+        pz_, cls, w, f = k.split("|")
+        lines.append(f"| {pz_[3:]} | {cls} {w} {f} | {v['floor_pL']:.2e} | {v['code']} | {v['d']} | {v['overhead']:.1f} | "
+                     f"{v['pXL']:.2e} [{v['pXL_hi']:.2e}] |")
+    open(os.path.join(OUT, f"fig2_this_work_{tag}.md"), "w").write("\n".join(lines) + "\n")
+
+
 def plot_bias(out, tag):
     import matplotlib
     matplotlib.use("Agg")
@@ -813,9 +1039,13 @@ if __name__ == "__main__":
         plot_bias(bias_sweep(pzl_model, "this-work-pZL"), "this-work-pZL")
         plot_overheads(pzl_model, "this-work-pZL")
         plot_maps(pzl_model, "this-work-pZL")
+        fig1_this_work(pzl_model, "this-work-pZL")
+        fig2_this_work(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
     pz1e2(pzl_paper, "paper-pZL")
+    fig1_this_work(pzl_paper, "paper-pZL")
+    fig2_this_work(pzl_paper, "paper-pZL")
     required_f(pzl_paper, "paper-pZL")
     frontier(pzl_paper, "paper-pZL")
     save_numbers()

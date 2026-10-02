@@ -41,7 +41,11 @@ def load(dirpath):
         pl_lo, pl_hi = per_round(lo * st["shots"], st["shots"], R, k), per_round(hi * st["shots"], st["shots"], R, k)
         p = sp["p_x"] if sp["memory"] == "Z" else sp["p_z"]
         fit = fit_z(sp["code"], sp["n_anc"], sp["d"], p) if sp["memory"] == "Z" else fit_x(sp["code"], sp["n_anc"], sp["d"], p, k)
+        dec = sp.get("decoder")
+        dname = dec if isinstance(dec, str) else (dec or {}).get("name", "?") + (
+            "-minsum" if isinstance(dec, dict) and dec.get("bp_method") == "minimum_sum" else "")
         rows.append(dict(code=sp["code"], n_anc=sp["n_anc"], mem=sp["memory"], d=sp["d"], p=p, variant=sp.get("variant"),
+                         anc_scale=float(sp.get("anc_scale", 1.0)), n_outer=sp.get("n_outer"), decoder=dname,
                          fails=st["fails"], shots=st["shots"], R=R, k=k, pL=pl, lo=pl_lo, hi=pl_hi, fit=fit,
                          ratio=pl / fit, within=(pl_lo <= 2 * fit and pl_hi >= fit / 2)))
     return rows
