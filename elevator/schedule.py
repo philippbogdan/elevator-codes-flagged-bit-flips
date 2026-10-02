@@ -63,6 +63,8 @@ class ElevatorSchedule:
         self.compress = compress
         if compress:
             assert n_anc == 1 and mode == "full", "compressed schedule: one ancilla, full sweep"
+        if mode == "local":
+            assert n_anc == 1, "shortest-path schedule: one ancilla"
         self.n_outer = n_outer
         self.r_min = d if r_min is None else r_min
         self.P = code.n + n_anc
