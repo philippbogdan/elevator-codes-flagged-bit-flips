@@ -53,7 +53,7 @@ direct-sampling points under flags agree with the stratified estimate at the sam
 {{ N["validation_transfer"]["inside"] }}/{{ N["validation_transfer"]["total"] }} with the p_X = 1e-9
 failure fractions re-weighted; d_Z transfers {{ N["transfer_check_main"]["agree"] }}/{{ N["transfer_check_main"]["total"] }}
 (p_Z = 1e-3) and {{ N["pz1e2_transfer_checks"]["agree"] }}/{{ N["pz1e2_transfer_checks"]["total"] }}
-(p_Z = 1e-2).  Phase flips below ~1e-9 are model extrapolations (labelled; held-out checks in
+(p_Z = 1e-2); p_X transfers {{ N["transfer_check_px"]["agree"] }}/{{ N["transfer_check_px"]["total"] }}.  Phase flips below ~1e-9 are model extrapolations (labelled; held-out checks in
 `phase_model.md`); the two phase-flip models (paper's fit, this work's) are carried side by side.
 
 ## 4. Overhead against the published floor

@@ -180,7 +180,9 @@ this work's own.
    intervals; the failure fractions measured at p_X = 1e-9 (the ones behind every overhead),
    re-weighted to the held-out p_X, contain {{ N["validation_transfer"]["inside"] }}/{{ N["validation_transfer"]["total"] }}
    direct results (`validation.md`).  Transfer in d_Z: {{ N["transfer_check_main"]["agree"] }}/{{ N["transfer_check_main"]["total"] }}
-   direct runs at d_Z = 17, 19 agree with the prediction from d_Z = 15 (`transfer_check.md`) and
+   direct runs at d_Z = 17, 19 agree with the prediction from d_Z = 15 and
+   {{ N["transfer_check_px"]["agree"] }}/{{ N["transfer_check_px"]["total"] }} direct runs at p_X = 1e-10 and
+   2.5e-8 with the p_X transfer used for the bias sweep (`transfer_check.md`), and
    {{ N["pz1e2_transfer_checks"]["agree"] }}/{{ N["pz1e2_transfer_checks"]["total"] }} at p_Z = 1e-2
    (d_Z = 17 → 25, 33).  Exactly timed perfect flags need no decoding at all: their failure
    probability is the probability that the flagged events contain an undetectable logical, computed

@@ -760,6 +760,28 @@ def transfer_check_main():
                          f"{t[0]:.2e} [{t[1]:.1e}, {t[2]:.1e}] | {'yes' if agree else 'NO'} | {ratio:.2f} |")
     lines.append(f"\n{ok} of {tot} direct runs at d_Z = 17, 19 are consistent with the transfer from d_Z = 15.\n")
     NUMBERS["transfer_check_main"] = dict(agree=ok, total=tot)
+    # transfer in p_X (the bias sweep): direct runs at p_X = 2.5e-8 ... 1e-10 vs the p_X = 1e-9 fractions
+    brow = [r for r in flag_rows(("flag_bias", "flag_16_3_8"), transfers=False) if r["idle"] == "edge,cnot"]
+    lines += ["\n## Transfer in p_X (bias sweep): direct runs vs the p_X = 1e-9 failure fractions\n",
+              "| code | flags | d_Z | p_X | direct p_XL [95% CI] | from p_X = 1e-9 [95% CI] | intervals overlap |",
+              "|---|---|---|---|---|---|---|"]
+    ok2 = tot2 = 0
+    for r in sorted(brow, key=lambda r: (r["code"], r["n_anc"], r["d"], r["p_x"], r["f"])):
+        key = (r["code"], r["n_anc"], r["f"], r["classes"], r["window"], r["r"], r.get("mode", "erasure"))
+        src = by.get(key, {}).get(r["d"])
+        if src is None:
+            continue
+        t = transfer_pxl(src, r["d"], p_x=r["p_x"])
+        if t is None:
+            continue
+        agree = not (t[2] < r["lo"] or t[1] > r["hi"])
+        ok2 += agree
+        tot2 += 1
+        fl = "none" if r["f"] == 0 else f"f={r['f']} {r['classes']} w={r['window'] or 'exact'}"
+        lines.append(f"| {CODE_LABEL[(r['code'], r['n_anc'])]} | {fl} | {r['d']} | {r['p_x']:.1e} | {r['pL']:.2e} [{r['lo']:.1e}, {r['hi']:.1e}] | "
+                     f"{t[0]:.2e} [{t[1]:.1e}, {t[2]:.1e}] | {'yes' if agree else 'NO'} |")
+    lines.append(f"\n{ok2} of {tot2} direct runs at other p_X are consistent with the p_X transfer.\n")
+    NUMBERS["transfer_check_px"] = dict(agree=ok2, total=tot2)
     open(os.path.join(OUT, "transfer_check.md"), "w").write("\n".join(lines) + "\n")
 
 

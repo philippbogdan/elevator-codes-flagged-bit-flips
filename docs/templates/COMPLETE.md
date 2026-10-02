@@ -138,7 +138,8 @@ without one).
   points: direct samples under flags {{ N["validation"]["agree"] }}/{{ N["validation"]["total"] }}
   and {{ N["validation_transfer"]["inside"] }}/{{ N["validation_transfer"]["total"] }} (from the
   p_X = 1e-9 fractions); d_Z transfers {{ N["transfer_check_main"]["agree"] }}/{{ N["transfer_check_main"]["total"] }}
-  and {{ N["pz1e2_transfer_checks"]["agree"] }}/{{ N["pz1e2_transfer_checks"]["total"] }}; held-out
+  and {{ N["pz1e2_transfer_checks"]["agree"] }}/{{ N["pz1e2_transfer_checks"]["total"] }}; p_X transfers (bias)
+  {{ N["transfer_check_px"]["agree"] }}/{{ N["transfer_check_px"]["total"] }}; held-out
   repetition-code points within {{ f2(min(h["ratio"] for h in N["phase_rep_fit"]["heldout"] if h["p"] <= 0.01)) }}–{{ f2(max(h["ratio"] for h in N["phase_rep_fit"]["heldout"] if h["p"] <= 0.01)) }}×.
 * **Overhead against the published floors** — 88 → {{ f1(ohv("paper-pZL", "all|w0|f0.9")) }}
   (paper pZL) / {{ f1(ohv("this-work-pZL", "all|w0|f0.9")) }} (this-work pZL) with flags on all

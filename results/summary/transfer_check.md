@@ -123,3 +123,25 @@
 
 117 of 117 direct runs at d_Z = 17, 19 are consistent with the transfer from d_Z = 15.
 
+
+## Transfer in p_X (bias sweep): direct runs vs the p_X = 1e-9 failure fractions
+
+| code | flags | d_Z | p_X | direct p_XL [95% CI] | from p_X = 1e-9 [95% CI] | intervals overlap |
+|---|---|---|---|---|---|---|
+| [15,6,5] | none | 15 | 1.0e-10 | 3.83e-19 [2.3e-19, 4.6e-15] | 3.53e-19 [2.1e-19, 1.9e-16] | yes |
+| [15,6,5] | f=0.99 idle w=exact | 15 | 1.0e-10 | 1.47e-20 [7.5e-21, 5.2e-15] | 5.57e-20 [2.3e-20, 4.1e-16] | yes |
+| [15,6,5] | f=0.99 all w=exact | 15 | 1.0e-10 | 1.95e-23 [3.7e-24, 2.1e-16] | 1.92e-25 [9.3e-26, 2.1e-16] | yes |
+| [15,6,5] | none | 15 | 2.5e-08 | 3.46e-12 [2.6e-12, 1.4e-11] | 5.50e-12 [3.2e-12, 2.1e-11] | yes |
+| [15,6,5] | f=0.99 idle w=exact | 15 | 2.5e-08 | 7.12e-13 [3.0e-13, 2.5e-11] | 8.55e-13 [3.5e-13, 3.0e-11] | yes |
+| [15,6,5] | f=0.99 all w=exact | 15 | 2.5e-08 | 5.92e-16 [1.6e-16, 6.9e-13] | 8.90e-18 [2.6e-18, 1.3e-11] | yes |
+| [15,6,5] 2 anc | f=0.99 all w=exact | 15 | 1.0e-10 | 1.03e-25 [5.6e-26, 1.4e-16] | 7.21e-24 [1.3e-24, 1.4e-16] | yes |
+| [15,6,5] 2 anc | f=0.99 all w=exact | 15 | 2.5e-08 | 4.61e-18 [1.7e-18, 4.6e-13] | 1.13e-16 [2.0e-17, 8.5e-12] | yes |
+| [15,9,3] | f=0.99 all w=exact | 15 | 1.0e-10 | 9.27e-17 [3.7e-17, 2.3e-16] | 2.03e-16 [1.1e-16, 3.8e-16] | yes |
+| [15,9,3] | f=0.99 idle w=exact | 15 | 1.0e-10 | 5.76e-15 [3.9e-15, 9.6e-15] | 8.69e-15 [8.0e-15, 9.6e-15] | yes |
+| [15,9,3] | none | 15 | 2.5e-08 | 1.88e-09 [1.8e-09, 2.0e-09] | 1.91e-09 [1.8e-09, 2.0e-09] | yes |
+| Hamming [15,11,3] | f=0.99 all w=exact | 15 | 1.0e-10 | 2.33e-16 [1.5e-16, 3.6e-16] | 2.69e-16 [1.8e-16, 4.0e-16] | yes |
+| Hamming [15,11,3] | f=0.99 idle w=exact | 15 | 1.0e-10 | 8.76e-15 [6.4e-15, 1.2e-14] | 9.73e-15 [8.7e-15, 1.1e-14] | yes |
+| Hamming [15,11,3] | f=0.99 idle w=exact | 15 | 2.5e-08 | 6.18e-10 [5.5e-10, 6.9e-10] | 6.07e-10 [5.4e-10, 6.8e-10] | yes |
+
+14 of 14 direct runs at other p_X are consistent with the p_X transfer.
+
