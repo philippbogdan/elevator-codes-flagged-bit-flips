@@ -296,10 +296,14 @@ this work's own.
     threshold would select): `assumptions.md`.
 
 13c. **Heralded flags (a flag certifies the X) versus erasures (the event's X occurs with
-    probability ½).**  [15,9,3] at f = 0.99: idle-only {{ pxl3("herald|idle|w0|f0.99|r0|herald") }}
-    (heralded) vs {{ pxl3("herald|idle|w0|f0.99|r0|erasure") }} (erasure); all locations
-    {{ pxl3("herald|all|w0|f0.99|r0|herald") }} vs {{ pxl3("herald|all|w0|f0.99|r0|erasure") }}
-    (`assumptions.md`).
+    probability ½).**  [15,9,3]: idle-only flags at f = 1 {{ pxl3("herald|idle|w0|f1.0|r0|herald") }}
+    (heralded) vs {{ pxl3("herald|idle|w0|f1.0|r0|erasure") }} (erasure); all locations at f = 0.9
+    {{ pxl3("herald|all|w0|f0.9|r0|herald") }} vs {{ pxl3("herald|all|w0|f0.9|r0|erasure") }}
+    (`assumptions.md`): a flag that certifies the X carries more information, and halves the
+    number of flagged events.  The minimum overhead with idle-only flags at f = 1 becomes
+    {{ asm("herald|idle|w0|f1.0|r0|herald") }} (erasure: {{ asm("herald|idle|w0|f1.0|r0|erasure") }}; this-work
+    pZL).  The erasure model is the one arXiv:2607.01375 supports (a flip leaves the cat's bit
+    random) and is used everywhere else.
 
 13d. **The idle-noise reading moves both error types but not the conclusion.**  Under the literal
     reading the [15,9,3] bit flips are ×{{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} higher
