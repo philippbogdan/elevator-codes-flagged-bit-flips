@@ -19,9 +19,13 @@ and arXiv:2607.01375v1.  Code: `elevator/`; task specifications: `tasks/`; raw r
   measured during one sweep of the whole column (n logical operations), alternating down and
   up.  With n = 15 this gives d_Z rounds per check for d_Z >= 16 - the paper's "m d_Z rounds
   per outer round ... n_L < d_Z in the operating regime" - and 16 rounds per check below.
-  Variants tried: 'compress' (exactly d_Z rounds per check, several operations per gap) and
-  'span' (stop after the last block of the check).  Two ancillas: both sweep in lockstep, one
-  block apart, each measuring alternate checks.
+  Variants tried: 'compress' (exactly d_Z rounds per check, several operations per gap),
+  'span' (stop after the last block of the check) and 'local' (the shortest path: the ancilla
+  takes the nearest remaining check of the outer round, heads for the nearer end of its support
+  and is reset in place; m·d_Z rounds per outer round as the paper states).  The full sweep
+  reproduces the [15,6,5] fits, the shortest path the [15,9,3] and [16,3,8] fits
+  (`results/summary/schedule_comparison.md`); the flag study uses the full sweep throughout.
+  Two ancillas: both sweep in lockstep, one block apart, each measuring alternate checks.
 * Noise (Table I): prep/measure in Z: X at p_X; prep/measure in X: Z at p_Z; idle: X at p_X,
   Z at p_Z; CNOT: IZ, ZI, ZZ at p_Z/3, IX, XI, XX at p_X/3.  Which locations count as idle is
   not stated: the reading that reproduces the published fits (below) has no idle noise on
