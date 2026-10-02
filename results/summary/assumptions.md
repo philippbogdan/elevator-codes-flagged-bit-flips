@@ -9,10 +9,10 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 | flags on | window | f | false flags | alternative | [15,9,3] | [15,6,5] | [15,6,5] 2 anc | minimum overhead |
 |---|---|---|---|---|---|---|---|---|
 | idle | exact | 0.99 | 0 | erasure | 8.69e-13 [8.0e-13, 9.6e-13] | 5.57e-17 [2.3e-17, 4.1e-14] | 4.88e-18 [2.2e-18, 2.7e-14] (transferred) | 51.6 ([15,9,3], d=15) |
-| idle+gate | exact | 0.99 | 0 | erasure | 1.23e-14 [4.9e-15, 3.1e-14] | 3.15e-20 [5.6e-21, 2.7e-14] | 1.49e-22 [5.6e-23, 2.0e-14] (transferred) | 51.6 ([15,9,3], d=15) |
+| idle+gate | exact | 0.99 | 0 | erasure | 1.23e-14 [4.9e-15, 3.1e-14] | 3.15e-20 [5.6e-21, 2.7e-14] | 1.23e-22 [4.2e-23, 2.0e-14] | 51.6 ([15,9,3], d=15) |
 | all | exact | 0.99 | 0 | erasure | 2.03e-14 [1.1e-14, 3.8e-14] | 2.06e-22 [9.5e-23, 2.1e-14] | 7.21e-21 [1.3e-21, 1.4e-14] | 51.6 ([15,9,3], d=15) |
 | idle | exact | 0.9 | 0 | erasure | 1.05e-12 [9.7e-13, 1.2e-12] | 3.99e-17 [1.4e-17, 4.4e-14] | - | 77.3 ([15,6,5], d=15) |
-| idle+gate | exact | 0.9 | 0 | erasure | 1.68e-13 [1.5e-13, 1.8e-13] | 3.88e-18 [1.1e-18, 1.4e-14] | 7.87e-19 [1.6e-19, 9.0e-15] (transferred) | 51.6 ([15,9,3], d=15) |
+| idle+gate | exact | 0.9 | 0 | erasure | 1.68e-13 [1.5e-13, 1.8e-13] | 3.88e-18 [1.1e-18, 1.4e-14] | 1.29e-19 [7.2e-20, 9.1e-15] | 51.6 ([15,9,3], d=15) |
 | all | exact | 0.9 | 0 | erasure | 1.61e-13 [1.5e-13, 1.8e-13] | 5.42e-18 [1.9e-18, 1.3e-14] | 1.23e-19 [7.1e-20, 8.6e-15] | 51.6 ([15,9,3], d=15) |
 
 ### timing window (ticks; one inner round = 4, one outer round ~600-1100)
@@ -60,11 +60,11 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 | flags on | window | f | false flags | alternative | [15,9,3] | [15,6,5] | [15,6,5] 2 anc | minimum overhead |
 |---|---|---|---|---|---|---|---|---|
 | idle | 4 | 0.8 | 1e-09 | erasure | 1.24e-12 [1.1e-12, 1.4e-12] | - | - | not reached |
-| idle | 4 | 0.8 | 1e-07 | erasure | 1.48e-12 [1.4e-12, 2.2e-12] | - | - | not reached |
+| idle | 4 | 0.8 | 1e-07 | erasure | 1.48e-12 [1.4e-12, 2.2e-12] | 8.11e-17 [3.3e-17, 1.6e-10] | 3.94e-17 [1.5e-17, 1.7e-10] | 77.3 ([15,6,5], d=15) |
 | idle | 4 | 0.8 | 1e-06 | erasure | 1.71e-12 [1.1e-12, 4.2e-11] | - | - | not reached |
-| all | 4 | 0.8 | 1e-09 | erasure | - | - | - | - |
-| all | 4 | 0.8 | 1e-07 | erasure | - | - | - | - |
-| all | 4 | 0.8 | 1e-06 | erasure | - | - | - | - |
+| all | 4 | 0.8 | 1e-09 | erasure | 4.27e-13 [3.9e-13, 5.0e-13] | - | - | 51.6 ([15,9,3], d=15) |
+| all | 4 | 0.8 | 1e-07 | erasure | 5.15e-13 [4.4e-13, 1.4e-12] | 2.86e-18 [1.7e-18, 1.9e-10] | 5.69e-18 [1.9e-18, 1.9e-10] | 51.6 ([15,9,3], d=15) |
+| all | 4 | 0.8 | 1e-06 | erasure | 8.30e-13 [3.9e-13, 3.8e-11] | - | - | 51.6 ([15,9,3], d=15) |
 
 ### idle-noise reading (bit flips at d_Z = 17; the literal reading also raises the phase flips, see REPORT)
 
@@ -72,7 +72,7 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 |---|---|---|---|---|---|
 | none | exact | 0.0 | 4.10e-12 / 1.12e-11 | 3.10e-16 / 1.67e-15 | 1.49e-16 / - |
 | idle | exact | 0.99 | 1.20e-12 / 1.62e-12 | 8.86e-17 / 9.58e-17 | 7.24e-18 / - |
-| all | exact | 0.9 | 2.09e-13 / - | 3.45e-18 / - | 1.08e-18 / 7.48e-18 |
-| all | exact | 0.99 | 2.77e-14 / - | 3.13e-20 / - | 1.90e-22 / 9.76e-22 |
-| all | 64 | 0.99 | 4.78e-14 / 9.90e-14 | 8.15e-22 / - | 1.15e-22 / 4.44e-22 |
+| all | exact | 0.9 | 2.09e-13 / - | 3.45e-18 / 2.56e-17 | 1.08e-18 / 7.48e-18 |
+| all | exact | 0.99 | 9.57e-15 / 5.97e-14 | 3.13e-20 / - | 1.90e-22 / 9.76e-22 |
+| all | 64 | 0.99 | 4.78e-14 / 9.90e-14 | 8.15e-22 / 2.94e-21 | 1.15e-22 / 4.44e-22 |
 | all | 1024 | 0.99 | 1.90e-13 / 3.92e-13 | 5.94e-22 / - | 2.26e-20 / 4.40e-20 |

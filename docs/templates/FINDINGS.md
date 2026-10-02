@@ -272,8 +272,12 @@ this work's own.
     {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at r = 1e-6 (95 % intervals; the single- and
     two-event strata are bounded analytically, `false_flag_bounds.json`: a failure needs falsely
     flagged locations that complete the real events to a logical, and with exact timing the decoder
-    never prefers two flags over one).  With 64-tick windows: {{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }}
-    at r = 1e-6{{ " — still below the target with its upper bound" if N["assumptions"].get("falseflag|all|w64|f0.99|r1e-06|erasure|pXL_15_9_3", [0, 0, 1])[2] < 1e-12 - N["convention"]["phase_compare"]["[15,9,3]|d15"]["this_work"] else " (upper bound limited by sampling)" }}.
+    never prefers two flags over one).  With 64-tick windows the 95 % upper bound stays below the
+    target up to r = {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} and the
+    central estimate up to r = {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }}
+    ({{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }} at 1e-6); beyond, the bound is set by the
+    analytic pair bound, which is loose for windows (the two-flags-cost-more argument is proved only
+    for exact timing).
     Full sweep, including f = 0.8–0.9 with 4–16-tick windows (the regime a photon-counting
     threshold would select): `assumptions.md`.
 

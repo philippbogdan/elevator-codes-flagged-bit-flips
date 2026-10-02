@@ -862,6 +862,18 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
         if a and b and a["pL"] > 0:
             out[f"literal|{cls}|w{w}|f{f}|ratio_15_9_3"] = b["pL"] / a["pL"]
     NUMBERS["md"]["assump_literal"] = "\n".join(lines[g0 + 1:])
+    # largest false-flag rate at which [15,9,3] (d_Z = 15) still meets the target with the 95% upper bound
+    tol = {}
+    budget = 1e-12 - pzl_fn("15_9_3", 1, 15, 1e-3)
+    for (cls, w, f) in [("all", 0, 0.99), ("all", 64, 0.99), ("idle", 0, 0.99), ("idle", 64, 0.99),
+                        ("all", 4, 0.8), ("all", 16, 0.8), ("all", 4, 0.9), ("all", 16, 0.9)]:
+        ok_r = [r_ for r_ in (1e-10, 1e-9, 1e-8, 1e-7, 1e-6)
+                if (lambda c: c is not None and c["hi"] <= budget)(cell(("15_9_3", 1), 15, f, cls, w, r_))]
+        ok_c = [r_ for r_ in (1e-10, 1e-9, 1e-8, 1e-7, 1e-6)
+                if (lambda c: c is not None and c["pL"] <= budget)(cell(("15_9_3", 1), 15, f, cls, w, r_))]
+        tol[f"{cls}|w{w}|f{f}"] = dict(max_r_conservative=max(ok_r) if ok_r else None,
+                                       max_r_central=max(ok_c) if ok_c else None)
+    out["tolerance"] = tol
     NUMBERS["assumptions"] = out
     open(os.path.join(OUT, "assumptions.md"), "w").write("\n".join(lines) + "\n")
 
