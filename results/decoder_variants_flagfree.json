@@ -26,5 +26,81 @@
     "seconds": 15.591039419174194
    }
   }
+ },
+ {
+  "code": "15_9_3",
+  "d": 9,
+  "memory": "X",
+  "p_x": 0.0,
+  "p_z": 0.007,
+  "shots": 600,
+  "rounds": 96,
+  "k": 9,
+  "decoders": {
+   "bplsd_cs4": {
+    "fails": 43,
+    "seconds": 68.44144630432129
+   },
+   "bposd_cs7": {
+    "fails": 35,
+    "seconds": 1618.9893798828125
+   },
+   "bposd0_ps": {
+    "fails": 38,
+    "seconds": 64.79414749145508
+   },
+   "bposd0_ms": {
+    "fails": 46,
+    "seconds": 11.83157992362976
+   }
+  }
+ },
+ {
+  "code": "15_9_3",
+  "d": 9,
+  "memory": "Z",
+  "p_x": 1e-05,
+  "p_z": 0.0,
+  "shots": 6000,
+  "rounds": 480,
+  "k": 9,
+  "decoders": {
+   "bposd_cs7": {
+    "fails": 1692,
+    "seconds": 3.50235915184021
+   },
+   "bposd0_ps": {
+    "fails": 1697,
+    "seconds": 2.9347803592681885
+   },
+   "bposd0_ms": {
+    "fails": 1880,
+    "seconds": 0.28160715103149414
+   }
+  }
+ },
+ {
+  "code": "15_6_5",
+  "d": 9,
+  "memory": "Z",
+  "p_x": 1e-05,
+  "p_z": 0.0,
+  "shots": 6000,
+  "rounds": 800,
+  "k": 6,
+  "decoders": {
+   "bposd_cs7": {
+    "fails": 611,
+    "seconds": 4.874735116958618
+   },
+   "bposd0_ps": {
+    "fails": 614,
+    "seconds": 3.8975021839141846
+   },
+   "bposd0_ms": {
+    "fails": 990,
+    "seconds": 1.00421142578125
+   }
+  }
  }
 ]
