@@ -1154,15 +1154,15 @@ def limits_table():
                     continue
                 tot = t[0] + fn(key[0], key[1], d, 1e-2)
                 if best is None or tot < best[0]:
-                    best = (tot, d, ref, t[0])
+                    best = (tot, d, ref, t[0], t[2] + fn(key[0], key[1], d, 1e-2))
             if best is None:
                 continue
-            tot, d, ref, pxl = best
+            tot, d, ref, pxl, tot_hi = best
             sp = strata_split(ref, d_target=d)
             pzl = fn(key[0], key[1], d, 1e-2)
             fo, wu = sp["flagged_only"], sp["with_unflagged"]
             fl = "none" if key[2] == 0 else f"f={key[2]} {key[3]} w={key[4] or 'exact'}"
-            L[f"p1e-2|{CODE_LABEL[key[:2]]}|{fl}|{tag}"] = dict(pL=tot, d=d, pZL=pzl, flagged_only=fo, with_unflagged=wu,
+            L[f"p1e-2|{CODE_LABEL[key[:2]]}|{fl}|{tag}"] = dict(pL=tot, pL_hi=tot_hi, d=d, pZL=pzl, flagged_only=fo, with_unflagged=wu,
                                                                overhead=overhead(key[0], key[1], d),
                                                                reach=next((overhead(key[0], key[1], dd) for dd in range(15, 302, 2)
                                                                            if (transfer_pxl(byd[min(byd, key=lambda x: abs(x - dd))], dd) or [1])[0]
@@ -1172,7 +1172,7 @@ def limits_table():
     NUMBERS["limits"] = L
     open(os.path.join(OUT, "limits.md"), "w").write("\n".join(lines) + "\n")
     # compact p_Z = 1e-2 table for the documents
-    md = ["| code | flags | lowest p_L, paper pZL (d_Z, overhead) | this-work pZL (d_Z, overhead) | 1e-12 reached at overhead (paper / this work) | floor made of (this work: phase / flagged-only / unflagged) |",
+    md = ["| code | flags | lowest p_L [with p_XL at its 95% upper bound], paper pZL (d_Z, overhead) | this-work pZL | 1e-12 reached at overhead (paper / this work) | floor made of (this work: phase / flagged-only / unflagged) |",
           "|---|---|---|---|---|---|"]
     order = ["none", "f=0.9 idle w=exact", "f=0.99 idle w=exact", "f=0.9 all w=exact", "f=0.99 idle+gate w=exact",
              "f=0.99 all w=exact", "f=0.99 all w=64", "f=0.99 all w=1024", "f=1.0 all w=exact"]
@@ -1185,7 +1185,8 @@ def limits_table():
             ra = f"{a['reach']:.0f}" if a.get("reach") else "no"
             rb = f"{b['reach']:.0f}" if b.get("reach") else "no"
             ext = lambda x: " (extrap.)" if x["d"] > 69 else ""
-            md.append(f"| {code} | {fl} | {a['pL']:.1e} ({a['d']}, {a['overhead']:.0f}){ext(a)} | {b['pL']:.1e} ({b['d']}, {b['overhead']:.0f}){ext(b)} | "
+            md.append(f"| {code} | {fl} | {a['pL']:.1e} [≤ {a['pL_hi']:.1e}] ({a['d']}, {a['overhead']:.0f}){ext(a)} | "
+                      f"{b['pL']:.1e} [≤ {b['pL_hi']:.1e}] ({b['d']}, {b['overhead']:.0f}){ext(b)} | "
                       f"{ra} / {rb} | {b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
     NUMBERS.setdefault("md", {})["pz1e2_table"] = "\n".join(md)
 
