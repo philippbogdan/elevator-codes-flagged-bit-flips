@@ -1146,6 +1146,42 @@ def literal_reading():
     open(os.path.join(OUT, "literal_reading.md"), "w").write("\n".join(lines) + "\n")
 
 
+def schedule_comparison():
+    """Flag-free Z memory under the full-sweep and the shortest-path ('local') ancilla paths, block-level
+    model, BP+OSD, against the paper's fits at its sampled points (results/sched_local)."""
+    import glob as _g
+    from elevator.decode import wilson
+    sys.path.insert(0, os.path.join(ROOT, "scripts"))
+    from summarize_repro import fit_z
+    rows = []
+    for fn in _g.glob(os.path.join(ROOT, "results", "sched_local", "*.json")):
+        st = json.load(open(fn))
+        sp = st["spec"]
+        if not st.get("shots"):
+            continue
+        R, k = st["rounds"], st["k"]
+        conv = lambda x: 1 - (1 - x) ** (1 / (R * k))
+        lo, hi = wilson(st["fails"], st["shots"])
+        pl = conv(st["fails"] / st["shots"])
+        fit = fit_z(sp["code"], sp["n_anc"], sp["d"], sp["p_x"])
+        rows.append(dict(code=sp["code"], n_anc=sp["n_anc"], d=sp["d"], p=sp["p_x"], mode=sp["mode"], fails=st["fails"],
+                         shots=st["shots"], pL=pl, lo=conv(lo), hi=conv(hi), fit=fit, ratio=pl / fit,
+                         rounds_per_outer=R / sp["n_outer"]))
+    if not rows:
+        return
+    rows.sort(key=lambda r: (r["code"], r["n_anc"], r["d"], r["p"], r["mode"]))
+    lines = ["\n## Ancilla path: full sweep vs shortest path (flag-free Z memory, BP+OSD, block level)\n",
+             "| code | anc | d_Z | p_X | path | rounds per outer round | fails/shots | p_XL [95% CI] | fit | ratio |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    summ = defaultdict(list)
+    for r in rows:
+        lines.append(f"| {r['code']} | {r['n_anc']} | {r['d']} | {r['p']:.0e} | {r['mode']} | {r['rounds_per_outer']:.0f} | "
+                     f"{r['fails']}/{r['shots']} | {r['pL']:.2e} [{r['lo']:.1e}, {r['hi']:.1e}] | {r['fit']:.2e} | {r['ratio']:.2f} |")
+        summ[f"{r['code']}|a{r['n_anc']}|{r['mode']}"].append(r["ratio"])
+    NUMBERS["schedule_comparison"] = {k: dict(min=min(v), max=max(v), n=len(v)) for k, v in summ.items()}
+    open(os.path.join(OUT, "schedule_comparison.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1596,6 +1632,7 @@ def plot_bias(out, tag):
 if __name__ == "__main__":
     aux_checks()
     repro_tables()
+    schedule_comparison()
     figures_from_fits()
     flag_tables(dirs=("flag_main", "flag_supp", "flag_falseflag"))
     flag_tables(dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
