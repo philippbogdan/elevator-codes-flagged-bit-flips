@@ -78,10 +78,16 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
         exact[(1, 0)] = f10
         assert not min_logical_weight_le2(bm), "DEM has a logical of weight <= 2"
         exact[(0, 1)] = 0.0
+        if int(spec["flag"].get("window", 0)) == 0:
+            # exactly timed flags: b < d erasures of single mechanisms cannot contain a logical
+            # (circuit distance = code distance, checked with Stim for every outer code used)
+            for b in range(2, code.d):
+                if (0, b) in weights:
+                    exact[(0, b)] = 0.0
     budget = int(spec.get("budget", 100000))
     n1 = int(spec.get("n1", 1000))
     rel_tol = float(spec.get("rel_tol", 0.15))
-    abs_tol = float(spec.get("abs_tol", 5e-14))
+    abs_tol = float(spec.get("abs_tol", 1e-13))
     base = int(spec.get("seed", 0)) * 7919
     used = 0
     sampled = [st for st in strata if st not in exact and weights[st] > 0]
