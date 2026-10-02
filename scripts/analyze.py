@@ -925,6 +925,13 @@ def aux_checks():
     pf = load("perfect_flags_exact.json")
     if pf:
         A["perfect_flags_exact"] = {f"{r['code']}|a{r['n_anc']}|d{r['d']}": {b: v["F"] for b, v in r["F"].items()} for r in pf}
+    cs = class_sums_table()
+    A["class_share"] = {}
+    for key in ("15_9_3:a1:d15", "15_6_5:a1:d15", "15_6_5:a2:d15"):
+        if key in cs:
+            sm = cs[key]["sums"]
+            tot = sum(v[0] for v in sm.values())
+            A["class_share"][key] = {c: v[0] / tot for c, v in sm.items()}
     se = load("sensitivity_15_9_3.json")
     if se:
         A["sensitivity_15_9_3"] = se
@@ -962,7 +969,7 @@ def bias_sweep(pzl_fn, tag, codes=CODES_MAIN, label="bias"):
 
 # ------------------------------------------------------------------ 6. p_Z = 1e-2: floors
 def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
-    rows = [r for r in flag_rows(("flag_pz1e2",)) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-8]
+    rows = [r for r in flag_rows(("flag_pz1e2",), transfers=False) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-8]
     if not rows:
         return
     refs = defaultdict(dict)
@@ -987,7 +994,9 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
                     lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {dd} | "
                                  f"{r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {t[0]:.2e} [{t[1]:.2e}, {t[2]:.2e}] {'' if ok else '(outside)'} |")
     NUMBERS[f"pz1e2_transfer_checks"] = dict(agree=int(sum(checks)), total=len(checks))
-    lines += ["\n### Floor per code and flag setting (d_Z <= 121) and overhead to reach given rates\n",
+    lines += ["\n### Floor per code and flag setting (d_Z <= 301) and overhead to reach given rates\n",
+              "Phase flips beyond d_Z ~ 70 (repetition code sampled to d_Z = 69 at p_Z >= 1.25e-2, elevator X memory "
+              "to d_Z = 29 at p_Z = 1e-2) are extrapolations of the phase-flip model; floors there are marked '(extrap.)'.\n",
               "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there | overhead for 1e-9 | 1e-10 | 1e-11 | 1e-12 |",
               "|---|---|---|---|---|---|---|---|---|---|---|"]
     out = {}
@@ -996,7 +1005,7 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
             continue
         best = None
         reach = {}
-        for d in range(15, 122, 2):
+        for d in range(15, 302, 2):
             ref_d = min(byd, key=lambda x: abs(x - d))
             t = transfer_pxl(byd[ref_d], d)
             if t is None:
@@ -1011,7 +1020,8 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
         if best:
             out[key] = best + (reach,)
             rc = " | ".join(f"{reach[tg]:.1f}" if tg in reach else "-" for tg in (1e-9, 1e-10, 1e-11, 1e-12))
-            lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {best[0]:.2e} | {best[1]} | "
+            lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {best[0]:.2e}"
+                         f"{' (extrap.)' if best[1] > 69 else ''} | {best[1]} | "
                          f"{best[2]:.1f} | {best[3]:.2e} | {best[4]:.2e} | {rc} |")
     NUMBERS.setdefault("pz1e2", {})[tag] = {f"{k[0]}|a{k[1]}|f{k[2]}|{k[3]}|w{k[4]}": dict(pL=v[0], d=v[1], overhead=v[2],
                                               reach={f"{tg:g}": oh for tg, oh in v[5].items()}) for k, v in out.items()}

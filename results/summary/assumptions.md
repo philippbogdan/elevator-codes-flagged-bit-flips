@@ -70,7 +70,7 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 
 | flags on | window | f | [15,9,3] noop / literal | [15,6,5] noop / literal | [15,6,5] 2 anc noop / literal |
 |---|---|---|---|---|---|
-| none | exact | 0.0 | 4.10e-12 / 1.12e-11 | 5.73e-16 / - | - / - |
+| none | exact | 0.0 | 4.10e-12 / 1.12e-11 | 5.73e-16 / - | 1.49e-16 / - |
 | idle | exact | 0.99 | 1.18e-12 / 1.62e-12 | 9.11e-17 / - | - / - |
 | all | exact | 0.9 | 2.18e-13 / - | 8.80e-18 / - | - / - |
 | all | exact | 0.99 | 2.75e-14 / - | 3.39e-22 / - | - / - |

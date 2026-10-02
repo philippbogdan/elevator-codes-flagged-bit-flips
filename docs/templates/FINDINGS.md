@@ -33,8 +33,11 @@ this work's own.
   than the whole simulated memory (five outer rounds), i.e. a flag that only says *which qubit*
   flipped (this-work pZL; paper pZL at d_Z = 17: {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 0) }}
   and {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 4096) }}).  §4.
-* **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**  About a quarter
-  of the bit flips happen inside gates and stay unflagged; [15,9,3] then saturates at
+* **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**
+  {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
+  inside CNOTs (the rest while idle; preparation and measurement
+  {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["prep"] + N["checks"]["class_share"]["15_9_3:a1:d15"]["meas"]) }})
+  and stay unflagged; [15,9,3] then saturates at
   p_XL = {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} per round (d_Z = 15, f = 1), barely
   below the target: with the paper's phase-flip fit no idle-only setting beats the flag-free 88
   ({{ ohs("paper-pZL", "idle|w0|f1.0") }} at f = 1); with this work's it needs f ≥
