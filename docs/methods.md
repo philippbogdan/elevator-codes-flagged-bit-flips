@@ -72,9 +72,10 @@ the size of Stim's disjoint-error approximation).
   takes > 2 s per shot there.
 * Flags: exact most-likely-error decoding as an integer program (HiGHS) on the block-level
   detector error model, with a flagged window's events made mutually exclusive.  Checked
-  against an exact maximum-likelihood (coset) trellis decoder: identical failures on the
-  leading strata (999 of 1000 shots agree).  BP+OSD with flag posteriors is kept as the
-  paper-like decoder (20-30 % more failures).
+  against exact maximum likelihood (a coset trellis for exact timing, enumeration of the windows'
+  assignments for coarse timing) on the strata that dominate failure, for [15,9,3] and for
+  [15,6,5] in the p_Z = 1e-2 regime (§8; numbers in FINDINGS item 5).  BP+OSD with flag
+  posteriors is kept as the paper-like decoder (more failures on the same configurations).
 * Isolated repetition code: PyMatching; equal to exact ML within statistics.
 
 ## 5. Rare-event estimation of bit flips, `elevator/strata.py`, `elevator/flagstudy.py`
