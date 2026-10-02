@@ -1216,7 +1216,7 @@ def strata_split(row, d_target=None, p_x=None):
         S = p_x * sum(2 * eff[c] * sums["sums"][c][1] for c in CLASS_LIST)
         R, k = sums["rounds"], sums["k"]
     parts = {"flagged_only": 0.0, "with_unflagged": 0.0}
-    keys = set(row["strata"]) | set(row["exact"])
+    keys = sorted(set(row["strata"]) | set(row["exact"]))
     for key in keys:
         a, b = map(int, key.split(","))
         w = pois(a, U) * pois(b, S)
