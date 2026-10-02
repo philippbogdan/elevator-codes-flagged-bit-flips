@@ -81,6 +81,7 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
     budget = int(spec.get("budget", 100000))
     n1 = int(spec.get("n1", 1000))
     rel_tol = float(spec.get("rel_tol", 0.15))
+    abs_tol = float(spec.get("abs_tol", 5e-14))
     base = int(spec.get("seed", 0)) * 7919
     used = 0
     sampled = [st for st in strata if st not in exact and weights[st] > 0]
@@ -100,7 +101,22 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
                 counts[(a, b)][1] += n
                 used += n
 
-        run_alloc({st: n1 for st in sampled}, "p1")
+        # phase 1: low orders first; higher orders only if their weight can matter
+        t_lead = (code.d + 1) // 2
+        lo_ord = [st for st in sampled if sum(st) <= t_lead + 1]
+        hi_ord = [st for st in sampled if sum(st) > t_lead + 1]
+        run_alloc({st: n1 for st in lo_ord}, "p1")
+        est0 = sum(weights[st] * counts[st][0] / max(counts[st][1], 1) for st in lo_ord)
+        est0 += sum(weights[st] * exact[st] for st in exact)
+        skipped = []
+        keep_hi = []
+        for st in hi_ord:
+            if est0 > 0 and weights[st] < 1e-3 * est0:
+                skipped.append(st)
+            else:
+                keep_hi.append(st)
+        run_alloc({st: n1 for st in keep_hi}, "p1b")
+        sampled = lo_ord + keep_hi
         it = 0
         while used < budget and it < 12:
             it += 1
@@ -114,6 +130,11 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
             tot = sum(widths.values())
             if est > 0 and tot < rel_tol * est:
                 break
+            # absolute stop: 95% upper bound (per round per logical qubit) below abs_tol
+            hi_tot = sum(weights[st] * wilson(*counts[st])[1] for st in sampled if counts[st][1])
+            hi_tot += sum(weights[st] * exact[st] for st in exact) + sum(weights[st] for st in skipped)
+            if hi_tot / (sched.n_rounds * code.k) < abs_tol:
+                break
             mx = max(widths.values()) if widths else 0
             if mx <= 0:
                 break
@@ -122,6 +143,9 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
             sw = sum(sel.values())
             run_alloc({st: max(100, int(chunk * wd / sw)) for st, wd in sel.items()}, f"it{it}")
     res = summarize(counts, weights, exact)
+    skip_w = sum(weights[st] for st in skipped)
+    res["hi"] += skip_w                      # skipped strata contribute at most their weight
+    res["skipped_weight"] = skip_w
     res.update(dict(exact={f"{a},{b}": v for (a, b), v in exact.items()},spec=spec, U=U, S=S, rounds=sched.n_rounds, k=code.k,
                     strata={f"{a},{b}": counts[(a, b)] for (a, b) in strata},
                     weights={f"{a},{b}": weights[(a, b)] for (a, b) in strata},
