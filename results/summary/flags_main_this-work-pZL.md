@@ -13,8 +13,10 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | all | 4 | 0.9 | 0 | 65.8 | [15,9,3], 19 | 3.21e-13 | 65.8 |
 | all | 4 | 0.99 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 1.79e-20 | 104.8 |
 | all | 4 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 |
+| all | 16 | 0.9 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 1.78e-19 | 104.8 |
 | all | 16 | 0.99 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 1.78e-20 | 104.8 |
 | all | 16 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 |
+| all | 64 | 0.9 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 1.83e-18 | 104.8 |
 | all | 64 | 0.99 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 7.07e-20 | 104.8 |
 | all | 64 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 2.93e-14 | 51.6 |
 | all | 256 | 0.9 | 0 | 104.8 | [15,6,5] 2 anc, 19 | 3.48e-18 | 104.8 |
@@ -29,4 +31,4 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | exact | 0.5 | 0 | not reached | - | - | not reached |
 | idle | exact | 0.8 | 0 | not reached | - | - | not reached |
 | idle | exact | 0.9 | 0 | not reached | - | - | not reached |
-| idle | exact | 0.99 | 0 | not reached | - | - | not reached |
+| idle | exact | 0.99 | 0 | 51.6 | [15,9,3], 15 | 8.69e-13 | not reached |
