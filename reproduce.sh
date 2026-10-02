@@ -49,6 +49,8 @@ if [ "$MODE" = "all" ]; then
   run_tasks tasks/tier_b.jsonl results/flag_main 30 12
   run_tasks tasks/flag_main_rem_local.jsonl results/flag_main 22 16
   run_tasks tasks/ham63_sel.jsonl results/flag_ham63 4 8
+  run_tasks tasks/ffcap.jsonl results/flag_supp 6 16              # false flags with analytic caps
+  run_tasks tasks/sched_local.jsonl results/sched_local 8 16      # ancilla-path sensitivity (flags off)
   [ -s tasks/legacy.jsonl ] && run_tasks tasks/legacy.jsonl results/flag_literal 4 16
   # local checks (minutes to an hour each)
   "$PY" scripts/known_answers.py --out results/known_answers.json
@@ -59,6 +61,9 @@ if [ "$MODE" = "all" ]; then
   "$PY" scripts/variants_z.py results/variants/z_variants_v1.json 20000
   "$PY" scripts/perfect_flags_exact.py 4000000
   "$PY" scripts/class_sums.py
+  "$PY" scripts/counting_convention.py
+  "$PY" scripts/decoder_check_16_3_8.py 20000
+  "$PY" scripts/false_flag_bounds.py
 fi
 
 # analysis: every table, figure and number, then the documents rendered from them
