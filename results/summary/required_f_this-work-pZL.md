@@ -369,7 +369,7 @@
 | Hamming [15,11,3] | 13 | 36.4 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [15,11,3] | 13 | 36.4 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [15,11,3] | 15 | 42.2 | all | exact | 0.637 (between 0.5 and 0.8) | 0.673 (between 0.5 and 0.8) |
-| Hamming [15,11,3] | 15 | 42.2 | all | 1 | 0.691 (between 0 and 0.99) | 0.790 (between 0 and 0.99) |
+| Hamming [15,11,3] | 15 | 42.2 | all | 1 | 0.692 (between 0 and 0.99) | 0.790 (between 0 and 0.99) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 16 | 0.695 (between 0 and 0.99) | 0.792 (between 0 and 0.99) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 64 | 0.746 (between 0 and 0.99) | 0.804 (between 0 and 0.99) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 256 | 0.863 (between 0 and 0.99) | 0.899 (between 0 and 0.99) |

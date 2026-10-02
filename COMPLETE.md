@@ -37,8 +37,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   failures on 3000 exactly timed configurations and
   91 vs 92
   on 70000 configurations with windows of 64–4096 ticks ([15,9,3]);
-  64 vs 68
-  on 4800 configurations of [15,6,5] in the p_Z = 1e-2 regime.
+  132 vs 136
+  on 12800 configurations of [15,6,5] in the p_Z = 1e-2 regime.
 * **Every assumption the flag model needs, with its measured effect** (`assumptions.md`; minimum
   overhead at p_Z = 1e-3, η = 1e6, 1e-12, this-work pZL / paper pZL):
 
@@ -59,8 +59,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   14/16 ([15,6,5], two ancillas) and
   6/16 ([15,9,3], ratios
   1.43–3.76);
-  X memory ratios 0.31–0.47
-  counting a failure once, 0.80–1.30
+  X memory ratios 0.34–0.47
+  counting a failure once, 0.89–1.30
   counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
   2.6 measured on the same shots, `counting_convention.json`);
   the repetition code within 0.7–1.4× of the paper's repetition-code fit for d_Z ≤ 13.
@@ -143,7 +143,7 @@ without one).
 * **Statistics** — every rate carries a 95 % interval (Wilson per stratum; failures counted in the
   tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
   analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
-  1112 sampled strata checked against it, 0 violations), or of the
+  1126 sampled strata checked against it, 0 violations), or of the
   false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
   95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
@@ -151,7 +151,7 @@ without one).
   points: direct samples under flags 30/30
   and 30/30 (from the
   p_X = 1e-9 fractions); d_Z transfers 146/146
-  and 124/124; p_X transfers (bias)
+  and 126/126; p_X transfers (bias)
   24/24; held-out
   repetition-code points within 0.94–1.48×.
 * **Overhead against the published floors** — 88 → 58.7
@@ -196,7 +196,7 @@ without one).
     can go below 25 qubits per logical qubit here;
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
-    0.79
+    0.80
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;

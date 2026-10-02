@@ -139,5 +139,53 @@
   "disagree": 0,
   "mle_only": 0,
   "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.99,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   2,
+   2
+  ],
+  "seconds": 120.08680438995361,
+  "n": 1600,
+  "ml": 11,
+  "mle": 11,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.99,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   3,
+   0
+  ],
+  "seconds": 119.52594065666199,
+  "n": 1600,
+  "ml": 49,
+  "mle": 49,
+  "disagree": 2,
+  "mle_only": 1,
+  "ml_only": 1
  }
 ]
