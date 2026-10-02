@@ -59,40 +59,84 @@ def load_elev_x(dirs) -> list[dict]:
     return rows
 
 
-def _design_rep(d, p):
-    h = (np.asarray(d) + 1) / 2
-    lp = np.log(np.asarray(p))
-    return np.stack([np.ones_like(lp), lp, h, h * lp, h * lp ** 2], axis=1)
-
-
 class RepModel:
-    def __init__(self, rows, weights="poisson"):
-        d = np.array([r["d"] for r in rows])
-        p = np.array([r["p"] for r in rows])
-        y = np.log(np.array([r["y"] for r in rows]))
-        # weight by inverse variance of log y (~ 1/fails)
-        w = np.array([r["fails"] for r in rows], dtype=float)
-        X = _design_rep(d, p)
-        W = np.sqrt(w)[:, None]
-        coef, *_ = np.linalg.lstsq(X * W, y * W.ravel(), rcond=None)
-        self.coef = coef
-        resid = (y - X @ coef)
-        self.rms = float(np.sqrt(np.sum(w * resid ** 2) / np.sum(w)))
-        # parameter covariance (for prediction intervals)
-        dof = max(len(y) - X.shape[1], 1)
-        s2 = float(np.sum(w * resid ** 2) / dof)
-        self.cov = s2 * np.linalg.pinv((X * W).T @ (X * W))
+    """p_rep(d, p) local in p.  At every sampled p:  log p_rep = alpha_p + beta_p h,  h = (d + 1)/2,
+    fitted (weights = failures, i.e. inverse variance of log y) to the points with d >= dmin (with
+    d = dmin - 2 admitted when fewer than three qualify), so the slope is the measured decay per
+    distance step at large d.  Between sampled p, alpha and beta are interpolated linearly in log p (outside
+    the sampled range: extrapolated from the two nearest).  Prediction variances propagate the
+    fit covariances (inflated by the reduced chi^2 when it exceeds 1)."""
+
+    def __init__(self, rows, dmin: int = 9):
+        from collections import defaultdict
+        byp = defaultdict(list)
+        for r in rows:
+            byp[r["p"]].append(r)
+        self.ps, self.coefs, self.covs, self.npts = [], [], [], []
+        num = den = 0.0
+        for p in sorted(byp):
+            rs = sorted(byp[p], key=lambda r: r["d"])
+            use = [r for r in rs if r["d"] >= dmin]
+            if len(use) < 3:                       # too few large-d points: admit d = dmin - 2
+                use = [r for r in rs if r["d"] >= dmin - 2]
+            if len(use) < 2:
+                use = rs[-2:]
+            if len(use) < 2:
+                continue
+            h = np.array([(r["d"] + 1) / 2 for r in use], float)
+            y = np.log(np.array([r["y"] for r in use]))
+            w = np.array([r["fails"] for r in use], float)
+            X = np.stack([np.ones_like(h), h], axis=1)
+            W = np.sqrt(w)[:, None]
+            coef, *_ = np.linalg.lstsq(X * W, y * W.ravel(), rcond=None)
+            cov = np.linalg.inv((X * W).T @ (X * W))
+            resid = y - X @ coef
+            if len(use) > 2:
+                cov *= max(1.0, float(np.sum(w * resid ** 2) / (len(use) - 2)))
+            num += float(np.sum(w * resid ** 2))
+            den += float(np.sum(w))
+            self.ps.append(p)
+            self.coefs.append(coef)
+            self.covs.append(cov)
+            self.npts.append(len(use))
+        self.lps = np.log(np.array(self.ps))
+        self.rms = float(np.sqrt(num / den)) if den else 0.0
+        self.coef = [float(x) for c in self.coefs for x in c]       # (alpha, beta) per sampled p
+
+    def _interp(self, p):
+        lp = np.log(p)
+        lps = self.lps
+        if len(lps) == 1:
+            return [(0, 1.0)]
+        i = int(np.searchsorted(lps, lp))
+        i = min(max(i, 1), len(lps) - 1)
+        t = (lp - lps[i - 1]) / (lps[i] - lps[i - 1])
+        if abs(t) < 1e-12:
+            return [(i - 1, 1.0)]
+        if abs(t - 1) < 1e-12:
+            return [(i, 1.0)]
+        return [(i - 1, 1.0 - t), (i, t)]
 
     def log_predict(self, d, p):
-        X = _design_rep(np.atleast_1d(d), np.atleast_1d(p))
-        mu = X @ self.coef
-        var = np.einsum("ij,jk,ik->i", X, self.cov, X)
-        return mu, np.sqrt(np.maximum(var, 0))
+        ds = np.atleast_1d(d).astype(float)
+        pp = np.broadcast_to(np.atleast_1d(p).astype(float), ds.shape)
+        mu = np.zeros(len(ds))
+        var = np.zeros(len(ds))
+        for j, (dd, pj) in enumerate(zip(ds, pp)):
+            x = np.array([1.0, (dd + 1) / 2])
+            for i, wt in self._interp(pj):
+                mu[j] += wt * float(x @ self.coefs[i])
+                var[j] += wt * wt * float(x @ self.covs[i] @ x)
+        return mu, np.sqrt(var)
 
     def predict(self, d, p):
         mu, _ = self.log_predict(d, p)
         out = np.exp(mu)
         return float(out[0]) if np.ndim(d) == 0 and np.ndim(p) == 0 else out
+
+    def table(self):
+        return [dict(p=p, alpha=float(c[0]), beta=float(c[1]), step_ratio=float(np.exp(c[1])), n=n)
+                for p, c, n in zip(self.ps, self.coefs, self.npts)]
 
 
 def fit_ratio(elev_rows, rep_model: RepModel, nb_over_k: dict):

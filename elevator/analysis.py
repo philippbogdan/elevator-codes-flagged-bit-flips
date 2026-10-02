@@ -30,7 +30,7 @@ def load_strata(dirs) -> list[dict]:
             rows.append(dict(code=s["code"], n_anc=s["n_anc"], d=s["d"], p_x=s["p_x"],
                              f=fl["f"], classes=CLASS_TAG[tuple(fl["classes"])] if fl["f"] > 0 else "none",
                              window=fl["window"], r=fl.get("false_rate", 0.0), mode=fl.get("mode", "erasure"),
-                             idle=",".join(s.get("idle_ctx", [])), tag=s.get("tag", ""),
+                             idle=",".join(s.get("idle_ctx", [])), tag=s.get("tag", ""), n_outer=s.get("n_outer", 5),
                              pL=r["pL_P"], lo=r["pL_lo"], hi=r["pL_hi"], P=r["P"], U=r["U"], S=r["S"],
                              rounds=r["rounds"], k=r["k"], decodes=r["decodes"], strata=r["strata"],
                              exact=r.get("exact", {}), weights=r["weights"], file=fn))

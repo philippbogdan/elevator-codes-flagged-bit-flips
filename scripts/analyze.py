@@ -704,6 +704,75 @@ def transfer_check_main():
     open(os.path.join(OUT, "transfer_check.md"), "w").write("\n".join(lines) + "\n")
 
 
+def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
+    """Each assumption of the flag model with its measured effect: p_XL of every main code at d_Z = 15
+    (p_X = 1e-9) and the minimum overhead at p_Z = 1e-3, eta = 1e6, 1e-12, for the alternatives tried."""
+    pzl_fn = pzl_fn or pzl_model
+    dirs = ("flag_main", "flag_supp", "flag_falseflag", "flag_herald", "flag_literal")
+    rows = [r for r in flag_rows(dirs) if r["p_x"] == 1e-9]
+
+    def cell(code, d, f, cls, w, rr=0.0, mode="erasure", idle="edge,cnot"):
+        c = [r for r in rows if (r["code"], r["n_anc"]) == code and r["d"] == d and r["f"] == f
+             and (f == 0 or (r["classes"] == cls and r["window"] == w)) and r["r"] == rr
+             and r.get("mode", "erasure") == mode and r["idle"] == idle]
+        if not c:
+            return None
+        return min(c, key=lambda r: r.get("transferred", False))
+
+    def best(f, cls, w, rr=0.0, mode="erasure", idle="edge,cnot"):
+        byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == f
+               and (f == 0 or (r["classes"] == cls and r["window"] == w)) and r["r"] == rr
+               and r.get("mode", "erasure") == mode and r["idle"] == idle}
+        b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", CODES_MAIN)
+        return f"{b[0]:.1f} ({CODE_LABEL[(b[1], b[2])]}, d={b[3]})" if b else ("not reached" if byc else "-")
+
+    groups = [
+        ("flag classes (which locations raise flags)", [("idle", 0, 0.99), ("idle+gate", 0, 0.99), ("all", 0, 0.99),
+                                                         ("idle", 0, 0.9), ("idle+gate", 0, 0.9), ("all", 0, 0.9)], {}),
+        ("timing window (ticks; one inner round = 4, one outer round ~600-1100)",
+         [("all", w, 0.99) for w in (0, 1, 4, 16, 64, 256, 1024, 4096)] + [("idle", w, 0.99) for w in (0, 64, 4096)], {}),
+        ("event model: erasure (X with prob. 1/2) vs heralded X", [("idle", 0, 0.99), ("all", 0, 0.99), ("all", 64, 0.99)],
+         {"mode": "herald"}),
+        ("false flags per qubit per tick (f = 0.99, flags on all locations, exact / 64 ticks)",
+         [("all", 0, 0.99, r) for r in (0.0, 1e-10, 1e-8, 1e-6)] + [("all", 64, 0.99, r) for r in (0.0, 1e-10, 1e-8, 1e-6)], {}),
+        ("false flags at the operating point of arXiv:2607.01375 (f = 0.8-0.9, windows 4-16 ticks)",
+         [(cls, w, f, r) for cls in ("idle", "all") for f in (0.8,) for w in (4,) for r in (1e-9, 1e-7, 1e-6)], {}),
+    ]
+    lines = [f"\n## Assumptions of the flag model and their measured effect (phase flips: {tag})\n",
+             "p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), and the minimum overhead "
+             "at p_Z = 1e-3, eta = 1e6, 1e-12 over [15,9,3], [15,6,5] (1 and 2 ancillas).\n"]
+    out = {}
+    for title, settings, kw in groups:
+        lines += [f"\n### {title}\n", "| flags on | window | f | false flags | alternative | " +
+                  " | ".join(CODE_LABEL[c] for c in CODES_MAIN) + " | minimum overhead |",
+                  "|---|---|---|---|---|" + "---|" * len(CODES_MAIN) + "---|"]
+        for st in settings:
+            cls, w, f = st[:3]
+            rr = st[3] if len(st) > 3 else 0.0
+            for alt in ([("erasure", None)] + ([(kw["mode"], kw["mode"])] if "mode" in kw else [])):
+                mode = alt[0]
+                cs = []
+                for code in CODES_MAIN:
+                    r = cell(code, 15, f, cls, w, rr, mode)
+                    cs.append(f"{r['pL']:.2e} [{r['lo']:.1e}, {r['hi']:.1e}]" + (" (transferred)" if r.get("transferred") else "") if r else "-")
+                b = best(f, cls, w, rr, mode)
+                lines.append(f"| {cls} | {w or 'exact'} | {f} | {rr:g} | {mode} | " + " | ".join(cs) + f" | {b} |")
+                out[f"{title}|{cls}|w{w}|f{f}|r{rr:g}|{mode}"] = b
+    # noise reading (bit flips only; d_Z = 17 where the literal-reading runs are)
+    lines += ["\n### idle-noise reading (bit flips at d_Z = 17; the literal reading also raises the phase flips, see REPORT)\n",
+              "| flags on | window | f | " + " | ".join(f"{CODE_LABEL[c]} noop / literal" for c in CODES_MAIN) + " |",
+              "|---|---|---|" + "---|" * len(CODES_MAIN)]
+    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 64, 0.99), ("all", 1024, 0.99)]:
+        cs = []
+        for code in CODES_MAIN:
+            a = cell(code, 17, f, cls, w)
+            b = cell(code, 17, f, cls, w, idle="edge,cnot,op")
+            cs.append((f"{a['pL']:.2e}" if a else "-") + " / " + (f"{b['pL']:.2e}" if b else "-"))
+        lines.append(f"| {cls} | {w or 'exact'} | {f} | " + " | ".join(cs) + " |")
+    NUMBERS["assumptions"] = out
+    open(os.path.join(OUT, "assumptions.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1095,6 +1164,7 @@ if __name__ == "__main__":
         plot_overheads(pzl_model, "this-work-pZL")
         plot_maps(pzl_model, "this-work-pZL")
         fig1_this_work(pzl_model, "this-work-pZL")
+        assumptions_table()
         fig2_this_work(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
