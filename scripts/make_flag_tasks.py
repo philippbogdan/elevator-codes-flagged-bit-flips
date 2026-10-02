@@ -192,7 +192,7 @@ def ham63_tasks():
     3 outer rounds to keep the block model within memory."""
     ts = []
     seed = 900000
-    for d in [15, 17]:
+    for d in [13, 15, 17]:
         for (f, cls, w) in [(0.0, "idle", 0), (0.9, "all", 0), (0.99, "all", 0), (0.995, "all", 0), (1.0, "all", 0),
                             (0.99, "all", 64), (0.99, "all", 1024), (0.99, "idle", 0)]:
             seed += 1
