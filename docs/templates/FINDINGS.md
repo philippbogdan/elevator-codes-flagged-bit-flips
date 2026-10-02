@@ -20,15 +20,31 @@ this work's own.
 
 ## The answer in brief
 
-* **Flagging bit flips on every location cuts the overhead by a third at the paper's operating
-  point.**  Without flags the minimum is {{ ohs("paper-pZL", "none|w0|f0.0") }} with the paper's
-  phase-flip fit — the published 88, now recomputed from this work's own bit-flip simulation — or
-  {{ ohs("this-work-pZL", "none|w0|f0.0") }} with this work's phase-flip model.  With flags on idle,
-  gate, preparation and measurement locations at efficiency f = 0.9 it is
-  {{ ohs("paper-pZL", "all|w0|f0.9") }} and {{ ohs("this-work-pZL", "all|w0|f0.9") }} respectively
+* **Flagging bit flips on every location cuts the overhead of the paper's codes by a third.**
+  Without flags the minimum at the paper's operating point is {{ ohs("paper-pZL", "none|w0|f0.0") }}
+  with the paper's phase-flip fit — the published 88, recomputed from this work's own bit-flip
+  simulation — or {{ ohs("this-work-pZL", "none|w0|f0.0") }} with this work's phase-flip model.  With
+  flags on idle, gate, preparation and measurement locations at efficiency f = 0.9 it is
+  {{ ohs("paper-pZL", "all|w0|f0.9", "main") }} and {{ ohs("this-work-pZL", "all|w0|f0.9", "main") }}
   ({{ pct(1 - ohv("paper-pZL", "all|w0|f0.9") / ohv("paper-pZL", "none|w0|f0.0")) }} and
-  {{ pct(1 - ohv("this-work-pZL", "all|w0|f0.9") / ohv("this-work-pZL", "none|w0|f0.0")) }} fewer
-  qubits): the higher-rate [15,9,3] code becomes usable at η = 1e6.  §4.
+  {{ pct(1 - ohv("this-work-pZL", "all|w0|f0.9") / ohv("this-work-pZL", "none|w0|f0.0")) }} fewer qubits):
+  the higher-rate [15,9,3] becomes usable at η = 1e6.  §4.
+* **With flags, higher-rate outer codes take over.**  Over the codes tried (Hamming [15,11,3],
+  [31,26,3], [63,57,3], extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
+  {{ ohs("paper-pZL", "all|w0|f0.99", "all_codes") }} (paper pZL) and
+  {{ ohs("this-work-pZL", "all|w0|f0.99", "all_codes") }} (this-work pZL) —
+  {{ pct(1 - ohv("paper-pZL", "all|w0|f0.99", "all_codes") / 88) }} fewer qubits than the published 88.  §7.
+* **Idle-only flags — the case arXiv:2607.01375 establishes — help only with a distance-4 code.**
+  {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
+  inside CNOTs (the rest while idle; preparation and measurement
+  {{ f"{100 * (N['checks']['class_share']['15_9_3:a1:d15']['prep'] + N['checks']['class_share']['15_9_3:a1:d15']['meas']):.1f} %" }})
+  and stay unflagged.  [15,9,3] then saturates at p_XL =
+  {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} per round (d_Z = 15, f = 1), at the target
+  ({{ ohs("paper-pZL", "idle|w0|f1.0", "main") }} with the paper's phase-flip fit,
+  {{ ohs("this-work-pZL", "idle|w0|f1.0", "main") }} with this work's but only in the central
+  estimate).  The extended Hamming [16,11,4] tolerates the unflagged gate flips: with idle-only flags
+  at f = 0.9 it reaches {{ ohs("this-work-pZL", "idle|w0|f0.9", "all_codes") }}
+  ({{ ohs("paper-pZL", "idle|w0|f0.9", "all_codes") }} paper pZL).  §4, §7.
 * **Efficiency f ≈ 0.6–0.8 is enough, and timing hardly matters — if gates are flagged.**  The
   minimum efficiency for [15,9,3] at its phase-flip floor is
   {{ reqf("this-work-pZL", "15_9_3|a1", 15, "all", 0) }} with exactly timed flags and
@@ -37,29 +53,24 @@ this work's own.
   flipped (this-work pZL; paper pZL at d_Z = 17: {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 0) }}
   and {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 4096) }}).  Counting each logical qubit's errors
   separately raises the requirement to between {{ N["convention"]["f_bracket_marginal"][0] }} and
-  {{ N["convention"]["f_bracket_marginal"][1] }} (item 13e).  §4.
-* **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**
-  {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
-  inside CNOTs (the rest while idle; preparation and measurement
-  {{ f"{100 * (N['checks']['class_share']['15_9_3:a1:d15']['prep'] + N['checks']['class_share']['15_9_3:a1:d15']['meas']):.1f} %" }})
-  and stay unflagged; [15,9,3] then saturates at
-  p_XL = {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} per round (d_Z = 15, f = 1), barely
-  below the target: with the paper's phase-flip fit no idle-only setting beats the flag-free 88
-  ({{ ohs("paper-pZL", "idle|w0|f1.0") }} at f = 1); with this work's it needs f ≥
-  {{ reqf("this-work-pZL", "15_9_3|a1", 15, "idle", 0) }} (central estimate; with the 95 % upper bound
-  of p_XL: {{ reqf("this-work-pZL", "15_9_3|a1", 15, "idle", 0, 1) }}) and fails for windows of
-  256 ticks or more.  Flags during gates are the open experimental question that decides the gain.  §4.
-* **What remains is the phase-flip floor, which flags cannot lower.**  With flags the [15,9,3]
-  memory at d_Z = 15 reaches p_L = p_ZL: its bit-flip part is gone and the overhead equals the
-  code's phase-flip floor ({{ f1(pfloor("15_9_3|a1", 1e-3, 1e-12, "oh_model")) }} at d_Z =
-  {{ pfloor("15_9_3|a1", 1e-3, 1e-12) }}), set by errors flags cannot reveal; the floor is the same for
-  an ideal phase-flip decoder.  §3, §7, §8.
+  {{ N["convention"]["f_bracket_marginal"][1] }} (item 13e).  Idle-only flags need exact or near-exact
+  timing.  §4.
+* **What remains is the phase-flip floor, which flags cannot lower.**  With flags each code reaches
+  p_L = p_ZL at its phase-flip floor (for [15,9,3]: {{ f1(pfloor("15_9_3|a1", 1e-3, 1e-12, "oh_model")) }}
+  at d_Z = {{ pfloor("15_9_3|a1", 1e-3, 1e-12) }}), set by errors flags cannot reveal; the floor is the
+  same for an ideal phase-flip decoder, and no Elevator-type memory can go below
+  {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit at this operating
+  point.  §3, §8.
 * **Bias.**  Flags move the bias at which [15,9,3] takes over from η ≈
   {{ e1(first_eta("paper-pZL", "none|w0|f0.0", "[15,9,3]")) }} (no flags; published ≈ 1.8e6) down to
   {{ e1(first_eta("paper-pZL", "all|w0|f0.9", "[15,9,3]")) }} (f = 0.9),
   {{ e1(first_eta("paper-pZL", "all|w0|f0.99", "[15,9,3]")) }} (f = 0.99) and to the whole range
   η ≥ 4e4 with perfect flags (paper pZL).  §5.
-* **p_Z = 1e-2.**  See §6 for the lowest reachable rate and its overhead per flag setting.
+* **p_Z = 1e-2.**  Flags push the memory past the bit-flip wall: [15,6,5] reaches 1e-12, which no
+  code reaches without flags, at {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }}
+  qubits per logical qubit (f = 0.99, paper pZL); [15,9,3] bottoms out at
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }} even with perfect flags (its
+  distance).  §6.
 
 ## 1. The published results are reproduced, up to two unstated circuit details
 

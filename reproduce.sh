@@ -51,6 +51,7 @@ if [ "$MODE" = "all" ]; then
   run_tasks tasks/ham63_sel.jsonl results/flag_ham63 4 8
   run_tasks tasks/ffcap.jsonl results/flag_supp 6 16              # false flags with analytic caps
   run_tasks tasks/sched_local.jsonl results/sched_local 8 16      # ancilla-path sensitivity (flags off)
+  run_tasks tasks/xham16_idle.jsonl results/flag_alt 4 16         # [16,11,4] with idle-only flags
   [ -s tasks/legacy.jsonl ] && run_tasks tasks/legacy.jsonl results/flag_literal 4 16
   # local checks (minutes to an hour each)
   "$PY" scripts/known_answers.py --out results/known_answers.json
