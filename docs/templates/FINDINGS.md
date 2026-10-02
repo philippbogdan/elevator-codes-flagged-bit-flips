@@ -219,7 +219,29 @@ this work's own.
     so its overhead is its phase-flip floor with or without flags; flags pay through the switch to
     the higher-rate [15,9,3].
 
-<!-- FLAG-ASSUMPTIONS -->
+13b. **False flags cost nothing up to 1e-6 per qubit per tick when timing is exact.**  [15,9,3]
+    at f = 0.99 on all locations: p_XL = {{ pxl3("falseflag|all|w0|f0.99|r0|erasure") }} without false
+    flags, {{ pxl3("falseflag|all|w0|f0.99|r1e-08|erasure") }} at r = 1e-8 and
+    {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at r = 1e-6 (95 % intervals; the single- and
+    two-event strata are bounded analytically, `false_flag_bounds.json`: a failure needs falsely
+    flagged locations that complete the real events to a logical, and with exact timing the decoder
+    never prefers two flags over one).  With 64-tick windows the central estimates are unchanged up
+    to 1e-6 ({{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }}) but the upper bounds are limited by
+    sampling.  Full sweep, including f = 0.8–0.9 with 4–16-tick windows (the regime a photon-counting
+    threshold would select): `assumptions.md`.
+
+13c. **Heralded flags (a flag certifies the X) versus erasures (the event's X occurs with
+    probability ½).**  [15,9,3] at f = 0.99: idle-only {{ pxl3("herald|idle|w0|f0.99|r0|herald") }}
+    (heralded) vs {{ pxl3("herald|idle|w0|f0.99|r0|erasure") }} (erasure); all locations
+    {{ pxl3("herald|all|w0|f0.99|r0|herald") }} vs {{ pxl3("herald|all|w0|f0.99|r0|erasure") }}
+    (`assumptions.md`).
+
+13d. **The idle-noise reading moves both error types but not the conclusion.**  Under the literal
+    reading the [15,9,3] bit flips are ×{{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} higher
+    without flags (d_Z = 17), the repetition code's phase flips ×4–30 (extra idle ticks,
+    `literal_reading.md`) and the phase-flip floor moves to d_Z =
+    {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }}: flag-free {{ f1(N["literal"]["floor|[15,6,5]"]["overhead_literal"]) }},
+    flagged {{ f1(N["literal"]["floor|[15,9,3]"]["overhead_literal"]) }} — the same one-third saving.
 
 ## 5. Bias from 4e4 to 1e7
 
