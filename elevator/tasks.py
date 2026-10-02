@@ -51,7 +51,8 @@ def run_phys_shard(spec: dict, shots: int, seed: int) -> dict:
                          p_z=spec.get("p_z", 0.0), n_anc=spec.get("n_anc", 1),
                          mode=spec.get("mode", "full"), n_outer=spec.get("n_outer"),
                          idle_ctx=tuple(spec.get("idle_ctx", ("edge", "cnot", "op"))),
-                         compress=bool(spec.get("compress", False)))
+                         compress=bool(spec.get("compress", False)),
+                         anc_scale=float(spec.get("anc_scale", 1.0)))
     dem = c.detector_error_model(decompose_errors=False, approximate_disjoint_errors=True)
     dec, L = make_decoder(dem, spec["decoder"])
     sampler = c.compile_detector_sampler(seed=seed)

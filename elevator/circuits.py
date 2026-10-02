@@ -70,7 +70,7 @@ class Frames:
 
 class CircuitBuilder:
     def __init__(self, sched: ElevatorSchedule, memory: str, p_x: float = 0.0, p_z: float = 0.0,
-                 idle_ctx=("edge", "cnot", "op")):
+                 idle_ctx=("edge", "cnot", "op"), anc_scale: float = 1.0):
         assert memory in ("X", "Z")
         self.s = sched
         self.memory = memory
@@ -86,6 +86,11 @@ class CircuitBuilder:
         # ticks, 'cnot' = boundary data qubits during the inner CNOT ticks, 'op' = data of
         # rows not taking part in a logical-operation tick.  Paper: all (Table I).
         self.idle_ctx = set(idle_ctx)
+        # diagnostic: scale the noise on rows holding a logical ancilla and on all
+        # logical-operation CNOTs (anc_scale = 1 leaves the circuit unchanged)
+        self.anc_scale = anc_scale
+        self.anc_rows_now: set = set()
+        self.in_op = False
 
     # ---- indexing
     def dq(self, r, j):
@@ -101,28 +106,50 @@ class CircuitBuilder:
         return [self.aq(r, j) for j in range(self.d - 1)]
 
     # ---- noise helpers
+    def _groups(self, qs):
+        """[(qubits, scale)]: split by whether the qubit's row holds a logical ancilla."""
+        if self.anc_scale == 1.0:
+            return [(qs, 1.0)]
+        if self.in_op:
+            return [(qs, self.anc_scale)]
+        a = [q for q in qs if q // self.W in self.anc_rows_now]
+        o = [q for q in qs if q // self.W not in self.anc_rows_now]
+        return [(o, 1.0), (a, self.anc_scale)]
+
+    def err1(self, name, qs, p):
+        for g, sc in self._groups(qs):
+            if g and p * sc > 0:
+                self.c.append(name, g, p * sc)
+
     def idle(self, qs, ctx="edge"):
         if not qs or ctx not in self.idle_ctx:
             return
-        px, pz = self.p_x, self.p_z
-        if px > 0 or pz > 0:
-            self.c.append("PAULI_CHANNEL_1", qs, [px, 0, pz])
+        for g, sc in self._groups(qs):
+            px, pz = self.p_x * sc, self.p_z * sc
+            if g and (px > 0 or pz > 0):
+                self.c.append("PAULI_CHANNEL_1", g, [px, 0, pz])
 
     def cnot(self, pairs):
         if not pairs:
             return
         flat = [q for pr in pairs for q in pr]
         self.c.append("CX", flat)
-        px, pz = self.p_x / 3, self.p_z / 3
-        if px > 0 or pz > 0:
-            # order: IX IY IZ XI XX XY XZ YI YX YY YZ ZI ZX ZY ZZ
-            self.c.append("PAULI_CHANNEL_2", flat,
-                          [px, 0, pz, px, px, 0, 0, 0, 0, 0, 0, pz, 0, 0, pz])
+        if self.anc_scale == 1.0 or self.in_op:
+            groups = [(pairs, 1.0 if self.anc_scale == 1.0 else self.anc_scale)]
+        else:
+            groups = [([pr for pr in pairs if pr[0] // self.W not in self.anc_rows_now], 1.0),
+                      ([pr for pr in pairs if pr[0] // self.W in self.anc_rows_now], self.anc_scale)]
+        for prs, sc in groups:
+            px, pz = self.p_x / 3 * sc, self.p_z / 3 * sc
+            if prs and (px > 0 or pz > 0):
+                # order: IX IY IZ XI XX XY XZ YI YX YY YZ ZI ZX ZY ZZ
+                self.c.append("PAULI_CHANNEL_2", [q for pr in prs for q in pr],
+                              [px, 0, pz, px, px, 0, 0, 0, 0, 0, 0, pz, 0, 0, pz])
 
     def meas(self, gate, qs, err):
         """Measure qs; returns list of record indices."""
         if err[1] > 0:
-            self.c.append(err[0], qs, err[1])
+            self.err1(err[0], qs, err[1])
         self.c.append(gate, qs)
         idx = list(range(self.nmeas, self.nmeas + len(qs)))
         self.nmeas += len(qs)
@@ -173,15 +200,17 @@ class CircuitBuilder:
                 _, ridx, resets, measures = seg
                 meas_rows = {m[0]: m for m in measures}
                 # t0
+                self.in_op = False
+                self.anc_rows_now = {r for r in range(P) if content[r][0] == "A"}
                 all_anc = [q for r in range(P) for q in self.row_anc(r)]
                 c.append("RX", all_anc)
                 if self.p_z > 0:
-                    c.append("Z_ERROR", all_anc, self.p_z)
+                    self.err1("Z_ERROR", all_anc, self.p_z)
                 if resets:
                     rq = [q for r in resets for q in self.row_data(r)]
                     c.append("R", rq)
                     if self.p_x > 0:
-                        c.append("X_ERROR", rq, self.p_x)
+                        self.err1("X_ERROR", rq, self.p_x)
                     for r in resets:
                         if X_mem:
                             xl[r] = F.fresh()
@@ -247,6 +276,7 @@ class CircuitBuilder:
                     continue
                 layers = [op_cnots(kind, ar, dr) for kind, ar, dr in ops]
                 nl = max(len(L) for L in layers)
+                self.in_op = True
                 for t in range(nl):
                     pairs = []
                     active = set()
@@ -261,8 +291,12 @@ class CircuitBuilder:
                             else:
                                 zl[tr] = Frames.xor(zl[tr], zl[cr])
                     self.cnot(pairs)
+                    self.in_op = False
+                    self.anc_rows_now = {r for r in range(P) if content[r][0] == "A"}
                     self.idle([q for r in range(P) if r not in active for q in self.row_data(r)], "op")
+                    self.in_op = True
                     self.end_tick()
+                self.in_op = False
         # ---- final data readout
         content = s.final_content
         drows = [r for r in range(P) if content[r][0] == "D"]
@@ -317,10 +351,11 @@ class CircuitBuilder:
 def build_circuit(code: OuterCode, d: int, memory: str, p_x: float = 0.0, p_z: float = 0.0,
                   n_anc: int = 1, mode: str = "full", n_outer: int | None = None,
                   r_min: int | None = None, idle_ctx=("edge", "cnot", "op"),
-                  check_order=None, compress: bool = False) -> tuple[stim.Circuit, ElevatorSchedule]:
+                  check_order=None, compress: bool = False,
+                  anc_scale: float = 1.0) -> tuple[stim.Circuit, ElevatorSchedule]:
     if n_outer is None:
         n_outer = 5 if memory == "Z" else 1
     sched = ElevatorSchedule(code, d, n_anc=n_anc, mode=mode, n_outer=n_outer, r_min=r_min,
                              check_order=check_order, compress=compress)
-    b = CircuitBuilder(sched, memory, p_x=p_x, p_z=p_z, idle_ctx=idle_ctx)
+    b = CircuitBuilder(sched, memory, p_x=p_x, p_z=p_z, idle_ctx=idle_ctx, anc_scale=anc_scale)
     return b.build(), sched
