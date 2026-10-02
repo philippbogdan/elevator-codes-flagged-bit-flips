@@ -870,14 +870,41 @@ def headline():
                     out.setdefault((r["code"], r["n_anc"], r["d"]), r)
         return out
 
+    # every simulated setting; a setting can always be degraded (drop flags at random, ignore a class,
+    # coarsen the aligned windows), so its overhead is the best over the settings it can emulate
+    rank = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
+    sims = sorted({("none", 0, 0.0)} | {(r["classes"], r["window"], r["f"]) for r in rows if r["f"] > 0}, key=str)
+
+    def below(a, b):            # can setting b emulate setting a?
+        if a[2] == 0:
+            return True
+        if b[2] == 0:
+            return False
+        wa, wb = a[1], b[1]
+        return (rank[a[0]] <= rank[b[0]] and a[2] <= b[2]
+                and (wa == wb or wb == 0 or (wa > 0 and wa % wb == 0)))
+
     for tag, fn in (("paper-pZL", pzl_paper), ("this-work-pZL", pzl_model)):
+        raw = {}
+        for st in sims:
+            for lab, codes in (("main", CODES_MAIN), ("all_codes", CODES_MAIN + ALT_CODES)):
+                raw[(st, lab, "pL")] = best_overhead(byc(*st, codes), 1e-3, 1e-12, fn, "pL", codes)
+                raw[(st, lab, "hi")] = best_overhead(byc(*st, codes), 1e-3, 1e-12, fn, "hi", codes)
+
+        def closed(st, lab, use):
+            cands = [raw[(s2, lab, use)] for s2 in sims if below(s2, st) and raw.get((s2, lab, use))]
+            if (st, lab, use) not in raw:
+                cands += [x for x in [best_overhead(byc(*st, CODES_MAIN if lab == "main" else CODES_MAIN + ALT_CODES),
+                                                    1e-3, 1e-12, fn, use, CODES_MAIN if lab == "main" else CODES_MAIN + ALT_CODES)] if x]
+            return min(cands, key=lambda b: b[0]) if cands else None
+
         h = {}
         for (cls, w, f) in [("none", 0, 0.0)] + HEAD_SETTINGS:
             key = f"{cls}|w{w}|f{f}"
             ent = {}
             for lab, codes in (("main", CODES_MAIN), ("all_codes", CODES_MAIN + ALT_CODES)):
-                b = best_overhead(byc(cls, w, f, codes), 1e-3, 1e-12, fn, "pL", codes)
-                bh = best_overhead(byc(cls, w, f, codes), 1e-3, 1e-12, fn, "hi", codes)
+                b = closed((cls, w, f), lab, "pL")
+                bh = closed((cls, w, f), lab, "hi")
                 ent[lab] = (dict(overhead=b[0], code=CODE_LABEL[(b[1], b[2])], d=b[3], pXL=b[4], pL=b[5]) if b else None)
                 ent[lab + "_cons"] = (dict(overhead=bh[0], code=CODE_LABEL[(bh[1], bh[2])], d=bh[3]) if bh else None)
             for code in CODES_MAIN + ALT_CODES:
