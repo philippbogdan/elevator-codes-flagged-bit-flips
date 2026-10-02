@@ -24,6 +24,7 @@ Modes for the ancilla path (the paper does not specify it):
            with the shortest path from where it stands, heads for the nearer end of
            that check's support and sweeps it; reset in place (sensitivity case: the
            shortest path an ancilla moving by SWAPs can take).
+  'ordered': as 'local' but the checks in the order of the rows of H.
 Each check lasts max(R_min, n_ops + 1) rounds (R_min = d_Z in the paper).
 """
 from __future__ import annotations
@@ -63,8 +64,8 @@ class ElevatorSchedule:
         self.compress = compress
         if compress:
             assert n_anc == 1 and mode == "full", "compressed schedule: one ancilla, full sweep"
-        if mode == "local":
-            assert n_anc == 1, "shortest-path schedule: one ancilla"
+        if mode in ("local", "ordered"):
+            assert n_anc == 1, "local ancilla paths: one ancilla"
         self.n_outer = n_outer
         self.r_min = d if r_min is None else r_min
         self.P = code.n + n_anc
@@ -108,6 +109,8 @@ class ElevatorSchedule:
                 if a.needs_reset and a.queue:
                     if self.mode == "local":
                         self._pick_local(a, content)
+                    elif self.mode == "ordered":
+                        self._aim(a, content, a.queue[0][0])
                     a.current = a.queue.pop(0)
                     a.done = set()
                     a.passes = 0
@@ -134,7 +137,7 @@ class ElevatorSchedule:
                 a.needs_reset = True
                 if self.mode == "full":
                     a.direction = -a.direction
-                elif self.mode == "local":
+                elif self.mode in ("local", "ordered"):
                     pass
                 else:
                     nxt = a.row + a.direction
@@ -167,7 +170,7 @@ class ElevatorSchedule:
         for a in ancs:
             if not a.active or a.path_complete:
                 continue
-            if self.mode == "local":
+            if self.mode in ("local", "ordered"):
                 c, _ = a.current
                 left = [r for r in range(P) if content[r][0] == "D" and content[r][1] in self.supports[c] - a.done]
                 if left and all(r < a.row for r in left):
@@ -222,9 +225,20 @@ class ElevatorSchedule:
         a.direction = -1 if abs(a.row - hi) < abs(a.row - lo) and hi <= a.row else (+1 if lo > a.row else
                                                                                      (-1 if hi < a.row else a.direction))
 
+    def _aim(self, a: Ancilla, content, c) -> None:
+        """head for the nearer end of check c's support"""
+        rows = [r for r in range(self.P) if content[r][0] == "D" and content[r][1] in self.supports[c]]
+        lo, hi = min(rows), max(rows)
+        if hi < a.row:
+            a.direction = -1
+        elif lo > a.row:
+            a.direction = +1
+        else:
+            a.direction = -1 if abs(a.row - lo) < abs(a.row - hi) else +1
+
     def _path_complete(self, a: Ancilla) -> bool:
         c, _ = a.current
-        if self.mode in ("span", "local"):
+        if self.mode in ("span", "local", "ordered"):
             return self.supports[c] <= a.done
         if self.mode == "full":
             return a.passes >= self.code.n and self.supports[c] <= a.done
