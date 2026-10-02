@@ -102,7 +102,31 @@ every event's location, each event is an X with probability 1/2, so maximum like
 with probability 1 - |K0|/|K| where K are the subsets of the event set with trivial syndrome and
 K0 those that are also logically trivial.  F(0,b) then needs no decoding and is computed to
 ~2 % from 4e6 sampled event sets (`scripts/perfect_flags_exact.py`); these values replace the
-sampled ones for that flag setting.
+sampled ones for that flag setting, and for every exactly timed setting that flags all four classes
+at the same f < 1 (its flagged events then have the same location distribution, and with no
+unflagged error the decoder picks among the zero-cost flag explanations exactly as with perfect
+flags).
+
+**Analytic bounds on F(a,b)** (`scripts/strata_caps.py`; exactly timed erasure flags, no false
+flags).  The decoder minimises sum_c w_c x_c over the unflagged merged columns plus the flagged
+windows' costs, which are all 0 here (X or no X at a known location, probability 1/2 each).
+Against the true explanation — at most a unflagged columns, each flagged window's true choice —
+optimality gives sum_{x^} w <= sum_{x'} w + eps (eps covers the MIP gap).  A failure makes
+x^ + x' + (y^ + y') an undetectable logical of the merged block-level DEM, and a window
+contributes at most one column, so |x^| >= d_DEM - a - b =: k.  The left side is at least S_k,
+the sum of the k smallest background column costs (removing the flagged locations only raises
+costs); the right side is at most sum_i W_b(u_i), the costs of the true columns with the b largest
+other contributions removed.  Hence F(a,b) <= P(sum_i W_b(u_i) >= S_k - eps) over the unflagged-error
+distribution: exactly 0 when a max W_b < S_k - eps, else computed per (column, class) bucket
+(a = 1) or by convolution with costs rounded up (a >= 2).  The per-column, per-class location
+counts are exact quadratics in d_Z (fitted at 17, 19, 21, checked at 25 and 33; built directly
+below 17), so the bound is evaluated at every transfer target; d_DEM >= 5 for [15,6,5] (one and
+two ancillas) is verified by an exhaustive meet-in-the-middle search over all sets of up to four
+columns.  The bounds are checked against every sampled stratum (882 strata, no sampled failure
+fraction above its bound) and against the decoder's own column costs (agreement to 1e-7).  For
+[15,6,5] they give F(1,1) = F(1,2) = 0 and F(2,0) <= 1e-5 ... 1e-2 at every d_Z of interest, which
+removes the zero-failure strata that dominated the 95 % upper bounds; sampled strata use
+min(Wilson upper end, bound), and strata never sampled their bound (1 if none).
 
 **Transfers.**  F(a,b) depends on p_X and d_Z only through the decoder's priors and the
 circuit's layout, while U and S are exact linear functions of p_X and of per-class fault sums

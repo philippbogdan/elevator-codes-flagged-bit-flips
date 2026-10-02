@@ -32,6 +32,9 @@ run_tasks () {   # $1 = task file, $2 = default output dir, $3 = cluster tasks, 
 
 if [ "$MODE" = "all" ]; then
   "$PY" -m pytest -q tests/test_core.py
+  # analytic stratum bounds (per-column fault counts, distance of the merged block-level DEM); the
+  # p_Z = 1e-2 deep runs below use them to skip the strata they bound by 0
+  "$PY" scripts/strata_caps.py
   # flag-free reproduction of arXiv:2601.10786 (physical Stim circuits, BP+OSD / BP+LSD)
   run_tasks tasks/repro_z.jsonl results/repro_z 20 16
   run_tasks tasks/repro_x.jsonl results/repro_x 36 16
@@ -52,6 +55,7 @@ if [ "$MODE" = "all" ]; then
   run_tasks tasks/ffcap.jsonl results/flag_supp 6 16              # false flags with analytic caps
   run_tasks tasks/sched_local.jsonl results/sched_local 8 16      # ancilla-path sensitivity (flags off)
   run_tasks tasks/xham16_idle.jsonl results/flag_alt 4 16         # [16,11,4] with idle-only flags
+  run_tasks tasks/pz1e2_deep.jsonl results/flag_pz1e2 12 12       # p_Z = 1e-2: deeper [15,6,5] strata at d_Z = 33
   [ -s tasks/legacy.jsonl ] && run_tasks tasks/legacy.jsonl results/flag_literal 4 16
   # local checks (minutes to an hour each)
   "$PY" scripts/known_answers.py --out results/known_answers.json

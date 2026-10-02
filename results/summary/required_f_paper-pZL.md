@@ -309,7 +309,7 @@
 | [15,9,3] | 19 | 65.8 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 19 | 65.8 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 19 | 65.8 | idle+gate | exact | 0.722 (between 0.5 and 0.8) | 0.739 (between 0.5 and 0.8) |
-| [15,9,3] | 21 | 72.9 | all | exact | 0.777 (between 0.5 and 0.8) | 0.792 (between 0.5 and 0.8) |
+| [15,9,3] | 21 | 72.9 | all | exact | 0.777 (between 0.5 and 0.8) | 0.791 (between 0.5 and 0.8) |
 | [15,9,3] | 21 | 72.9 | all | 1 | 0.802 (between 0 and 0.9) | 0.831 (between 0 and 0.9) |
 | [15,9,3] | 21 | 72.9 | all | 4 | 0.788 (between 0.5 and 0.8) | 0.831 (between 0.8 and 0.9) |
 | [15,9,3] | 21 | 72.9 | all | 16 | 0.815 (between 0 and 0.9) | 0.844 (between 0 and 0.9) |
@@ -343,7 +343,7 @@
 | [15,9,3] | 23 | 80.0 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 23 | 80.0 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 23 | 80.0 | idle+gate | exact | 0.822 (between 0.8 and 0.9) | 0.837 (between 0.8 and 0.9) |
-| [15,9,3] | 25 | 87.1 | all | exact | 0.856 (between 0.8 and 0.9) | 0.868 (between 0.8 and 0.9) |
+| [15,9,3] | 25 | 87.1 | all | exact | 0.856 (between 0.8 and 0.9) | 0.867 (between 0.8 and 0.9) |
 | [15,9,3] | 25 | 87.1 | all | 1 | 0.869 (between 0 and 0.9) | 0.892 (between 0 and 0.9) |
 | [15,9,3] | 25 | 87.1 | all | 4 | 0.865 (between 0.8 and 0.9) | 0.893 (between 0.8 and 0.9) |
 | [15,9,3] | 25 | 87.1 | all | 16 | 0.880 (between 0 and 0.9) | 0.906 (between 0.9 and 0.99) |
@@ -376,7 +376,7 @@
 | Hamming [15,11,3] | 15 | 42.2 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [15,11,3] | 15 | 42.2 | all | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [15,11,3] | 15 | 42.2 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [15,11,3] | 17 | 48.0 | all | exact | 0.714 (between 0.5 and 0.8) | 0.744 (between 0.5 and 0.8) |
+| Hamming [15,11,3] | 17 | 48.0 | all | exact | 0.714 (between 0.5 and 0.8) | 0.743 (between 0.5 and 0.8) |
 | Hamming [15,11,3] | 17 | 48.0 | all | 1 | 0.760 (between 0 and 0.99) | 0.848 (between 0 and 0.99) |
 | Hamming [15,11,3] | 17 | 48.0 | all | 16 | 0.763 (between 0 and 0.99) | 0.849 (between 0 and 0.99) |
 | Hamming [15,11,3] | 17 | 48.0 | all | 64 | 0.810 (between 0 and 0.99) | 0.860 (between 0 and 0.99) |
@@ -440,7 +440,7 @@
 | Hamming [31,26,3] | 17 | 40.6 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [31,26,3] | 17 | 40.6 | all | 4096 | 0.989 (between 0 and 0.99) | not reached with f <= 1 |
 | Hamming [31,26,3] | 17 | 40.6 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [31,26,3] | 19 | 45.5 | all | exact | 0.930 (between 0.9 and 0.95) | 0.937 (between 0.9 and 0.95) |
+| Hamming [31,26,3] | 19 | 45.5 | all | exact | 0.930 (between 0.9 and 0.95) | 0.936 (between 0.9 and 0.95) |
 | Hamming [31,26,3] | 19 | 45.5 | all | 1 | 0.941 (between 0 and 0.99) | 0.965 (between 0 and 0.99) |
 | Hamming [31,26,3] | 19 | 45.5 | all | 16 | 0.938 (between 0 and 0.99) | 0.964 (between 0 and 0.99) |
 | Hamming [31,26,3] | 19 | 45.5 | all | 64 | 0.957 (between 0 and 0.99) | 0.976 (between 0 and 0.99) |
@@ -456,7 +456,7 @@
 | Hamming [31,26,3] | 21 | 50.5 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [31,26,3] | 21 | 50.5 | all | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [31,26,3] | 21 | 50.5 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [31,26,3] | 23 | 55.4 | all | exact | 0.934 (between 0.9 and 0.95) | 0.941 (between 0.9 and 0.95) |
+| Hamming [31,26,3] | 23 | 55.4 | all | exact | 0.934 (between 0.9 and 0.95) | 0.940 (between 0.9 and 0.95) |
 | Hamming [31,26,3] | 23 | 55.4 | all | 1 | 0.944 (between 0 and 0.99) | 0.968 (between 0 and 0.99) |
 | Hamming [31,26,3] | 23 | 55.4 | all | 16 | 0.941 (between 0 and 0.99) | 0.966 (between 0 and 0.99) |
 | Hamming [31,26,3] | 23 | 55.4 | all | 64 | 0.960 (between 0 and 0.99) | 0.978 (between 0 and 0.99) |
@@ -464,7 +464,7 @@
 | Hamming [31,26,3] | 23 | 55.4 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [31,26,3] | 23 | 55.4 | all | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [31,26,3] | 23 | 55.4 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [31,26,3] | 25 | 60.3 | all | exact | 0.959 (between 0.95 and 0.98) | 0.963 (between 0.95 and 0.98) |
+| Hamming [31,26,3] | 25 | 60.3 | all | exact | 0.959 (between 0.95 and 0.98) | 0.962 (between 0.95 and 0.98) |
 | Hamming [31,26,3] | 25 | 60.3 | all | 1 | 0.965 (between 0 and 0.99) | 0.981 (between 0 and 0.99) |
 | Hamming [31,26,3] | 25 | 60.3 | all | 16 | 0.962 (between 0 and 0.99) | 0.980 (between 0 and 0.99) |
 | Hamming [31,26,3] | 25 | 60.3 | all | 64 | 0.976 (between 0 and 0.99) | 0.988 (between 0 and 0.99) |
@@ -480,7 +480,7 @@
 | Hamming [63,57,3] | 15 | 32.6 | all | 64 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 15 | 32.6 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 15 | 32.6 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 17 | 37.1 | all | exact | 0.977 (between 0.9 and 0.99) | 0.980 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 17 | 37.1 | all | exact | 0.977 (between 0.9 and 0.99) | 0.979 (between 0.9 and 0.99) |
 | Hamming [63,57,3] | 17 | 37.1 | all | 64 | 0.983 (between 0 and 0.99) | not reached with f <= 1 |
 | Hamming [63,57,3] | 17 | 37.1 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 17 | 37.1 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
@@ -492,11 +492,11 @@
 | Hamming [63,57,3] | 21 | 46.0 | all | 64 | 0.988 (between 0 and 0.99) | not reached with f <= 1 |
 | Hamming [63,57,3] | 21 | 46.0 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 21 | 46.0 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 23 | 50.5 | all | exact | 0.987 (between 0.9 and 0.99) | 0.989 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 23 | 50.5 | all | exact | 0.987 (between 0.9 and 0.99) | 0.988 (between 0.9 and 0.99) |
 | Hamming [63,57,3] | 23 | 50.5 | all | 64 | 0.990 (between 0 and 0.99) | not reached with f <= 1 |
 | Hamming [63,57,3] | 23 | 50.5 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 23 | 50.5 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 25 | 55.0 | all | exact | 0.989 (between 0.9 and 0.99) | 0.990 (between 0.99 and 0.995) |
+| Hamming [63,57,3] | 25 | 55.0 | all | exact | 0.989 (between 0.9 and 0.99) | 0.990 (between 0.9 and 0.99) |
 | Hamming [63,57,3] | 25 | 55.0 | all | 64 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 25 | 55.0 | all | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 25 | 55.0 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |

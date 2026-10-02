@@ -254,23 +254,24 @@ this work's own.
 
 12. **Minimum overhead across f ∈ [0, 1] and timing from exact to 4096 CNOT layers.**  Full grid:
     `flags_main_paper-pZL.md`, `flags_main_this-work-pZL.md`, `map_f_window_this-work-pZL.png`,
-    `overhead_vs_flags_*.png`; summary (`headline.md`):
+    `overhead_vs_flags_*.png`; summary (`headline.md`; central estimates of p_XL, and the overhead
+    with p_XL at its 95 % upper bound where that differs):
 
     | flags on | window | f | paper pZL | this-work pZL |
     |---|---|---|---|---|
-    | none | – | 0 | {{ ohs("paper-pZL", "none|w0|f0.0") }} | {{ ohs("this-work-pZL", "none|w0|f0.0") }} |
-    | idle | exact | 0.99 | {{ ohs("paper-pZL", "idle|w0|f0.99") }} | {{ ohs("this-work-pZL", "idle|w0|f0.99") }} |
-    | idle | exact | 1 | {{ ohs("paper-pZL", "idle|w0|f1.0") }} | {{ ohs("this-work-pZL", "idle|w0|f1.0") }} |
-    | idle | 4096 | 0.99 | {{ ohs("paper-pZL", "idle|w4096|f0.99") }} | {{ ohs("this-work-pZL", "idle|w4096|f0.99") }} |
-    | idle + gate | exact | 0.99 | {{ ohs("paper-pZL", "idle+gate|w0|f0.99") }} | {{ ohs("this-work-pZL", "idle+gate|w0|f0.99") }} |
-    | all | exact | 0.5 | {{ ohs("paper-pZL", "all|w0|f0.5") }} | {{ ohs("this-work-pZL", "all|w0|f0.5") }} |
-    | all | exact | 0.8 | {{ ohs("paper-pZL", "all|w0|f0.8") }} | {{ ohs("this-work-pZL", "all|w0|f0.8") }} |
-    | all | exact | 0.9 | {{ ohs("paper-pZL", "all|w0|f0.9") }} | {{ ohs("this-work-pZL", "all|w0|f0.9") }} |
-    | all | 1 | 0.99 | {{ ohs("paper-pZL", "all|w1|f0.99") }} | {{ ohs("this-work-pZL", "all|w1|f0.99") }} |
-    | all | 64 | 0.99 | {{ ohs("paper-pZL", "all|w64|f0.99") }} | {{ ohs("this-work-pZL", "all|w64|f0.99") }} |
-    | all | 1024 | 0.99 | {{ ohs("paper-pZL", "all|w1024|f0.99") }} | {{ ohs("this-work-pZL", "all|w1024|f0.99") }} |
-    | all | 4096 | 0.9 | {{ ohs("paper-pZL", "all|w4096|f0.9") }} | {{ ohs("this-work-pZL", "all|w4096|f0.9") }} |
-    | all | 4096 | 1 | {{ ohs("paper-pZL", "all|w4096|f1.0") }} | {{ ohs("this-work-pZL", "all|w4096|f1.0") }} |
+    | none | – | 0 | {{ ohc("paper-pZL", "none|w0|f0.0") }} | {{ ohc("this-work-pZL", "none|w0|f0.0") }} |
+    | idle | exact | 0.99 | {{ ohc("paper-pZL", "idle|w0|f0.99") }} | {{ ohc("this-work-pZL", "idle|w0|f0.99") }} |
+    | idle | exact | 1 | {{ ohc("paper-pZL", "idle|w0|f1.0") }} | {{ ohc("this-work-pZL", "idle|w0|f1.0") }} |
+    | idle | 4096 | 0.99 | {{ ohc("paper-pZL", "idle|w4096|f0.99") }} | {{ ohc("this-work-pZL", "idle|w4096|f0.99") }} |
+    | idle + gate | exact | 0.99 | {{ ohc("paper-pZL", "idle+gate|w0|f0.99") }} | {{ ohc("this-work-pZL", "idle+gate|w0|f0.99") }} |
+    | all | exact | 0.5 | {{ ohc("paper-pZL", "all|w0|f0.5") }} | {{ ohc("this-work-pZL", "all|w0|f0.5") }} |
+    | all | exact | 0.8 | {{ ohc("paper-pZL", "all|w0|f0.8") }} | {{ ohc("this-work-pZL", "all|w0|f0.8") }} |
+    | all | exact | 0.9 | {{ ohc("paper-pZL", "all|w0|f0.9") }} | {{ ohc("this-work-pZL", "all|w0|f0.9") }} |
+    | all | 1 | 0.99 | {{ ohc("paper-pZL", "all|w1|f0.99") }} | {{ ohc("this-work-pZL", "all|w1|f0.99") }} |
+    | all | 64 | 0.99 | {{ ohc("paper-pZL", "all|w64|f0.99") }} | {{ ohc("this-work-pZL", "all|w64|f0.99") }} |
+    | all | 1024 | 0.99 | {{ ohc("paper-pZL", "all|w1024|f0.99") }} | {{ ohc("this-work-pZL", "all|w1024|f0.99") }} |
+    | all | 4096 | 0.9 | {{ ohc("paper-pZL", "all|w4096|f0.9") }} | {{ ohc("this-work-pZL", "all|w4096|f0.9") }} |
+    | all | 4096 | 1 | {{ ohc("paper-pZL", "all|w4096|f1.0") }} | {{ ohc("this-work-pZL", "all|w4096|f1.0") }} |
 
     A window of 1 tick is one CNOT layer; an inner round is 4 ticks, an outer round of [15,9,3] at
     d_Z = 15 about 600 ticks, the whole simulated memory (5 outer rounds) about 3000.
@@ -302,7 +303,8 @@ this work's own.
     (`assumptions.md`): a flag that certifies the X carries more information, and halves the
     number of flagged events.  The minimum overhead with idle-only flags at f = 1 becomes
     {{ asm("herald|idle|w0|f1.0|r0|herald") }} (erasure: {{ asm("herald|idle|w0|f1.0|r0|erasure") }}; this-work
-    pZL).  The erasure model is the one arXiv:2607.01375 supports (a flip leaves the cat's bit
+    pZL), and with p_XL at its 95 % upper bound {{ asm("herald|idle|w0|f1.0|r0|herald|cons") }} (erasure:
+    {{ asm("herald|idle|w0|f1.0|r0|erasure|cons") }}).  The erasure model is the one arXiv:2607.01375 supports (a flip leaves the cat's bit
     random) and is used everywhere else.
 
 13d. **The idle-noise reading moves both error types but not the conclusion.**  Under the literal

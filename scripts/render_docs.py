@@ -65,6 +65,15 @@ def ohs(tag, key, lab="main"):
     return f"{e['overhead']:.1f} ({e['code']}, d_Z = {e['d']})" if e else "not reached"
 
 
+def ohc(tag, key, lab="main"):
+    """minimum overhead (central estimate), with the one from p_XL at its 95 % upper bound where it differs"""
+    e, c = H[tag][key][lab], H[tag][key].get(lab + "_cons")
+    s = ohs(tag, key, lab)
+    if e and c and abs(e["overhead"] - c["overhead"]) < 1e-9:
+        return s
+    return s + "; 95 % bound: " + (f"{c['overhead']:.1f} ({c['code']}, d_Z = {c['d']})" if c else "not reached")
+
+
 def reqf(tag, code, d, cls, w, which=0):
     """minimum flag efficiency (central = 0, conservative = 1) for code 'code|aN', d_Z, classes, window"""
     return N["required_f"][tag][f"{code}|d{d}|{cls}|w{w}"][which]
@@ -100,7 +109,7 @@ def pxl3(key):
 
 
 ENV = dict(N=N, H=H, asm=asm, pxl3=pxl3, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
-           round=round, sorted=sorted, ohv=ohv, ohs=ohs, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
+           round=round, sorted=sorted, ohv=ohv, ohs=ohs, ohc=ohc, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
            abs=abs, str=str, int=int, float=float, zip=zip, list=list, dict=dict, any=any, all=all)
 PAT = re.compile(r"\{\{(.+?)\}\}", re.S)
 

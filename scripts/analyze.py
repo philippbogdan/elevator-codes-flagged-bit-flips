@@ -12,6 +12,7 @@ from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
 import numpy as np  # noqa: E402
 
@@ -332,6 +333,18 @@ def transfer_pxl(row, d_target, p_x=None):
     eff = {c: (row["f"] if c in CLASSES_OF[row["classes"]] else 0.0) for c in CLASS_LIST}
     U = p_x * sum((1 - eff[c]) * sums["sums"][c][0] for c in CLASS_LIST)
     S = p_x * sum(2 * eff[c] * sums["sums"][c][1] for c in CLASS_LIST)
+    return combine_strata(row, U, S, sums["rounds"], sums["k"], d_target, p_x)
+
+
+def combine_strata(row, U, S, R, k, d, p_x):
+    """p_XL (central, lo, hi) per round per logical qubit from a row's stratum failure fractions at
+    intensities U, S: exact strata as they are; sampled ones with their Wilson interval, the upper end
+    capped by the analytic bounds (false flags: scripts/false_flag_bounds.py; exact timing:
+    scripts/strata_caps.py at this d_Z and p_X); strata never sampled at their bound (1 if none), and
+    the truncated tail at its weight."""
+    from elevator.decode import wilson
+    from elevator.strata import pois
+    caps = strata_caps_at(row, d, p_x)
     est = lo = hi = 0.0
     kmax = 0
     for key, (f, n) in row["strata"].items():
@@ -342,15 +355,40 @@ def transfer_pxl(row, d_target, p_x=None):
             v = row["exact"][key]
             est += w * v; lo += w * v; hi += w * v
             continue
+        cap = caps.get(key)
         if n == 0:
+            hi += w * (1.0 if cap is None else cap)
             continue
         l, h = wilson(f, n)
         if key in row.get("hi_cap", {}):
             h = min(h, max(row["hi_cap"][key], f / n))
+        if cap is not None:
+            if cap == 0.0:
+                assert f == 0, f"stratum {key} of {row.get('file')} fails although its bound is 0"
+            h = min(h, max(cap, f / n))
         est += w * f / n; lo += w * l; hi += w * h
     tail = 1.0 - sum(pois(a, U) * pois(t - a, S) for t in range(kmax + 1) for a in range(t + 1))
-    R, k = sums["rounds"], sums["k"]
     return est / (R * k), lo / (R * k), (hi + max(tail, 0.0)) / (R * k)
+
+
+def strata_caps_at(row, d, p_x):
+    """Analytic upper bounds on F(a, b) (scripts/strata_caps.py) where they apply: exactly timed flags,
+    no false flags, erasure events, the full-sweep schedule with the paper's idle reading."""
+    if not (row["window"] == 0 and row["r"] == 0 and row.get("mode", "erasure") == "erasure"
+            and row["idle"] == "edge,cnot" and row.get("n_outer", 5) == 5):
+        return {}
+    import strata_caps as SC
+    rec = SC.record_for(row["code"], row["n_anc"], 5, "edge,cnot")
+    if rec is None:
+        return {}
+    key = (row["code"], row["n_anc"], d, p_x, row["f"], row["classes"], tuple(sorted(row["strata"])))
+    if key not in _CAPS:
+        eff = [row["f"] if c in CLASSES_OF[row["classes"]] else 0.0 for c in CLASS_LIST]
+        _CAPS[key] = SC.caps_for(rec, d, p_x, eff, [tuple(map(int, s_.split(","))) for s_ in row["strata"]])
+    return _CAPS[key]
+
+
+_CAPS = {}
 
 
 # ------------------------------------------------------------------ 3. flag study
@@ -376,45 +414,30 @@ def perfect_exact():
 
 
 def apply_perfect_exact(r):
-    """Rows with f = 1 on every class, exact timing, no false flags: replace the decoder-sampled F(0, b)
-    by the decoding-free values of scripts/perfect_flags_exact.py at the nearest computed d_Z (U = 0,
-    so these are the only strata).  They enter as sampled strata (round(F n) failures of n event
-    sets), so their sampling uncertainty is carried into every interval and transfer."""
-    if not (r["f"] == 1.0 and r["classes"] == "all" and r["window"] == 0 and r["r"] == 0
-            and r.get("mode", "erasure") == "erasure" and r["U"] == 0):
+    """Every row without false flags: its estimate recomputed with the analytic stratum bounds
+    (combine_strata).  Rows with exactly timed flags on every class (any f), erasure events and the
+    paper's idle reading also get the decoding-free F(0, b) of scripts/perfect_flags_exact.py at the
+    nearest computed d_Z instead of the decoder-sampled ones: with every class flagged at the same f the
+    flagged events have the perfect-flag location distribution, and with no unflagged error the decoder
+    chooses among the zero-cost flag explanations, as with perfect flags.  They enter as sampled strata
+    (round(F n) failures of n event sets), so their sampling uncertainty is carried into every interval
+    and transfer."""
+    if r["r"] != 0:
         return r
-    recs = [x for x in perfect_exact() if (x["code"], x["n_anc"], x["n_outer"]) == (r["code"], r["n_anc"], r.get("n_outer", 5))]
-    if not recs:
-        return r
-    rec = min(recs, key=lambda x: abs(x["d"] - r["d"]))
-    from elevator.decode import wilson
-    from elevator.strata import pois
     r = dict(r)
-    ex = {k: v for k, v in r["exact"].items() if not (k.startswith("0,") and k.split(",")[1] in rec["F"])}
-    st = {k: v for k, v in r["strata"].items() if not k.startswith("0,")}
-    n = int(rec["samples"])
-    for b, v in rec["F"].items():
-        st[f"0,{b}"] = [int(round(v["F"] * n)), n]
-    r["exact"], r["strata"] = ex, st
-    r["exact_F_source_d"] = rec["d"]
-    est = lo = hi = 0.0
-    for k, v in ex.items():
-        a, b = map(int, k.split(","))
-        w = pois(a, 0.0) * pois(b, r["S"])
-        est += w * v; lo += w * v; hi += w * v
-    bmax = 0
-    for k, (fl, nn) in st.items():
-        a, b = map(int, k.split(","))
-        bmax = max(bmax, a + b)
-        if nn == 0 or a > 0:
-            continue
-        w = pois(b, r["S"])
-        l, h = wilson(fl, nn)
-        est += w * fl / nn; lo += w * l; hi += w * h
-    tail = 1.0 - sum(pois(b, r["S"]) for b in range(bmax + 1))
+    if r["classes"] == "all" and r["window"] == 0 and r.get("mode", "erasure") == "erasure" and r["idle"] == "edge,cnot":
+        recs = [x for x in perfect_exact() if (x["code"], x["n_anc"], x["n_outer"]) == (r["code"], r["n_anc"], r.get("n_outer", 5))]
+        if recs:
+            rec = min(recs, key=lambda x: abs(x["d"] - r["d"]))
+            n = int(rec["samples"])
+            r["exact"] = {k: v for k, v in r["exact"].items() if not (k.startswith("0,") and k.split(",")[1] in rec["F"])}
+            r["strata"] = dict(r["strata"])
+            for b, v in rec["F"].items():
+                r["strata"][f"0,{b}"] = [int(round(v["F"] * n)), n]
+            r["exact_F_source_d"] = rec["d"]
     R, k = r["rounds"], r["k"]
-    r["P"] = est
-    r["pL"], r["lo"], r["hi"] = est / (R * k), lo / (R * k), (hi + max(tail, 0.0)) / (R * k)
+    r["pL"], r["lo"], r["hi"] = combine_strata(r, r["U"], r["S"], R, k, r["d"], r["p_x"])
+    r["P"] = r["pL"] * R * k
     return r
 
 
@@ -422,8 +445,9 @@ _FFB = {}
 
 
 def apply_false_flag_bounds(r):
-    """Rows with false flags (r > 0) of distance-3 codes: cap the upper end of the single-event strata
-    (1,0) and (0,1) by the bounds of scripts/false_flag_bounds.py (results/false_flag_bounds.json)."""
+    """Rows with false flags (r > 0) of distance-3 codes: cap the upper end of the single- and two-event
+    strata (1,0), (0,1), (0,2) by the bounds of scripts/false_flag_bounds.py (results/false_flag_bounds.json,
+    or those the run itself used) and recompute the row's estimate."""
     if r["r"] <= 0:
         return r
     if "t" not in _FFB:
@@ -432,25 +456,12 @@ def apply_false_flag_bounds(r):
     b = _FFB["t"].get(os.path.relpath(r["file"], ROOT)) or r.get("caps")
     if not b:
         return r
-    from elevator.decode import wilson
-    from elevator.strata import pois
     r = dict(r)
     r["hi_cap"] = {k: b[k] for k in ("1,0", "0,1", "0,2") if k in b}
-    if r.get("caps"):              # caps applied during sampling are already in the stored bounds
-        r["hi_cap"].update({k: v for k, v in r["caps"].items()})
+    for k, v in (r.get("caps") or {}).items():
+        r["hi_cap"][k] = min(r["hi_cap"].get(k, 1.0), v)
     R, k = r["rounds"], r["k"]
-    dh = 0.0
-    for key, cap in r["hi_cap"].items():
-        if key in r["exact"] or key not in r["strata"]:
-            continue
-        f, n = r["strata"][key]
-        if n == 0:
-            continue
-        a, bb = map(int, key.split(","))
-        w = pois(a, r["U"]) * pois(bb, r["S"])
-        h = wilson(f, n)[1]
-        dh += w * (h - min(h, max(cap, f / n)))
-    r["hi"] = r["hi"] - dh / (R * k)
+    r["pL"], r["lo"], r["hi"] = combine_strata(r, r["U"], r["S"], R, k, r["d"], r["p_x"])
     return r
 
 
@@ -460,21 +471,57 @@ def flag_rows(dirs, transfers=True):
         p = os.path.join(ROOT, "results", dd)
         if os.path.isdir(p):
             rows += load_strata(p)
-    rows = [apply_false_flag_bounds(apply_perfect_exact(r)) for r in rows]
-    # several runs of the same setting (e.g. false-flag runs repeated with analytic caps): keep the
-    # one with the tightest upper bound
-    best = {}
-    for r in rows:
-        key = (r["code"], r["n_anc"], r["d"], r["p_x"], r["f"], r["classes"], r["window"], r["r"],
-               r.get("mode", "erasure"), r["idle"], r.get("n_outer", 5))
-        if key not in best or r["hi"] < best[key]["hi"]:
-            best[key] = r
-    rows = list(best.values())
+    rows = [apply_false_flag_bounds(apply_perfect_exact(r)) for r in pool_runs(rows)]
     for r in rows:
         r.setdefault("transferred", False)
     if transfers:
         rows += synthesize(rows)
     return rows
+
+
+def pool_runs(rows):
+    """Several runs of the same setting: runs with independent seeds (deeper p_Z = 1e-2 runs) have their
+    stratum counts pooled (a stratum exact in any run is exact); of runs sharing a seed (false-flag runs
+    repeated with analytic caps) only the one with the most samples is kept."""
+    groups = defaultdict(list)
+    for r in rows:
+        groups[(r["code"], r["n_anc"], r["d"], r["p_x"], r["f"], r["classes"], r["window"], r["r"],
+                r.get("mode", "erasure"), r["idle"], r.get("n_outer", 5))].append(r)
+    out = []
+    for rs in groups.values():
+        if len(rs) > 1:
+            # runs that share a seed share samples (a rerun with caps): keep the larger one of those
+            by_seed = {}
+            for r in rs:
+                sd = json.load(open(r["file"]))["spec"].get("seed")
+                if sd not in by_seed or (r["decodes"], -r["hi"]) > (by_seed[sd]["decodes"], -by_seed[sd]["hi"]):
+                    by_seed[sd] = r
+            rs = list(by_seed.values())
+        if len(rs) == 1:
+            out.append(rs[0])
+            continue
+        base = dict(rs[0])
+        exact = {}
+        for r in rs:
+            exact.update(r["exact"])
+        strata = {}
+        for r in rs:
+            for k, (f, n) in r["strata"].items():
+                if k in exact:
+                    continue
+                c = strata.setdefault(k, [0, 0])
+                c[0] += f
+                c[1] += n
+        caps = {}
+        for r in rs:
+            for k, v in (r.get("caps") or {}).items():
+                caps[k] = min(caps.get(k, 1.0), v)
+        base.update(exact=exact, strata=strata, caps=caps, decodes=sum(r["decodes"] for r in rs),
+                    files=[r["file"] for r in rs])
+        R, k = base["rounds"], base["k"]
+        base["pL"], base["lo"], base["hi"] = combine_strata(base, base["U"], base["S"], R, k, base["d"], base["p_x"])
+        out.append(base)
+    return out
 
 
 TRANSFER_D = [13, 15, 17, 19, 21, 23, 25]
@@ -815,11 +862,11 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
             return None
         return min(c, key=lambda r: r.get("transferred", False))
 
-    def best(f, cls, w, rr=0.0, mode="erasure", idle="edge,cnot"):
+    def best(f, cls, w, rr=0.0, mode="erasure", idle="edge,cnot", use="pL"):
         byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == f
                and (f == 0 or (r["classes"] == cls and r["window"] == w)) and r["r"] == rr
                and r.get("mode", "erasure") == mode and r["idle"] == idle}
-        b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", CODES_MAIN)
+        b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, use, CODES_MAIN)
         return f"{b[0]:.1f} ({CODE_LABEL[(b[1], b[2])]}, d={b[3]})" if b else ("not reached" if byc else "-")
 
     groups = [
@@ -857,6 +904,7 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
                 b = best(f, cls, w, rr, mode)
                 lines.append(f"| {cls} | {w or 'exact'} | {f} | {rr:g} | {mode} | " + " | ".join(cs) + f" | {b} |")
                 out[f"{gkeys[gi]}|{cls}|w{w}|f{f}|r{rr:g}|{mode}"] = b
+                out[f"{gkeys[gi]}|{cls}|w{w}|f{f}|r{rr:g}|{mode}|cons"] = best(f, cls, w, rr, mode, use="hi")
                 r93 = cell(("15_9_3", 1), 15, f, cls, w, rr, mode)
                 if r93:
                     out[f"{gkeys[gi]}|{cls}|w{w}|f{f}|r{rr:g}|{mode}|pXL_15_9_3"] = [r93["pL"], r93["lo"], r93["hi"]]
@@ -995,6 +1043,7 @@ def headline():
     NUMBERS["headline"] = H
     lines = ["\n## Headline numbers (p_Z = 1e-3, eta = 1e6, 1e-12 per round per logical qubit)\n",
              f"Published (paper's fits): {H['published']['overhead']:.1f} ({H['published']['code']}, d_Z = {H['published']['d']}).\n",
+             "Central estimate of p_XL; in brackets the overhead with p_XL at its 95% upper bound where it differs.\n",
              "| flags | window | f | min overhead, main codes (paper pZL) | (this work pZL) | incl. Hamming codes (paper pZL) | (this work pZL) |",
              "|---|---|---|---|---|---|---|"]
     for (cls, w, f) in [("none", 0, 0.0)] + HEAD_SETTINGS:
@@ -1002,8 +1051,11 @@ def headline():
         cells = []
         for lab in ("main", "all_codes"):
             for tag in ("paper-pZL", "this-work-pZL"):
-                e = H[tag][key][lab]
-                cells.append(f"{e['overhead']:.1f} ({e['code']}, {e['d']})" if e else "not reached / not simulated")
+                e, c = H[tag][key][lab], H[tag][key][lab + "_cons"]
+                txt = f"{e['overhead']:.1f} ({e['code']}, {e['d']})" if e else "not reached / not simulated"
+                if e and (c is None or abs(c["overhead"] - e["overhead"]) > 1e-9):
+                    txt += f" [{c['overhead']:.1f} ({c['code']}, {c['d']})]" if c else " [not reached]"
+                cells.append(txt)
         lines.append(f"| {cls} | {w or 'exact'} | {f} | " + " | ".join(cells) + " |")
     open(os.path.join(OUT, "headline.md"), "w").write("\n".join(lines) + "\n")
 
