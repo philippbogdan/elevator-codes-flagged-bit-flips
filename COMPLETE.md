@@ -144,7 +144,7 @@ without one).
   tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
   analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
   1139 sampled strata checked against it, 0 violations), or of the
-  false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
+  analytic false-flag bounds; overheads are given from the central rate and, where it differs, from the
   95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
   p_X with exact intensities; the phase-flip model), and the model predicts held-out sampled
@@ -198,7 +198,7 @@ without one).
     frontier's 32.6 is within 12 % of it, the rest being the outer code's rate);
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
-    0.75
+    0.76
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;
@@ -206,5 +206,6 @@ without one).
   * *false flags* — none up to 1e-06 per qubit per tick, the largest rate tested, with exact timing (95 % bound
     with the dominant strata bounded analytically); with 64-tick windows
     1e-06 (1e-06 central).
-  What is not a limit of the problem is listed as open in REPORT §7: the two fit-level
-  reproduction residuals and the existence of flags during gates (a physics input).
+  What is not a limit of the problem is listed as open in REPORT §7 — the two fit-level
+  reproduction residuals, whether flags exist during gates (a physics input), the phase-flip
+  extrapolations below sampling reach (both models carried), and at p_Z = 1e-2 the sampling-limited 95 % bounds with timing windows: measurement or input questions, not limits.

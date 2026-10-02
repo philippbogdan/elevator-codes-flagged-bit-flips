@@ -81,13 +81,13 @@ p_Z = 1e-2, η = 1e6 (published: the fits bottom out near 2e-9 for [15,9,3] and 
 with two ancillas, neither reaches 1e-12).  Without flags this work finds
 4.7e-9 and
 2.1e-11 with the paper's phase-flip fit
-(1.3e-8 and
+(1.2e-8 and
 1.8e-10 with this work's).  With flags
 on all locations at f = 0.99 the floors fall to
 4.4e-11 ([15,9,3]) and
 5.3e-15 ([15,6,5], two
 ancillas), and [15,6,5] reaches 1e-12 at 269.3
-qubits per logical qubit (paper pZL; 482.7
+qubits per logical qubit (paper pZL; 472.0
 this-work pZL; with p_XL at its 95 % upper bound 269.3 and
 not reached).  Full table: FINDINGS §6.
 

@@ -144,7 +144,7 @@ without one).
   tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
   analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
   {{ N["strata_caps"]["strata_checked"] }} sampled strata checked against it, {{ N["strata_caps"]["violations"] }} violations), or of the
-  false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
+  analytic false-flag bounds; overheads are given from the central rate and, where it differs, from the
   95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
   p_X with exact intensities; the phase-flip model), and the model predicts held-out sampled
@@ -190,5 +190,6 @@ without one).
   * *false flags* — none up to {{ g(N["assumptions"]["tolerance"]["all|w0|f0.99"]["max_r_conservative"]) }} per qubit per tick, the largest rate tested, with exact timing (95 % bound
     with the dominant strata bounded analytically); with 64-tick windows
     {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} ({{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }} central).
-  What is not a limit of the problem is listed as open in REPORT §7: the two fit-level
-  reproduction residuals and the existence of flags during gates (a physics input){{ ", and the sampling-limited gap of the false-flag tolerance with windows" if N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"] != N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"] else "" }}.
+  What is not a limit of the problem is listed as open in REPORT §7 — the two fit-level
+  reproduction residuals, whether flags exist during gates (a physics input), the phase-flip
+  extrapolations below sampling reach (both models carried){{ ", and at p_Z = 1e-2 the sampling-limited 95 % bounds with timing windows" if any((N["limits"].get(f"p1e-2|[15,6,5]|f=0.99 all w={w}|paper-pZL") or {}).get("c_reach") and not (N["limits"].get(f"p1e-2|[15,6,5]|f=0.99 all w={w}|paper-pZL") or {}).get("c_reach_hi") for w in (1, 4, 16, 64, 256, 1024, 4096)) else "" }}{{ ", the windowed false-flag gap" if N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"] != N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"] else "" }}: measurement or input questions, not limits.
