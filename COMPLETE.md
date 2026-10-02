@@ -13,7 +13,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 |---|---|---|
 | 1. Simulation and decoder (both codes, X and Z memory, flag efficiency, false flags, timing; flags used as erasures; every assumption stated and its effect measured) | holds | §1 below; `docs/methods.md`, `results/summary/assumptions.md` |
 | 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds: the published overheads (88, the [15,9,3] threshold, the p_Z = 1e-2 floor of [15,6,5]); every fit within 2× at the points tested with the circuit variant that reproduces it — [15,6,5] with the full-sweep ancilla, [15,9,3] and [16,3,8] with the shortest-path ancilla, the X memory in the per-qubit count its fit uses; the disagreements explained by evidence (ancilla path and counting convention unstated in the paper) | §2 |
-| 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors | holds | §3 |
+| 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors over the same flag settings | holds | §3 |
 | 4. FINDINGS.md, REPORT.md, one command (`./reproduce.sh`) | holds | §4 |
 | Fidelity, known answers, statistics, overhead, frontier, limits (GOAL.md "Measurable") | hold | §5 |
 
@@ -44,7 +44,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   |---|---|---|
   | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | paper's codes: 51.6 ([15,9,3], d_Z = 15); 95 % bound: 77.3 ([15,6,5], d_Z = 15) / 51.6 ([15,9,3], d_Z = 15) / 51.6 ([15,9,3], d_Z = 15) (paper pZL: 88.0 ([15,6,5], d_Z = 17) / 58.7 ([15,9,3], d_Z = 17) / 58.7 ([15,9,3], d_Z = 17)); with idle-only flags the distance-4 [16,11,4] reaches 44.8 (ext. Hamming [16,11,4], d_Z = 15) (51.0 (ext. Hamming [16,11,4], d_Z = 17)) |
   | timing precision | windows exact, 1 … 4096 ticks | flags on all locations: the minimum overhead of the paper's codes is unchanged up to 4096 ticks (longer than the whole memory); idle-only flags: [15,9,3] fails from 256 ticks, [16,11,4] holds to 4096 ticks at f ≥ 0.899 |
-  | false flags | r = 1e-10 … 1e-6 per qubit per tick | [15,9,3], f = 0.99 on all locations: tolerated (95 % upper bound within the target) up to r = 1e-06 with exact timing and 1e-08 with 64-tick windows (central estimate: 1e-06); p_XL = 2.0e-14 [1.1e-14, 3.8e-14] at r = 0, 2.6e-14 [2.1e-14, 1.9e-13] at 1e-6 (exact timing) |
+  | false flags | r = 1e-10 … 1e-6 per qubit per tick | [15,9,3], f = 0.99 on all locations: tolerated (95 % upper bound within the target) up to r = 1e-06 with exact timing and 1e-07 with 64-tick windows (central estimate: 1e-06); p_XL = 2.0e-14 [1.1e-14, 3.8e-14] at r = 0, 2.6e-14 [2.1e-14, 1.5e-13] at 1e-6 (exact timing) |
   | erasure vs heralded X | flag certifies the X | [15,9,3]: idle-only flags at f = 1 8.4e-13 [7.8e-13, 9.0e-13] (erasure) vs 4.9e-13 [4.6e-13, 5.5e-13] (heralded); all locations at f = 0.9 1.6e-13 [1.5e-13, 1.8e-13] vs 3.8e-14 [3.1e-14, 8.5e-14]; minimum overhead with idle-only flags at f = 1, p_XL at its 95 % upper bound: 77.3 ([15,6,5], d=15) (erasure) vs 51.6 ([15,9,3], d=15) (heralded) |
   | idle noise during logical-operation ticks (unstated in the paper) | none ("noop", reproduces the fits) / on every waiting block (literal) | bit flips × 2.7 without flags ([15,9,3], d_Z = 17); phase flips × 4–93 (repetition code with the extra idle ticks), phase-flip floor d_Z = 17 instead of 15; minimum overhead 88.0 ([15,6,5], d_Z = 17) without and 58.7 ([15,9,3], d_Z = 17) with flags on all locations at f = 0.99 (`literal_reading.md`) |
   | equal tick durations, aligned windows | — | the overhead is flat in the window from 1 to 4096 ticks (flags on all locations), so any assignment of durations to ticks leaves it unchanged |
@@ -57,8 +57,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   14/16 ([15,6,5], two ancillas) and
   6/16 ([15,9,3], ratios
   1.43–3.76);
-  X memory ratios 0.38–0.47
-  counting a failure once, 0.98–1.30
+  X memory ratios 0.16–0.47
+  counting a failure once, 0.42–1.30
   counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
   2.6 measured on the same shots, `counting_convention.json`);
   the repetition code within 0.7–1.4× of the paper's repetition-code fit for d_Z ≤ 13.
@@ -69,7 +69,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   flag-free simulation (bit flips) with the paper's phase-flip fit: the published operating point
   is reproduced — 88.0 ([15,6,5], d_Z = 17) at η = 1e6 — and so is Fig. 1:
   187.0 ([16,3,8]) → 93.5 ([15,6,5] 2 anc) → 88.0 ([15,6,5]) → 58.7 ([15,9,3])
-  with steps at η = 4.82e4, 8.80e4, 2.16e6
+  with steps at η = 5.53e4, 6.98e4, 2.16e6
   (published 187 → 93.5 → 88 → 58.7 at 6.7e4, 1.21e5, 1.76e6).  At p_Z = 1e-2 the flag-free floors come out as
   2.1e-11 ([15,6,5], two ancillas, d_Z =
   49; published 2.08e-11 at 49) and
@@ -100,10 +100,12 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 * **Bias 4e4 … 1e7** (`bias_*.md`, `fig1_this_work_*.md/.png`, `overhead_vs_bias_*.png`): [15,9,3]
   is the cheapest code from η = 2.16e6 without
   flags, 4.90e5 (f = 0.9),
-  1.77e5 (f = 0.99) and everywhere with
+  1.06e5 (f = 0.99) and everywhere with
   perfect flags (paper pZL).
-* **p_Z = 1e-2, η = 1e6: lowest reachable p_L and its overhead per flag setting**
-  (`fig2_this_work_*.md`, `pz1e2_*.md`, `limits.md`; FINDINGS §6 has the full table): without
+* **p_Z = 1e-2, η = 1e6: lowest reachable p_L and its overhead per flag setting** — the same
+  efficiencies (0.5 … 1), location classes and windows (exact … 4096 ticks, more than an outer round
+  at the d_Z of these floors) as at p_Z = 1e-3, for [15,9,3] and [15,6,5] with one and two ancillas
+  (FINDINGS §6, `pz1e2_floors.md`, `fig2_this_work_*.md`, `limits.md`): without
   flags 2.1e-11 ([15,6,5], two ancillas) and
   4.7e-9 ([15,9,3]) (paper pZL); with flags on all
   locations at f = 0.99 1.3e-14 at
@@ -138,7 +140,7 @@ without one).
 * **Statistics** — every rate carries a 95 % interval (Wilson per stratum; failures counted in the
   tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
   analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
-  882 sampled strata checked against it, 0 violations), or of the
+  963 sampled strata checked against it, 0 violations), or of the
   false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
   95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
@@ -146,7 +148,7 @@ without one).
   points: direct samples under flags 30/30
   and 30/30 (from the
   p_X = 1e-9 fractions); d_Z transfers 146/146
-  and 48/48; p_X transfers (bias)
+  and 84/84; p_X transfers (bias)
   24/24; held-out
   repetition-code points within 0.94–1.48×.
 * **Overhead against the published floors** — 88 → 58.7
@@ -174,15 +176,16 @@ without one).
 | 44.8 | ext. Hamming [16,11,4] | 15 | 8.2e-13 | 0.99 | idle | 4096 | 0 |
 | 51.6 | [15,9,3] | 15 | 7.5e-13 | 0.8 | all | 4096 | 0 |
 | 51.6 | [15,9,3] | 15 | 6.0e-13 | 0.8 | all | 16 | 1e-08 |
-| 51.6 | [15,9,3] | 15 | 1.9e-13 | 0.99 | all | 64 | 1e-08 |
+| 51.6 | [15,9,3] | 15 | 4.1e-13 | 0.9 | all | 16 | 1e-07 |
+| 51.6 | [15,9,3] | 15 | 1.9e-13 | 0.99 | all | 64 | 1e-07 |
 | 51.6 | [15,9,3] | 15 | 1.4e-13 | 0.99 | all | exact | 1e-06 |
-| 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |
+| 77.3 | [15,6,5] | 15 | 1.6e-13 | 0.0 | none | any (no flags) | 0 |
 
   pushed outward on the criterion furthest from its limit — overhead (higher-rate codes), then the
   timing window, then the efficiency — until each axis reached a limit of the problem (next item).
 * **Every remaining limit belongs to the problem** (`limits.md`, FINDINGS §8):
   * *overhead* — every frontier code sits at its phase-flip floor: one step lower in d_Z its phase
-    flips alone exceed 1e-12 ([15,9,3]: 3.13e-12
+    flips alone exceed 1e-12 ([15,9,3]: 3.15e-12
     at d_Z = 13), at the floor its bit flips are far below its phase flips
     (4.81e-18 vs
     1.10e-13); phase flips are errors flags cannot
@@ -190,12 +193,13 @@ without one).
     can go below 25 qubits per logical qubit here;
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
-    0.72
+    0.79
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;
   * *timing precision* — none needed within exact … 4096 ticks when gates are flagged;
-  * *false flags* — none up to 1e-6 per qubit per tick with exact timing (rigorous bounds).
+  * *false flags* — none up to 1e-06 per qubit per tick, the largest rate tested, with exact timing (95 % bound
+    with the dominant strata bounded analytically); with 64-tick windows
+    1e-07 (1e-06 central).
   What is not a limit of the problem is listed as open in REPORT §7: the two fit-level
-  reproduction residuals, the existence of flags during gates (a physics input), and sample-limited
-  upper bounds for false flags with coarse windows.
+  reproduction residuals and the existence of flags during gates (a physics input), and the sampling-limited gap of the false-flag tolerance with windows.

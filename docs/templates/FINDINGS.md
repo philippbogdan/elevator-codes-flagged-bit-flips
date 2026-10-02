@@ -302,17 +302,19 @@ this work's own.
 13b. **False flags cost nothing up to 1e-6 per qubit per tick when timing is exact.**  [15,9,3]
     at f = 0.99 on all locations: p_XL = {{ pxl3("falseflag|all|w0|f0.99|r0|erasure") }} without false
     flags, {{ pxl3("falseflag|all|w0|f0.99|r1e-08|erasure") }} at r = 1e-8 and
-    {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at r = 1e-6 (95 % intervals; the single- and
-    two-event strata are bounded analytically, `false_flag_bounds.json`: a failure needs falsely
-    flagged locations that complete the real events to a logical, and with exact timing the decoder
-    never prefers two flags over one).  With 64-tick windows the 95 % upper bound stays below the
-    target up to r = {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} and the
-    central estimate up to r = {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }}
-    ({{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }} at 1e-6); beyond, the bound is set by the
-    analytic pair bound, which is loose for windows (the two-flags-cost-more argument is proved only
-    for exact timing).
-    Full sweep, including f = 0.8–0.9 with 4–16-tick windows (the regime a photon-counting
-    threshold would select): `assumptions.md`.
+    {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at r = 1e-6 (95 % intervals).  The single- and
+    two-event strata, which carry most of the weight, are bounded without decoding
+    (`false_flag_bounds.json`, methods §5): a cheaper wrong explanation must complete the true errors
+    to a logical through columns of falsely flagged windows, and the decoder's own costs limit how
+    many and which; with exact timing a single flagged event is never mistaken (F(0,1) = 0).  Largest
+    false-flag rate (of 1e-10 … 1e-6) at which [15,9,3] still meets the target at d_Z = 15, from the
+    95 % upper bound (central estimate in brackets):
+    {{ "; ".join(f"{k.split('|')[0]} flags, f = {k.split('|')[2][1:]}, {'exact timing' if k.split('|')[1] == 'w0' else k.split('|')[1][1:] + '-tick windows'}: " + (g(v["max_r_conservative"]) if v["max_r_conservative"] else "none") + " (" + (g(v["max_r_central"]) if v["max_r_central"] else "none") + ")" for k, v in N["assumptions"]["tolerance"].items()) }}.
+    Every setting that meets the target with its 95 % bound still does up to r =
+    {{ g(min(v["max_r_conservative"] for v in N["assumptions"]["tolerance"].values() if v["max_r_conservative"])) }}; at
+    1e-6 the central estimate exceeds the target for
+    {{ "; ".join(k.split("|")[0] + " flags at f = " + k.split("|")[2][1:] + " with " + k.split("|")[1][1:] + "-tick windows" for k, v in N["assumptions"]["tolerance"].items() if v["max_r_central"] and v["max_r_central"] < 1e-6 and k.split("|")[1] != "w0") or "no setting" }}
+    (full sweep: `assumptions.md`).
 
 13c. **Heralded flags (a flag certifies the X) versus erasures (the event's X occurs with
     probability ½).**  [15,9,3]: idle-only flags at f = 1 {{ pxl3("herald|idle|w0|f1.0|r0|herald") }}
@@ -379,12 +381,21 @@ this work's own.
     {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|this-work-pZL"]["pL"]) }} and
     {{ e1(N["limits"]["p1e-2|[15,9,3]|none|this-work-pZL"]["pL"]) }}.
 
-16. **Flags push the memory past the bit-flip wall.**  Lowest p_L per flag setting (phase flips
-    beyond d_Z = 25, the largest elevator X memory sampled at p_Z = 1e-2, are extrapolations of the
-    phase-flip model, marked), the overhead at which 1e-12
-    is reached, and what the floor is made of (`pz1e2_*.md`, `limits.md`, `fig2_this_work_*.md`):
+16. **Flags push the memory past the bit-flip wall.**  Lowest p_L per flag setting — the same
+    efficiencies, location classes and timing windows as at p_Z = 1e-3, windows up to 4096 ticks,
+    more than an outer round at the d_Z of these floors — with its overhead, the lowest p_L with p_XL
+    at its 95 % upper bound, and the cheapest overhead at which 1e-12 is reached (all floors lie
+    beyond d_Z = 25, the largest elevator X memory sampled at p_Z = 1e-2, so their phase flips are
+    extrapolations of the phase-flip model).  With the paper's phase-flip fit:
 
-{{ N["md"]["pz1e2_table"] }}
+{{ N["md"]["pz1e2_compact|paper-pZL"] }}
+
+    With this work's phase-flip model:
+
+{{ N["md"]["pz1e2_compact|this-work-pZL"] }}
+
+    d_Z, the floor's composition (phase flips / flagged-only / with unflagged errors) and Hamming
+    [15,11,3]: `pz1e2_floors.md`; per-d_Z values and the transfer checks: `pz1e2_*.md`, `limits.md`.
 
     With flags on all locations [15,6,5] reaches 1e-12 — which neither code reaches without flags —
     at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }} qubits per logical

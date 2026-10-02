@@ -128,6 +128,21 @@ fraction above its bound) and against the decoder's own column costs (agreement 
 removes the zero-failure strata that dominated the 95 % upper bounds; sampled strata use
 min(Wilson upper end, bound), and strata never sampled their bound (1 if none).
 
+**Analytic bounds with false flags** (`scripts/false_flag_bounds.py`; distance-3 codes, any timing).
+With false flags no stratum is exactly 0, and F(1,0), F(0,1), F(0,2) carry most of the Poisson weight.
+The decoder fails only if its explanation differs from the truth by a nontrivial logical of >= 3
+columns, made of true columns it drops or swaps and an alternative set E' of n_x unflagged columns and
+n_f columns of falsely flagged windows whose decoder cost is at most that of the truth (+ eps).  With
+the decoder's own costs (w for unflagged columns, v = log(pi_0/pi_c) for flagged-window columns, the
+false-flag rate inside pi), every (n_x, n_f) that the costs allow is bounded explicitly — (1,1), (0,2),
+(1,2), (0,3), summing P(c) <= r_W N_W(c) (some window holding column c falsely flagged) over the
+completions to a logical — and the rest by the Poisson tail of the number of false flags; n_x >= 2
+must be cost-impossible.  For F(1,0) the true column's cost is taken with its three largest window
+contributions removed, plus the probability of four or more false flags on it; for F(0,1) the true
+flagged event's own window may be switched to another of its columns; with exact timing
+2 min(v_min, w_min) > max v gives F(0,1) = 0.  No decoding is involved; the bounds replace the upper
+end of the Wilson interval where smaller.
+
 **Transfers.**  F(a,b) depends on p_X and d_Z only through the decoder's priors and the
 circuit's layout, while U and S are exact linear functions of p_X and of per-class fault sums
 (`results/summary/class_sums.json`, exact quadratics in d_Z for d_Z >= 17).  Rates at a (d_Z,

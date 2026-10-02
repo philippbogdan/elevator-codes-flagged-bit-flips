@@ -131,3 +131,23 @@ def test_strata_caps_against_decoder():
             det, obs = fm.syndrome(flips)
             if det.any() or obs.any():
                 assert np.array_equal(dec.decode(det, wins), obs)
+
+
+def test_false_flag_bounds_against_decoder():
+    """scripts/false_flag_bounds.py: with exact timing and r = 1e-6 a single flagged event is never
+    mistaken (bound 0), and no decoded (0,1) sample with false flags fails."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+    from false_flag_bounds import bounds_for
+    from elevator.flagstudy import _build
+    spec = dict(kind="strata", code="15_9_3", n_anc=1, d=5, mode="full", compress=False, idle_ctx=["edge", "cnot"],
+                n_outer=3, p_x=1e-9, decoder="mle_excl",
+                flag=dict(f=0.99, classes=["idle", "gate", "prep", "meas"], window=0, false_rate=1e-6))
+    b = bounds_for(spec)
+    assert b["0,1"] == 0.0 and 0.0 <= b["1,0"] <= 1.0 and 0.0 <= b["0,2"] <= 1.0
+    code, sched, bm, fm, dec, ss = _build(spec)
+    rng = np.random.default_rng(2)
+    for _ in range(150):
+        flips, wins = ss.sample(0, 1, rng)
+        det, obs = fm.syndrome(flips)
+        if det.any() or obs.any():
+            assert np.array_equal(dec.decode(det, wins), obs)

@@ -445,21 +445,21 @@ _FFB = {}
 
 
 def apply_false_flag_bounds(r):
-    """Rows with false flags (r > 0) of distance-3 codes: cap the upper end of the single- and two-event
-    strata (1,0), (0,1), (0,2) by the bounds of scripts/false_flag_bounds.py (results/false_flag_bounds.json,
-    or those the run itself used) and recompute the row's estimate."""
+    """Rows with false flags (r > 0) of distance-3 codes: cap the upper end of the strata (1,0), (0,1) and
+    (exact timing) (0,2) by the rigorous bounds of scripts/false_flag_bounds.py
+    (results/false_flag_bounds.json, keyed by setting) and recompute the row's estimate."""
     if r["r"] <= 0:
         return r
     if "t" not in _FFB:
         fn = os.path.join(ROOT, "results", "false_flag_bounds.json")
         _FFB["t"] = json.load(open(fn)) if os.path.exists(fn) else {}
-    b = _FFB["t"].get(os.path.relpath(r["file"], ROOT)) or r.get("caps")
+    key = "|".join(str(x) for x in (r["code"], r["n_anc"], r["d"], r["p_x"], r["f"], r["classes"], r["window"],
+                                    r["r"], r["idle"], r.get("n_outer", 5)))
+    b = _FFB["t"].get(key)
     if not b:
         return r
     r = dict(r)
     r["hi_cap"] = {k: b[k] for k in ("1,0", "0,1", "0,2") if k in b}
-    for k, v in (r.get("caps") or {}).items():
-        r["hi_cap"][k] = min(r["hi_cap"].get(k, 1.0), v)
     R, k = r["rounds"], r["k"]
     r["pL"], r["lo"], r["hi"] = combine_strata(r, r["U"], r["S"], R, k, r["d"], r["p_x"])
     return r
@@ -1276,25 +1276,48 @@ def limits_table():
                          f"{fo / tot:.2f} | {wu / tot:.2f} |")
     NUMBERS["limits"] = L
     open(os.path.join(OUT, "limits.md"), "w").write("\n".join(lines) + "\n")
-    # compact p_Z = 1e-2 table for the documents
+    # p_Z = 1e-2 tables for the documents: the full one (results/summary/pz1e2_floors.md) and a compact
+    # one per phase-flip model (every flag setting, the paper's codes)
+    order = ["none", "f=0.5 all w=exact", "f=0.8 all w=exact", "f=0.9 all w=exact", "f=0.95 all w=exact",
+             "f=0.99 all w=exact", "f=0.999 all w=exact", "f=1.0 all w=exact",
+             "f=0.99 all w=1", "f=0.99 all w=4", "f=0.99 all w=16", "f=0.99 all w=64", "f=0.99 all w=256",
+             "f=0.99 all w=1024", "f=0.99 all w=4096", "f=0.9 all w=4096", "f=0.99 idle+gate w=exact",
+             "f=0.9 idle w=exact", "f=0.99 idle w=exact", "f=1.0 idle w=exact", "f=0.99 idle w=4096"]
+    rch = lambda x, k_: f"{x[k_]:.0f}" if x.get(k_) else "no"
+    ext = lambda x: " (extrap.)" if x["d"] > 25 else ""
+    cell = lambda x: (f"{x['pL']:.1e} ({x['d']}, {x['overhead']:.0f}){ext(x)} "
+                      f"[{x['floor_hi']:.1e} ({x['d_hi']}, {x['overhead_hi']:.0f})]")
     md = ["| code | flags | lowest p_L, paper pZL (d_Z, overhead) [lowest 95 % upper bound (d_Z, overhead)] | this-work pZL | 1e-12 reached at overhead, paper pZL (central / 95 % bound) | this-work pZL | floor made of (this work: phase / flagged-only / unflagged) |",
           "|---|---|---|---|---|---|---|"]
-    order = ["none", "f=0.9 idle w=exact", "f=0.99 idle w=exact", "f=0.9 all w=exact", "f=0.99 idle+gate w=exact",
-             "f=0.99 all w=exact", "f=0.99 all w=64", "f=0.99 all w=1024", "f=1.0 all w=exact"]
     for code in ["[15,9,3]", "[15,6,5]", "[15,6,5] 2 anc", "Hamming [15,11,3]"]:
         for fl in order:
             a = L.get(f"p1e-2|{code}|{fl}|paper-pZL")
             b = L.get(f"p1e-2|{code}|{fl}|this-work-pZL")
             if not a or not b:
                 continue
-            rch = lambda x, k_: f"{x[k_]:.0f}" if x.get(k_) else "no"
-            ext = lambda x: " (extrap.)" if x["d"] > 25 else ""
-            cell = lambda x: (f"{x['pL']:.1e} ({x['d']}, {x['overhead']:.0f}){ext(x)} "
-                              f"[{x['floor_hi']:.1e} ({x['d_hi']}, {x['overhead_hi']:.0f})]")
             md.append(f"| {code} | {fl} | {cell(a)} | {cell(b)} | {rch(a, 'reach')} / {rch(a, 'reach_hi')} | "
                       f"{rch(b, 'reach')} / {rch(b, 'reach_hi')} | "
                       f"{b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
     NUMBERS.setdefault("md", {})["pz1e2_table"] = "\n".join(md)
+    open(os.path.join(OUT, "pz1e2_floors.md"), "w").write(
+        "## p_Z = 1e-2, eta = 1e6: lowest reachable p_L per code and flag setting\n\n"
+        "Central estimate (d_Z, overhead), in brackets the lowest p_L with p_XL at its 95 % upper bound; "
+        "'(extrap.)': phase flips beyond the sampled d_Z = 25.\n\n" + "\n".join(md) + "\n")
+    codes3 = ["[15,9,3]", "[15,6,5]", "[15,6,5] 2 anc"]
+    for tag in ("paper-pZL", "this-work-pZL"):
+        cm = ["| flags | " + " | ".join(f"{c}: lowest p_L (overhead) [95 % bound]" for c in codes3)
+              + " | 1e-12 reached at (central / 95 % bound) |", "|---|" + "---|" * (len(codes3) + 1)]
+        for fl in order:
+            es = [L.get(f"p1e-2|{c}|{fl}|{tag}") for c in codes3]
+            if not any(es):
+                continue
+            cells = [f"{e['pL']:.1e} ({e['overhead']:.0f}) [{e['floor_hi']:.1e}]" if e else "–" for e in es]
+            rc = [(e["reach"], c) for e, c in zip(es, codes3) if e and e.get("reach")]
+            rh = [(e["reach_hi"], c) for e, c in zip(es, codes3) if e and e.get("reach_hi")]
+            r1 = f"{min(rc)[0]:.0f} ({min(rc)[1]})" if rc else "no"
+            r2 = f"{min(rh)[0]:.0f} ({min(rh)[1]})" if rh else "no"
+            cm.append(f"| {fl} | " + " | ".join(cells) + f" | {r1} / {r2} |")
+        NUMBERS["md"][f"pz1e2_compact|{tag}"] = "\n".join(cm)
 
 
 def literal_reading():
@@ -1753,8 +1776,8 @@ FIG_SETTINGS = [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0,
 
 
 def _source_rows(px_pref, codes, settings=FIG_SETTINGS, dirs=("flag_main", "flag_supp", "flag_alt", "flag_16_3_8", "flag_pz1e2")):
-    """Directly simulated rows (no synthesized ones) per (code, setting): the one at d_Z = 15 (else
-    the smallest d_Z) and p_X closest to px_pref (in log)."""
+    """Directly simulated rows (no synthesized ones) per (code, setting): {d_Z: row} at the simulated p_X
+    closest to px_pref (in log); transfers to a d_Z start from the nearest simulated one (_nearest)."""
     rows = [r for r in flag_rows(dirs, transfers=False) if r["idle"] == "edge,cnot" and r["r"] == 0
             and r.get("mode", "erasure") == "erasure"]
     out = {}
@@ -1764,8 +1787,14 @@ def _source_rows(px_pref, codes, settings=FIG_SETTINGS, dirs=("flag_main", "flag
                     and (f == 0 or (r["classes"] == cls and r["window"] == w))]
             if not cand:
                 continue
-            out[(code, cls, w, f)] = min(cand, key=lambda r: (abs(math.log(r["p_x"] / px_pref)), abs(r["d"] - 15), r["d"]))
+            pb = min({r["p_x"] for r in cand}, key=lambda p: abs(math.log(p / px_pref)))
+            out[(code, cls, w, f)] = {r["d"]: r for r in cand if r["p_x"] == pb}
     return out
+
+
+def _nearest(byd, d):
+    """the row of byd ({d_Z: row}) simulated at the d_Z nearest to d (the larger one on a tie)"""
+    return byd[min(byd, key=lambda x: (abs(x - d), -x))]
 
 
 def fig1_this_work(pzl_fn, tag, codes=CODES_MAIN + [("16_3_8", 1)]):
@@ -1784,11 +1813,11 @@ def fig1_this_work(pzl_fn, tag, codes=CODES_MAIN + [("16_3_8", 1)]):
             px = 1e-3 / eta
             best = None
             for code in codes:
-                r = src.get((code, cls, w, f))
-                if r is None:
+                byd = src.get((code, cls, w, f))
+                if byd is None:
                     continue
                 for d in range(13, 42, 2):
-                    t = transfer_pxl(r, d, p_x=px)
+                    t = transfer_pxl(_nearest(byd, d), d, p_x=px)
                     if t is None:
                         continue
                     if t[0] + pzl_fn(code[0], code[1], d, 1e-3) <= 1e-12:
@@ -1845,10 +1874,11 @@ def fig2_this_work(pzl_fn, tag, codes=CODES_MAIN):
             floor = None
             floor_c = None
             for code in codes:
-                r = src.get((code, cls, w, f))
-                if r is None:
+                byd = src.get((code, cls, w, f))
+                if byd is None:
                     continue
                 for d in range(13, dmax + 1, 2):
+                    r = _nearest(byd, d)
                     t = transfer_pxl(r, d, p_x=px)
                     if t is None:
                         continue

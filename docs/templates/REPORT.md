@@ -111,7 +111,7 @@ than the memory), then the flag efficiency.
 | floors at p_Z = 1e-2 with perfect flags | the code's distance: ≥ d flagged events containing an undetectable logical, computed without a decoder | `limits.md`, `perfect_flags_exact.json` |
 | flag efficiency required | set by unflagged bit flips under a decoder shown to be ML-optimal for the flag model (exact and coarse timing) | `decoder_optimality*.json`, `required_f_*.md` |
 | timing precision | none within exact … 4096 ticks when gates are flagged | `flags_main_*.md` |
-| false flags | tolerated up to 1e-6 per qubit per tick with exact timing (rigorous upper bounds); windows of 64 ticks: central estimates unchanged to 1e-6, upper bounds sample-limited | `assumptions.md`, `false_flag_bounds.json` |
+| false flags | with exact timing none up to {{ g(N["assumptions"]["tolerance"]["all|w0|f0.99"]["max_r_conservative"]) }} per qubit per tick, the largest rate tested (95 % bound; the dominant strata bounded analytically, without decoding); with 64-tick windows up to {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} ({{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }} central) | `assumptions.md`, `false_flag_bounds.json` |
 
 ## 7. What failed, what remains open
 
@@ -126,5 +126,4 @@ than the memory), then the flag efficiency.
   carried; every conclusion above holds under either.
 * At p_Z = 1e-2 the floors with flags lie at d_Z = {{ min(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}–{{ max(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}, beyond the largest elevator X memory sampled
   there (d_Z = 25, fitted within a factor 2); they are model extrapolations, marked as such.
-* False flags with coarse windows: the upper bounds are limited by sampling, not by a property of
-  the problem; the central estimates show no effect up to 1e-6 per qubit per tick.
+{{ ("* False flags with 64-tick windows: between " + g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) + " and " + g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) + " per qubit per tick the 95 % upper bound, not the central estimate, exceeds the target: a sampling limit, not a property of the problem.") if N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"] != N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"] else "* False flags: with exact timing and with 64-tick windows the 95 % bounds meet the target up to the largest rate tested (1e-6 per qubit per tick); no open item." }}

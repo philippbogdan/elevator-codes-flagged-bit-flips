@@ -13,7 +13,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 |---|---|---|
 | 1. Simulation and decoder (both codes, X and Z memory, flag efficiency, false flags, timing; flags used as erasures; every assumption stated and its effect measured) | holds | §1 below; `docs/methods.md`, `results/summary/assumptions.md` |
 | 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds: the published overheads (88, the [15,9,3] threshold, the p_Z = 1e-2 floor of [15,6,5]); every fit within 2× at the points tested with the circuit variant that reproduces it — [15,6,5] with the full-sweep ancilla, [15,9,3] and [16,3,8] with the shortest-path ancilla, the X memory in the per-qubit count its fit uses; the disagreements explained by evidence (ancilla path and counting convention unstated in the paper) | §2 |
-| 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors | holds | §3 |
+| 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors over the same flag settings | holds | §3 |
 | 4. FINDINGS.md, REPORT.md, one command (`./reproduce.sh`) | holds | §4 |
 | Fidelity, known answers, statistics, overhead, frontier, limits (GOAL.md "Measurable") | hold | §5 |
 
@@ -102,8 +102,10 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   flags, {{ e2(first_eta("paper-pZL", "all|w0|f0.9", "[15,9,3]")) }} (f = 0.9),
   {{ e2(first_eta("paper-pZL", "all|w0|f0.99", "[15,9,3]")) }} (f = 0.99) and everywhere with
   perfect flags (paper pZL).
-* **p_Z = 1e-2, η = 1e6: lowest reachable p_L and its overhead per flag setting**
-  (`fig2_this_work_*.md`, `pz1e2_*.md`, `limits.md`; FINDINGS §6 has the full table): without
+* **p_Z = 1e-2, η = 1e6: lowest reachable p_L and its overhead per flag setting** — the same
+  efficiencies (0.5 … 1), location classes and windows (exact … 4096 ticks, more than an outer round
+  at the d_Z of these floors) as at p_Z = 1e-3, for [15,9,3] and [15,6,5] with one and two ancillas
+  (FINDINGS §6, `pz1e2_floors.md`, `fig2_this_work_*.md`, `limits.md`): without
   flags {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas) and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]) (paper pZL); with flags on all
   locations at f = 0.99 {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["pL"]) }} at
@@ -180,7 +182,8 @@ without one).
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;
   * *timing precision* — none needed within exact … 4096 ticks when gates are flagged;
-  * *false flags* — none up to 1e-6 per qubit per tick with exact timing (rigorous bounds).
+  * *false flags* — none up to {{ g(N["assumptions"]["tolerance"]["all|w0|f0.99"]["max_r_conservative"]) }} per qubit per tick, the largest rate tested, with exact timing (95 % bound
+    with the dominant strata bounded analytically); with 64-tick windows
+    {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} ({{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }} central).
   What is not a limit of the problem is listed as open in REPORT §7: the two fit-level
-  reproduction residuals, the existence of flags during gates (a physics input), and sample-limited
-  upper bounds for false flags with coarse windows.
+  reproduction residuals and the existence of flags during gates (a physics input){{ ", and the sampling-limited gap of the false-flag tolerance with windows" if N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"] != N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"] else "" }}.
