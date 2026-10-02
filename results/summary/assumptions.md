@@ -40,7 +40,7 @@ p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), 
 | all | exact | 0.99 | 0 | erasure | 2.03e-14 [1.1e-14, 3.8e-14] | 2.06e-22 [9.5e-23, 2.1e-14] | 7.21e-21 [1.3e-21, 1.4e-14] | 51.6 ([15,9,3], d=15) |
 | all | exact | 0.99 | 0 | herald | - | - | 6.17e-23 [2.8e-23, 6.9e-15] | 82.2 ([15,6,5] 2 anc, d=15) |
 | all | 64 | 0.99 | 0 | erasure | 3.52e-14 [1.6e-14, 8.4e-14] | 3.84e-20 [1.1e-20, 8.5e-14] | 1.44e-20 [4.0e-21, 8.9e-14] | 51.6 ([15,9,3], d=15) |
-| all | 64 | 0.99 | 0 | herald | - | 3.88e-20 [1.5e-20, 5.9e-14] | - | 77.3 ([15,6,5], d=15) |
+| all | 64 | 0.99 | 0 | herald | - | 3.88e-20 [1.5e-20, 5.9e-14] | 3.67e-21 [6.8e-22, 3.0e-14] | 77.3 ([15,6,5], d=15) |
 
 ### false flags per qubit per tick (f = 0.99, flags on all locations, exact / 64 ticks)
 

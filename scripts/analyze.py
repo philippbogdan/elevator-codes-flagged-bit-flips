@@ -185,7 +185,11 @@ def phase_model():
         NUMBERS["phase_ratio_fit"] = dict(coef=list(coef), n=len(elev))
         if data_only:
             cs_ = [r["y"] / (float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])]) for r in data_only]
-            NUMBERS["ancilla_diag"] = dict(c_min=min(cs_), c_max=max(cs_))
+            small = [c_ for c_, r in zip(cs_, data_only) if r["d"] <= 17]
+            full_c = {f"d{r['d']}": r["y"] / (float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])])
+                      for r in elev if r["p"] == 0.01 and r["d"] >= 21}
+            NUMBERS["ancilla_diag"] = dict(c_min=min(cs_), c_max=max(cs_), c_min_small=min(small), c_max_small=max(small),
+                                           full_large=full_c)
             lines.append("\n### Ancilla diagnostic: logical-ancilla and logical-operation noise switched off\n")
             lines.append("| d_Z | p_Z | p_ZL ancilla noise off [95% CI] | (n_b/k) p_rep | c without ancilla noise |")
             lines.append("|---|---|---|---|---|")
