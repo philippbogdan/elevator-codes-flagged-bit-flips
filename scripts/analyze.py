@@ -1195,7 +1195,7 @@ def limits_table():
                 continue
             ra = f"{a['reach']:.0f}" if a.get("reach") else "no"
             rb = f"{b['reach']:.0f}" if b.get("reach") else "no"
-            ext = lambda x: " (extrap.)" if x["d"] > 69 else ""
+            ext = lambda x: " (extrap.)" if x["d"] > 25 else ""
             md.append(f"| {code} | {fl} | {a['pL']:.1e} [≤ {a['pL_hi']:.1e}] ({a['d']}, {a['overhead']:.0f}){ext(a)} | "
                       f"{b['pL']:.1e} [≤ {b['pL_hi']:.1e}] ({b['d']}, {b['overhead']:.0f}){ext(b)} | "
                       f"{ra} / {rb} | {b['pZL'] / b['pL']:.2f} / {b['flagged_only'] / b['pL']:.2f} / {b['with_unflagged'] / b['pL']:.2f} |")
@@ -1427,8 +1427,8 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
                                  f"{r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {t[0]:.2e} [{t[1]:.2e}, {t[2]:.2e}] {'' if ok else '(outside)'} |")
     NUMBERS[f"pz1e2_transfer_checks"] = dict(agree=int(sum(checks)), total=len(checks))
     lines += ["\n### Floor per code and flag setting (d_Z <= 301) and overhead to reach given rates\n",
-              "Phase flips beyond d_Z ~ 70 (repetition code sampled to d_Z = 69 at p_Z >= 1.25e-2, elevator X memory "
-              "to d_Z = 29 at p_Z = 1e-2) are extrapolations of the phase-flip model; floors there are marked '(extrap.)'.\n",
+              "Phase flips beyond d_Z = 25 (elevator X memory sampled to d_Z = 25 at p_Z = 1e-2, the repetition code to "
+              "d_Z = 69 at p_Z >= 1.25e-2) are extrapolations of the phase-flip model; floors there are marked '(extrap.)'.\n",
               "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there | overhead for 1e-9 | 1e-10 | 1e-11 | 1e-12 |",
               "|---|---|---|---|---|---|---|---|---|---|---|"]
     out = {}
@@ -1453,7 +1453,7 @@ def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
             out[key] = best + (reach,)
             rc = " | ".join(f"{reach[tg]:.1f}" if tg in reach else "-" for tg in (1e-9, 1e-10, 1e-11, 1e-12))
             lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {best[0]:.2e}"
-                         f"{' (extrap.)' if best[1] > 69 else ''} | {best[1]} | "
+                         f"{' (extrap.)' if best[1] > 25 else ''} | {best[1]} | "
                          f"{best[2]:.1f} | {best[3]:.2e} | {best[4]:.2e} | {rc} |")
     NUMBERS.setdefault("pz1e2", {})[tag] = {f"{k[0]}|a{k[1]}|f{k[2]}|{k[3]}|w{k[4]}": dict(pL=v[0], d=v[1], overhead=v[2],
                                               reach={f"{tg:g}": oh for tg, oh in v[5].items()}) for k, v in out.items()}
