@@ -115,5 +115,29 @@
   "disagree": 0,
   "mle_only": 0,
   "ml_only": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 1,
+  "d": 17,
+  "p_x": 1e-08,
+  "f": 0.99,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   1,
+   3
+  ],
+  "seconds": 117.2979953289032,
+  "n": 1600,
+  "ml": 0,
+  "mle": 0,
+  "disagree": 0,
+  "mle_only": 0,
+  "ml_only": 0
  }
 ]

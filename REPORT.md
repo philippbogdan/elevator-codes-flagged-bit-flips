@@ -125,7 +125,7 @@ than the memory), then the flag efficiency.
 |---|---|---|
 | overhead at p_Z = 1e-3 (each code at its phase-flip floor) | phase flips cannot be flagged; one step lower in d_Z they alone exceed the target; unchanged with an ideal decoder for the data blocks; any Elevator-type memory needs ≥ 25 qubits per logical qubit | `limits.md`, `phase_floor.md` |
 | floors at p_Z = 1e-2 with perfect flags | the code's distance: ≥ d flagged events containing an undetectable logical, computed without a decoder | `limits.md`, `perfect_flags_exact.json` |
-| flag efficiency required | set by unflagged bit flips under a decoder shown to be ML-optimal for the flag model (exact and coarse timing) | `decoder_optimality*.json`, `required_f_*.md` |
+| flag efficiency required | set by unflagged bit flips under a decoder shown to be ML-optimal for the flag model (exact and coarse timing; [15,9,3] at p_Z = 1e-3, [15,6,5] in the p_Z = 1e-2 regime) | `decoder_optimality*.json`, `required_f_*.md` |
 | timing precision | none within exact … 4096 ticks when gates are flagged | `flags_main_*.md` |
 | false flags | with exact timing none up to 1e-06 per qubit per tick, the largest rate tested (95 % bound; the dominant strata bounded analytically, without decoding); with 64-tick windows up to 1e-06 (1e-06 central) | `assumptions.md`, `false_flag_bounds.json` |
 
@@ -140,6 +140,7 @@ than the memory), then the flag efficiency.
 * The phase-flip floor at p_Z = 1e-3 rests on an extrapolation below sampling reach (model checked
   on held-out points); the paper's own extrapolation gives d_Z = 17 instead of 15.  Both are
   carried; every conclusion above holds under either.
+* At p_Z = 1e-2 with timing windows the 95 % bounds are set by sampling: flagged-only strata with no failure in their samples (no analytic bound covers windows there), so 1e-12 is reached only in the central estimate for windows of 1, 4, 16, 64, 1024, 4096 ticks ([15,6,5], f = 0.99, paper pZL).
 * At p_Z = 1e-2 the floors with flags lie at d_Z = 39–123, beyond the largest elevator X memory sampled
   there (d_Z = 25, fitted within a factor 2); they are model extrapolations, marked as such.
-* False flags: with exact timing and with 64-tick windows the 95 % bounds meet the target up to the largest rate tested (1e-6 per qubit per tick); no open item.
+

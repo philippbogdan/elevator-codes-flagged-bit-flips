@@ -1,7 +1,7 @@
 """Result files whose spec is not in any task file (so ./reproduce.sh all would not recreate them).
 
-  python scripts/orphans.py            # list
-  python scripts/orphans.py --write    # collect their specs into tasks/legacy.jsonl
+  python scripts/orphans.py            # list (tasks/legacy.jsonl counts as a task file)
+  python scripts/orphans.py --write    # collect the specs no other task file has into tasks/legacy.jsonl
 """
 import glob
 import json
@@ -14,7 +14,7 @@ from elevator.tasks import task_id  # noqa: E402
 
 known = set()
 for fn in glob.glob(os.path.join(ROOT, "tasks", "*.jsonl")):
-    if fn.endswith("legacy.jsonl"):
+    if fn.endswith("legacy.jsonl") and "--write" in sys.argv:     # regenerating legacy.jsonl itself
         continue
     for line in open(fn):
         if line.strip():

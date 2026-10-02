@@ -181,12 +181,18 @@ n_b (2 d_Z - 1) / k per logical qubit, n_b counting the logical ancillas; the mi
 codes and d_Z whose p_XL + p_ZL meets the target (central estimate; the conservative column uses
 the 95 % upper bound of p_XL).  Two phase-flip models are carried everywhere: the paper's fit
 ('paper-pZL') and this work's model ('this-work-pZL').  A decoder can always ignore the flags, so
-for a code without a run at some flag setting its flag-free rate is used there.
+for a code without a run at some flag setting its flag-free rate is used there; more generally a
+setting can always be degraded to one it can emulate (coarser aligned windows, flags dropped at
+random, a class ignored).  At p_Z = 1e-3 the minimum overhead of a setting is the best over the
+settings it can emulate; at p_Z = 1e-2, where the estimates are noisier, the 95 % bounds are closed
+that way and a central value above such a bound is replaced by it.  Runs of the same setting with
+independent seeds are pooled stratum by stratum (runs sharing a seed: the larger one is kept).
 
 ## 8. Checks of optimality
 
 * Exact timing: exclusive-window MLE vs the exact coset ML (trellis) on the leading strata,
-  `results/decoder_optimality.json`.
+  `results/decoder_optimality.json` ([15,9,3], p_X = 1e-9) and `results/decoder_optimality_15_6_5.json`
+  ([15,6,5], p_X = 1e-8, the strata of the p_Z = 1e-2 floors).
 * Coarse timing: for strata of flagged events only, ML by enumerating every assignment 'window W
   flipped column c or nothing' (unflagged explanations are suppressed by p_X), against the MLE on
   the same samples: `results/decoder_optimality_windows.json`.
