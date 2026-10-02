@@ -413,13 +413,15 @@ def apply_false_flag_bounds(r):
     if "t" not in _FFB:
         fn = os.path.join(ROOT, "results", "false_flag_bounds.json")
         _FFB["t"] = json.load(open(fn)) if os.path.exists(fn) else {}
-    b = _FFB["t"].get(os.path.relpath(r["file"], ROOT))
+    b = _FFB["t"].get(os.path.relpath(r["file"], ROOT)) or r.get("caps")
     if not b:
         return r
     from elevator.decode import wilson
     from elevator.strata import pois
     r = dict(r)
     r["hi_cap"] = {k: b[k] for k in ("1,0", "0,1", "0,2") if k in b}
+    if r.get("caps"):              # caps applied during sampling are already in the stored bounds
+        r["hi_cap"].update({k: v for k, v in r["caps"].items()})
     R, k = r["rounds"], r["k"]
     dh = 0.0
     for key, cap in r["hi_cap"].items():

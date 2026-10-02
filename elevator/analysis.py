@@ -33,7 +33,7 @@ def load_strata(dirs) -> list[dict]:
                              idle=",".join(s.get("idle_ctx", [])), tag=s.get("tag", ""), n_outer=s.get("n_outer", 5),
                              pL=r["pL_P"], lo=r["pL_lo"], hi=r["pL_hi"], P=r["P"], U=r["U"], S=r["S"],
                              rounds=r["rounds"], k=r["k"], decodes=r["decodes"], strata=r["strata"],
-                             exact=r.get("exact", {}), weights=r["weights"], file=fn))
+                             exact=r.get("exact", {}), weights=r["weights"], file=fn, caps=r.get("caps", {})))
     return rows
 
 

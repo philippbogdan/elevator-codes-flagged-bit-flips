@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import sys
 import time
 import zlib
 from multiprocessing import Pool
@@ -85,6 +86,15 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
             for b in range(2, code.d):
                 if (0, b) in weights:
                     exact[(0, b)] = 0.0
+    # analytic caps on single/two-event strata with false flags (scripts/false_flag_bounds.py): the
+    # allocation then spends its budget where the upper bound is really decided
+    caps = {}
+    if spec.get("ff_caps") and r_false > 0:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+        from false_flag_bounds import bounds_for
+        b = bounds_for(dict(spec))
+        if b:
+            caps = {tuple(map(int, k.split(","))): v for k, v in b.items() if k in ("1,0", "0,1", "0,2")}
     budget = int(spec.get("budget", 100000))
     n1 = int(spec.get("n1", 1000))
     rel_tol = float(spec.get("rel_tol", 0.15))
@@ -133,12 +143,15 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
             for st in sampled:
                 f, n = counts[st]
                 lo, hi = wilson(f, n)
-                widths[st] = weights[st] * (hi - lo)
+                if st in caps:
+                    hi = min(hi, max(caps[st], f / max(n, 1)))
+                widths[st] = weights[st] * max(hi - lo, 0.0)
             tot = sum(widths.values())
             if est > 0 and tot < rel_tol * est:
                 break
             # absolute stop: 95% upper bound (per round per logical qubit) below abs_tol
-            hi_tot = sum(weights[st] * wilson(*counts[st])[1] for st in sampled if counts[st][1])
+            hi_tot = sum(weights[st] * (min(wilson(*counts[st])[1], max(caps[st], counts[st][0] / counts[st][1]))
+                                        if st in caps else wilson(*counts[st])[1]) for st in sampled if counts[st][1])
             hi_tot += sum(weights[st] * exact[st] for st in exact) + sum(weights[st] for st in skipped)
             if hi_tot / (sched.n_rounds * code.k) < abs_tol:
                 break
@@ -150,6 +163,8 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
             sw = sum(sel.values())
             run_alloc({st: max(100, int(chunk * wd / sw)) for st, wd in sel.items()}, f"it{it}")
     res = summarize(counts, weights, exact)
+    if caps:
+        res["caps"] = {f"{a},{b}": v for (a, b), v in caps.items()}
     skip_w = sum(weights[st] for st in skipped)
     res["hi"] += skip_w                      # skipped strata contribute at most their weight
     res["skipped_weight"] = skip_w
