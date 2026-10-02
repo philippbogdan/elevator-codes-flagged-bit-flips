@@ -185,6 +185,48 @@ def pzl_model(code, n_anc, d, pz, conservative=False):
     return (n + n_anc) / k * val
 
 
+# ------------------------------------------------------------------ 2b. transfer of F(a,b) across d_Z
+CLASS_LIST = ["idle", "gate", "prep", "meas"]
+CLASSES_OF = {"none": [], "idle": ["idle"], "idle+gate": ["idle", "gate"], "all": CLASS_LIST}
+
+
+def class_sums_table():
+    fn = os.path.join(OUT, "class_sums.json")
+    return json.load(open(fn)) if os.path.exists(fn) else {}
+
+
+def transfer_pxl(row, d_target, p_x=None):
+    """p_XL (per round per logical qubit) at d_target from the stratum failure fractions of `row`
+    (computed at row['d']) and exact fault intensities U, S at d_target (class sums).
+    Returns (central, lo, hi)."""
+    from elevator.decode import wilson
+    from elevator.strata import pois
+    sums = class_sums_table().get(f"{row['code']}:a{row['n_anc']}:d{d_target}")
+    if sums is None:
+        return None
+    p_x = row["p_x"] if p_x is None else p_x
+    eff = {c: (row["f"] if c in CLASSES_OF[row["classes"]] else 0.0) for c in CLASS_LIST}
+    U = p_x * sum((1 - eff[c]) * sums["sums"][c][0] for c in CLASS_LIST)
+    S = p_x * sum(2 * eff[c] * sums["sums"][c][1] for c in CLASS_LIST)
+    est = lo = hi = 0.0
+    kmax = 0
+    for key, (f, n) in row["strata"].items():
+        a, b = map(int, key.split(","))
+        kmax = max(kmax, a + b)
+        w = pois(a, U) * pois(b, S)
+        if key in row["exact"]:
+            v = row["exact"][key]
+            est += w * v; lo += w * v; hi += w * v
+            continue
+        if n == 0:
+            continue
+        l, h = wilson(f, n)
+        est += w * f / n; lo += w * l; hi += w * h
+    tail = 1.0 - sum(pois(a, U) * pois(t - a, S) for t in range(kmax + 1) for a in range(t + 1))
+    R, k = sums["rounds"], sums["k"]
+    return est / (R * k), lo / (R * k), (hi + max(tail, 0.0)) / (R * k)
+
+
 # ------------------------------------------------------------------ 3. flag study
 CODES_MAIN = [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]
 CODE_LABEL = {("15_9_3", 1): "[15,9,3]", ("15_6_5", 1): "[15,6,5]", ("15_6_5", 2): "[15,6,5] 2 anc",
