@@ -188,6 +188,37 @@ def phase_model():
     return m
 
 
+def pzl_ideal(code, n_anc, d, pz):
+    """Lower bound for the phase flips: data blocks exactly like isolated repetition codes decoded
+    at the ML level (a = 1; matching = ML within statistics for the repetition code), the moving
+    ancilla's term kept (it is the noise of the scheme's own logical operations)."""
+    m = PHASE["rep"]
+    n, k = OH.ELEVATOR_NK[code]
+    from elevator.phasemodel import sweep_fraction
+    th, thcov, tmodel = PHASE["two"]
+    a, g, kap = np.exp(th)
+    return float(n * 1.0 * m.predict(d, pz) + n_anc * g * sweep_fraction(n, d) * m.predict(d, kap * pz)) / k
+
+
+def phase_floor_table():
+    """Smallest d_Z whose phase-flip rate alone is below the target, per code (model and ideal bound)."""
+    lines = ["\n## Phase-flip floor (flags cannot lower it)\n",
+             "| code | p_Z | target | d_Z (this work's model) | overhead | d_Z (ideal decoder bound) | overhead |",
+             "|---|---|---|---|---|---|---|"]
+    out = {}
+    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2), ("ham15", 1), ("ham31", 1), ("ham63", 1)]:
+        for pz, tgt in [(1e-3, 1e-12), (1e-3, 1e-15), (1e-2, 1e-9), (1e-2, 1e-12)]:
+            dm = next((d for d in range(3, 202, 2) if pzl_model(code[0], code[1], d, pz) <= tgt), None)
+            di = next((d for d in range(3, 202, 2) if pzl_ideal(code[0], code[1], d, pz) <= tgt), None)
+            om = overhead(code[0], code[1], dm) if dm else None
+            oi = overhead(code[0], code[1], di) if di else None
+            out[f"{code[0]}|a{code[1]}|{pz:g}|{tgt:g}"] = dict(d_model=dm, oh_model=om, d_ideal=di, oh_ideal=oi)
+            lines.append(f"| {CODE_LABEL[code]} | {pz:g} | {tgt:g} | {dm} | {om:.1f} | {di} | {oi:.1f} |" if dm and di
+                         else f"| {CODE_LABEL[code]} | {pz:g} | {tgt:g} | {dm} | - | {di} | - |")
+    NUMBERS["phase_floor"] = out
+    open(os.path.join(OUT, "phase_floor.md"), "w").write("\n".join(lines) + "\n")
+
+
 def pzl_model(code, n_anc, d, pz, conservative=False):
     """This work's phase-flip model: n a p_rep(d,p) + n_anc g p_rep(d, kappa p), per logical qubit;
     falls back to (n_b/k) c(d,p) p_rep(d,p) if the two-component fit is unavailable."""
@@ -613,6 +644,8 @@ if __name__ == "__main__":
     plot_overheads(pzl_paper, "paper-pZL")
     if phase_model() is not None:
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_main", "flag_supp", "flag_falseflag"))
+        if "two" in PHASE:
+            phase_floor_table()
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt", "flag_ham63"), label="alt",
                     codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)])
