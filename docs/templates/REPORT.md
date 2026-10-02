@@ -49,13 +49,18 @@ failure fractions re-weighted; d_Z transfers {{ N["transfer_check_main"]["agree"
 
 ## 4. Overhead against the published floor
 
-| setting (p_Z = 1e-3, η = 1e6, 1e-12) | paper pZL | this-work pZL | vs 88 |
-|---|---|---|---|
-| no flags | {{ ohs("paper-pZL", "none|w0|f0.0") }} | {{ ohs("this-work-pZL", "none|w0|f0.0") }} | {{ pct(1 - ohv("paper-pZL", "none|w0|f0.0") / 88) }} / {{ pct(1 - ohv("this-work-pZL", "none|w0|f0.0") / 88) }} fewer |
-| idle-only flags, f = 1, exact timing | {{ ohs("paper-pZL", "idle|w0|f1.0") }} | {{ ohs("this-work-pZL", "idle|w0|f1.0") }} | {{ pct(1 - ohv("paper-pZL", "idle|w0|f1.0") / 88) }} / {{ pct(1 - ohv("this-work-pZL", "idle|w0|f1.0") / 88) }} fewer |
-| flags on all locations, f = 0.8, exact | {{ ohs("paper-pZL", "all|w0|f0.8") }} | {{ ohs("this-work-pZL", "all|w0|f0.8") }} | {{ pct(1 - ohv("paper-pZL", "all|w0|f0.8") / 88) }} / {{ pct(1 - ohv("this-work-pZL", "all|w0|f0.8") / 88) }} fewer |
-| flags on all locations, f = 0.9, 4096-tick windows | {{ ohs("paper-pZL", "all|w4096|f0.9") }} | {{ ohs("this-work-pZL", "all|w4096|f0.9") }} | {{ pct(1 - ohv("paper-pZL", "all|w4096|f0.9") / 88) }} / {{ pct(1 - ohv("this-work-pZL", "all|w4096|f0.9") / 88) }} fewer |
-| any flags, Hamming outer codes included | {{ f1(N["headline"]["paper-pZL:best_flagged_all_codes"]) }} | {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} | {{ pct(1 - N["headline"]["paper-pZL:best_flagged_all_codes"] / 88) }} / {{ pct(1 - N["headline"]["this-work-pZL:best_flagged_all_codes"] / 88) }} fewer |
+Against the published 88 (paper's phase-flip fit) and against this work's own flag-free baseline
+with its phase-flip model ({{ f1(ohv("this-work-pZL", "none|w0|f0.0")) }}; the 88 → {{ f1(ohv("this-work-pZL", "none|w0|f0.0")) }}
+difference is the phase-flip extrapolation alone, §3 of FINDINGS):
+
+| setting (p_Z = 1e-3, η = 1e6, 1e-12) | paper pZL | fewer than 88 | this-work pZL | fewer than its flag-free |
+|---|---|---|---|---|
+| no flags | {{ ohs("paper-pZL", "none|w0|f0.0") }} | {{ pct(1 - ohv("paper-pZL", "none|w0|f0.0") / 88) }} | {{ ohs("this-work-pZL", "none|w0|f0.0") }} | – |
+| idle-only flags, f = 0.99, exact timing | {{ ohs("paper-pZL", "idle|w0|f0.99") }} | {{ pct(1 - ohv("paper-pZL", "idle|w0|f0.99") / 88) }} | {{ ohs("this-work-pZL", "idle|w0|f0.99") }} | {{ pct(1 - ohv("this-work-pZL", "idle|w0|f0.99") / ohv("this-work-pZL", "none|w0|f0.0")) }}{{ "" if (H["this-work-pZL"]["idle|w0|f0.99"]["main_cons"] or {}).get("overhead") == ohv("this-work-pZL", "idle|w0|f0.99") else " (marginal: with the 95 % upper bound of p_XL " + str(round((H["this-work-pZL"]["idle|w0|f0.99"]["main_cons"] or {}).get("overhead", 0), 1)) + ")" }} |
+| idle-only flags, f = 0.99, 4096-tick windows | {{ ohs("paper-pZL", "idle|w4096|f0.99") }} | {{ pct(1 - ohv("paper-pZL", "idle|w4096|f0.99") / 88) }} | {{ ohs("this-work-pZL", "idle|w4096|f0.99") }} | {{ pct(1 - ohv("this-work-pZL", "idle|w4096|f0.99") / ohv("this-work-pZL", "none|w0|f0.0")) }} |
+| flags on all locations, f = 0.8, exact | {{ ohs("paper-pZL", "all|w0|f0.8") }} | {{ pct(1 - ohv("paper-pZL", "all|w0|f0.8") / 88) }} | {{ ohs("this-work-pZL", "all|w0|f0.8") }} | {{ pct(1 - ohv("this-work-pZL", "all|w0|f0.8") / ohv("this-work-pZL", "none|w0|f0.0")) }} |
+| flags on all locations, f = 0.9, 4096-tick windows | {{ ohs("paper-pZL", "all|w4096|f0.9") }} | {{ pct(1 - ohv("paper-pZL", "all|w4096|f0.9") / 88) }} | {{ ohs("this-work-pZL", "all|w4096|f0.9") }} | {{ pct(1 - ohv("this-work-pZL", "all|w4096|f0.9") / ohv("this-work-pZL", "none|w0|f0.0")) }} |
+| any flags, Hamming outer codes included | {{ f1(N["headline"]["paper-pZL:best_flagged_all_codes"]) }} | {{ pct(1 - N["headline"]["paper-pZL:best_flagged_all_codes"] / 88) }} | {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} | {{ pct(1 - N["headline"]["this-work-pZL:best_flagged_all_codes"] / ohv("this-work-pZL", "none|w0|f0.0")) }} |
 
 p_Z = 1e-2, η = 1e6 (published: the fits bottom out near 2e-9 for [15,9,3] and 2e-11 for [15,6,5]
 with two ancillas, neither reaches 1e-12).  Without flags this work finds
