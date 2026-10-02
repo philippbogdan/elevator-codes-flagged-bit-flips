@@ -312,11 +312,82 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
     return res, rows
 
 
+# ------------------------------------------------------------------ 4. validation (held-out direct MC)
+def validation_table():
+    from elevator.decode import wilson
+    vdir = os.path.join(ROOT, "results", "flag_validation")
+    if not os.path.isdir(vdir):
+        return
+    strata = {}
+    direct = {}
+    import glob as _g
+    for fn in _g.glob(os.path.join(vdir, "*.json")):
+        r = json.load(open(fn))
+        sp = r["spec"]
+        key = (sp["code"], sp["n_anc"], sp["d"], sp["p_x"], sp["flag"]["f"], tuple(sp["flag"]["classes"]), sp["flag"]["window"])
+        if sp["kind"] == "strata":
+            strata[key] = r
+        elif r.get("shots"):
+            direct[key] = r
+    lines = ["\n## Held-out check of the stratified estimator under flags\n",
+             "Same configuration, two estimators: direct Monte Carlo (all events sampled) and the stratified "
+             "estimator used at p_X = 1e-9 (truncated at a+b <= kmax).  Per shot, 95% intervals.\n",
+             "| code | p_X | f | flags on | window | direct P_fail [95% CI] | stratified [95% CI] | agree |",
+             "|---|---|---|---|---|---|---|---|"]
+    agree = 0
+    total = 0
+    for key in sorted(set(strata) & set(direct)):
+        s_, d_ = strata[key], direct[key]
+        P = d_["fails"] / d_["shots"]
+        lo, hi = wilson(d_["fails"], d_["shots"])
+        ok = not (s_["hi"] < lo or s_["lo"] > hi)
+        agree += ok
+        total += 1
+        cls = {1: "idle", 2: "idle+gate", 4: "all"}.get(len(key[5]), "?") if key[4] > 0 else "-"
+        lines.append(f"| {CODE_LABEL[(key[0], key[1])]} | {key[3]:.0e} | {key[4]} | {cls} | {key[6] or 'exact'} | "
+                     f"{P:.3e} [{lo:.2e}, {hi:.2e}] | {s_['P']:.3e} [{s_['lo']:.2e}, {s_['hi']:.2e}] | {'yes' if ok else 'NO'} |")
+    lines.append(f"\n{agree} of {total} configurations agree within the 95% intervals.\n")
+    NUMBERS["validation"] = dict(agree=agree, total=total)
+    open(os.path.join(OUT, "validation.md"), "w").write("\n".join(lines) + "\n")
+
+
+# ------------------------------------------------------------------ 5. bias sweep
+ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
+
+
+def bias_sweep(pzl_fn, tag, codes=CODES_MAIN, label="bias"):
+    rows = [r for r in flag_rows(("flag_main", "flag_bias", "flag_alt")) if r["idle"] == "edge,cnot"]
+    settings = [("none", 0, 0.0), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 0, 1.0), ("idle", 0, 0.9),
+                ("idle", 0, 0.99), ("all", 64, 0.99), ("all", 1024, 0.99)]
+    lines = [f"\n## Overhead vs noise bias at p_Z = 1e-3, target 1e-12 (phase flips: {tag})\n",
+             "| eta | p_X | " + " | ".join(f"{c} f={f} w={w or 'exact'}" for c, w, f in settings) + " |",
+             "|---|---|" + "---|" * len(settings)]
+    out = {}
+    for px, eta in sorted(ETAS.items(), key=lambda kv: kv[1]):
+        cells = []
+        for (cls, w, f) in settings:
+            if f == 0:
+                byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["p_x"] == px and r["f"] == 0 and r["r"] == 0}
+            else:
+                byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["p_x"] == px and r["f"] == f
+                       and r["classes"] == cls and r["window"] == w and r["r"] == 0}
+            b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", codes)
+            out[(eta, cls, w, f)] = b
+            cells.append(f"{b[0]:.1f} ({CODE_LABEL[(b[1], b[2])]}, {b[3]})" if b else ("-" if not byc else "not reached"))
+        lines.append(f"| {eta:.1e} | {px:.1e} | " + " | ".join(cells) + " |")
+    open(os.path.join(OUT, f"{label}_{tag}.md"), "w").write("\n".join(lines) + "\n")
+    NUMBERS.setdefault("bias", {})[f"{label}:{tag}"] = {f"{k[0]:g}|{k[1]}|w{k[2]}|f{k[3]}": (None if v is None else v[0]) for k, v in out.items()}
+    return out
+
+
 if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
     flag_tables()
+    validation_table()
+    bias_sweep(pzl_paper, "paper-pZL")
     if phase_model() is not None:
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL")
+        bias_sweep(pzl_model, "this-work-pZL")
     save_numbers()
     print("wrote", OUT)
