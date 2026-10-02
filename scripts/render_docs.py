@@ -87,7 +87,19 @@ def pfloor(code, pz, tgt, which="d_model"):
     return N["phase_floor"][f"{code}|{pz:g}|{tgt:g}"][which]
 
 
-ENV = dict(N=N, H=H, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
+def asm(key, default="not simulated"):
+    """an entry of the assumptions summary (numbers.json: assumptions)"""
+    v = N.get("assumptions", {}).get(key)
+    return default if v is None or v == "-" else v
+
+
+def pxl3(key):
+    """p_XL of [15,9,3] at d_Z = 15 for an assumptions entry, as 'central [lo, hi]'"""
+    v = N.get("assumptions", {}).get(key + "|pXL_15_9_3")
+    return "not simulated" if not v else f"{e1(v[0])} [{e1(v[1])}, {e1(v[2])}]"
+
+
+ENV = dict(N=N, H=H, asm=asm, pxl3=pxl3, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
            round=round, sorted=sorted, ohv=ohv, ohs=ohs, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
            abs=abs, str=str, int=int, float=float)
 PAT = re.compile(r"\{\{(.+?)\}\}", re.S)

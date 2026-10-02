@@ -44,9 +44,9 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   |---|---|---|
   | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | {{ ohs("this-work-pZL", "idle|w0|f0.99") }} / {{ ohs("this-work-pZL", "idle+gate|w0|f0.99") }} / {{ ohs("this-work-pZL", "all|w0|f0.99") }}; paper pZL: {{ ohs("paper-pZL", "idle|w0|f0.99") }} / {{ ohs("paper-pZL", "idle+gate|w0|f0.99") }} / {{ ohs("paper-pZL", "all|w0|f0.99") }} |
   | timing precision | windows exact, 1 … 4096 ticks | flags on all locations: no change of the minimum overhead up to 4096 ticks (> the whole memory); idle-only flags fail from 256 ticks |
-  | false flags | r = 1e-10 … 1e-6 per qubit per tick | <!-- FALSEFLAG-EFFECT --> |
-  | erasure vs heralded X | flag certifies the X | <!-- HERALD-EFFECT --> |
-  | idle noise during logical-operation ticks (unstated in the paper) | none ("noop", reproduces the fits) / on every waiting block (literal) | <!-- LITERAL-EFFECT --> |
+  | false flags | r = 1e-10 … 1e-6 per qubit per tick | [15,9,3], f = 0.99 on all locations, exact timing: p_XL = {{ pxl3("falseflag|all|w0|f0.99|r0|erasure") }} (r = 0), {{ pxl3("falseflag|all|w0|f0.99|r1e-08|erasure") }} (1e-8), {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} (1e-6), minimum overhead unchanged ({{ asm("falseflag|all|w0|f0.99|r1e-06|erasure") }}); 64-tick windows: {{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }} at 1e-6 (upper bound sample-limited) |
+  | erasure vs heralded X | flag certifies the X | [15,9,3] at f = 0.99: idle-only flags {{ pxl3("herald|idle|w0|f0.99|r0|erasure") }} (erasure) vs {{ pxl3("herald|idle|w0|f0.99|r0|herald") }} (heralded); all locations {{ pxl3("herald|all|w0|f0.99|r0|erasure") }} vs {{ pxl3("herald|all|w0|f0.99|r0|herald") }}; minimum overhead {{ asm("herald|all|w0|f0.99|r0|herald") }} (heralded, all locations) |
+  | idle noise during logical-operation ticks (unstated in the paper) | none ("noop", reproduces the fits) / on every waiting block (literal) | bit flips × {{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} without flags and × {{ f1(asm("literal|idle|w0|f0.99|ratio_15_9_3")) }} with idle flags ([15,9,3], d_Z = 17); phase flips × 4–30 (repetition code with the extra idle ticks), phase-flip floor d_Z = {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }} instead of {{ N["literal"]["floor|[15,9,3]"]["d_noop"] }}: overheads {{ f1(N["literal"]["floor|[15,6,5]"]["overhead_literal"]) }} flag-free and {{ f1(N["literal"]["floor|[15,9,3]"]["overhead_literal"]) }} with flags if bit flips are suppressed (`literal_reading.md`) |
   | equal tick durations, aligned windows | — | the overhead is flat in the window from 1 to 4096 ticks (flags on all locations), so any assignment of durations to ticks leaves it unchanged |
   | phase randomisation accompanying an event; events on inner ancillas during X-basis preparation/readout | not modelled | rate ~p_X, 10^6 below p_Z: changes p_ZL by < 1e-5 relative; Table I has no X error there |
 
@@ -67,7 +67,10 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   is reproduced — {{ ohs("paper-pZL", "none|w0|f0.0") }} at η = 1e6 — and the Fig. 1 steps fall at
   η = {{ ", ".join(e2(s["eta"]) for s in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}
   ({{ ", ".join(s["code"] for s in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}), published
-  6.7e4, 1.21e5, 1.76e6.  <!-- PZ1E2-FLAGFREE -->
+  6.7e4, 1.21e5, 1.76e6.  At p_Z = 1e-2 the flag-free floors come out as
+  {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas, d_Z =
+  {{ N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["d"] }}; published 2.08e-11 at 49) and
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]; published 1.94e-9).
 * **Disagreements, explained by evidence** (FINDINGS §1 item 4): neither the decoder (exact ML;
   BP+OSD-CS7, BP+OSD-0 and BP+LSD equal on the same X-memory shots), nor check order, number of
   rounds or schedule variant; both residuals lie inside the range spanned by the readings of the
@@ -93,7 +96,18 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ e2(first_eta("paper-pZL", "all|w0|f0.99", "[15,9,3]")) }} (f = 0.99) and everywhere with
   perfect flags (paper pZL).
 * **p_Z = 1e-2, η = 1e6: lowest reachable p_L and its overhead per flag setting**
-  (`fig2_this_work_*.md`, `pz1e2_*.md`): <!-- PZ1E2-SUMMARY -->
+  (`fig2_this_work_*.md`, `pz1e2_*.md`, `limits.md`; FINDINGS §6 has the full table): without
+  flags {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas) and
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]) (paper pZL); with flags on all
+  locations at f = 0.99 {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["pL"]) }} at
+  {{ f1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL"]["overhead"]) }} qubits and
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["pL"]) }} at
+  {{ f1(N["limits"]["p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL"]["overhead"]) }}; with perfect flags
+  {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL"]["pL"]) }} and
+  {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }}.  1e-12 is reached with
+  [15,6,5] from f ≈ 0.9 on all locations ({{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }}
+  qubits per logical qubit at f = 0.99, paper pZL); this work's phase-flip model places every floor
+  higher and at larger d_Z (both in the tables).
 
 ## 4. Deliverable 4 — documents and one command
 
@@ -125,6 +139,35 @@ without one).
 * **Overhead against the published floors** — 88 → {{ f1(ohv("paper-pZL", "all|w0|f0.9")) }}
   (paper pZL) / {{ f1(ohv("this-work-pZL", "all|w0|f0.9")) }} (this-work pZL) with flags on all
   locations; idle-only flags: {{ f1(ohv("paper-pZL", "idle|w0|f1.0")) }} /
-  {{ f1(ohv("this-work-pZL", "idle|w0|f1.0")) }} at f = 1.  p_Z = 1e-2: <!-- PZ1E2-VS-PUBLISHED -->
-* **The frontier** — `frontier_*.md`: <!-- FRONTIER-SUMMARY -->
-* **Every remaining limit belongs to the problem** — <!-- LIMITS-SUMMARY -->
+  {{ f1(ohv("this-work-pZL", "idle|w0|f1.0")) }} at f = 1; with higher-rate outer codes the lowest
+  overhead reached is {{ f1(N["headline"]["paper-pZL:best_flagged_all_codes"]) }} (paper pZL) /
+  {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} (this-work pZL).  p_Z = 1e-2 against
+  the published floors 2e-9 / 2e-11: §3.
+* **The frontier** — `frontier_*.md` (FINDINGS §7): non-dominated in overhead, p_L, flag efficiency,
+  flag classes, timing window and false-flag rate over every code (the paper's plus Hamming
+  [15,11,3], [31,26,3], [63,57,3], extended Hamming [16,11,4]), decoder (exact MLE = ML; BP+OSD
+  dominated) and flag setting; this-work pZL, p_L ≤ 1e-12 with the 95 % upper bound:
+
+{{ N["md"]["frontier_req_this-work-pZL"] }}
+
+  pushed outward on the criterion furthest from its limit — overhead (higher-rate codes), then the
+  timing window, then the efficiency — until each axis reached a limit of the problem (next item).
+* **Every remaining limit belongs to the problem** (`limits.md`, FINDINGS §8):
+  * *overhead* — every frontier code sits at its phase-flip floor: one step lower in d_Z its phase
+    flips alone exceed 1e-12 ([15,9,3]: {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL_below"]) }}
+    at d_Z = 13), at the floor its bit flips are far below its phase flips
+    ({{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pXL"]) }} vs
+    {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL"]) }}); phase flips are errors flags cannot
+    reveal, the floor is the same for an ideal decoder of the data blocks, and no Elevator-type memory
+    can go below {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit here;
+  * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
+    undetectable logical, computed without a decoder; [15,9,3] floor
+    {{ f2(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["flagged_only"] / N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["pL"]) }}
+    flagged-only) plus phase flips;
+  * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
+    model at exact and coarse timing;
+  * *timing precision* — none needed within exact … 4096 ticks when gates are flagged;
+  * *false flags* — none up to 1e-6 per qubit per tick with exact timing (rigorous bounds).
+  What is not a limit of the problem is listed as open in REPORT §7: the two fit-level
+  reproduction residuals, the existence of flags during gates (a physics input), and sample-limited
+  upper bounds for false flags with coarse windows.

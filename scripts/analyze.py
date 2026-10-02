@@ -1079,6 +1079,50 @@ def limits_table():
     NUMBERS.setdefault("md", {})["pz1e2_table"] = "\n".join(md)
 
 
+def literal_reading():
+    """Sensitivity to the unstated idle-noise placement (literal reading: idle noise on every waiting block
+    during logical-operation ticks).  Phase flips: the isolated repetition code with the extra idle ticks
+    (results/phase_rep_literal) against the noop one; bit flips: flagged runs at d_Z = 17 (assumptions.md).
+    The literal phase-flip floor uses the literal repetition-code model in the two-component model with
+    the noop a, g, kappa (an approximation, labelled)."""
+    from elevator.phasemodel import RepModel, load_rep, sweep_fraction
+    d_lit = os.path.join(ROOT, "results", "phase_rep_literal")
+    if not os.path.isdir(d_lit) or "two" not in PHASE:
+        return
+    rows = load_rep(d_lit)
+    if len(rows) < 4:
+        return
+    ml = RepModel(rows)
+    m = PHASE["rep"]
+    out = {"ratio": {}}
+    lines = ["\n## Literal idle-noise reading: phase flips\n",
+             "Isolated repetition code with the extra idle ticks of the literal reading (2.73 per round on average) "
+             "against the noop reading, per round:\n", "| p_Z | d_Z | literal | noop (model) | ratio |", "|---|---|---|---|---|"]
+    for r in sorted(rows, key=lambda r: (r["p"], r["d"])):
+        pn = float(m.predict(r["d"], r["p"]))
+        out["ratio"][f"{r['p']:g}|{r['d']}"] = r["y"] / pn
+        lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} | {pn:.2e} | {r['y'] / pn:.2f} |")
+    th, _, _ = PHASE["two"]
+    a, g, kap = np.exp(th)
+
+    def pzl_lit(code, n_anc, d, pz):
+        n, k = OH.ELEVATOR_NK[code]
+        return float(n * a * ml.predict(d, pz) + n_anc * g * sweep_fraction(n, d) * ml.predict(d, kap * pz)) / k
+
+    lines += ["\nPhase-flip floor at p_Z = 1e-3, 1e-12 under the literal reading (two-component model with the "
+              "literal repetition code; approximation):\n", "| code | d_Z noop | d_Z literal | overhead literal |", "|---|---|---|---|"]
+    for code in CODES_MAIN:
+        dn = next((d for d in range(3, 99, 2) if pzl_model(code[0], code[1], d, 1e-3) <= 1e-12), None)
+        try:
+            dl = next((d for d in range(3, 99, 2) if pzl_lit(code[0], code[1], d, 1e-3) <= 1e-12), None)
+        except Exception:
+            dl = None
+        out[f"floor|{CODE_LABEL[code]}"] = dict(d_noop=dn, d_literal=dl, overhead_literal=overhead(code[0], code[1], dl) if dl else None)
+        lines.append(f"| {CODE_LABEL[code]} | {dn} | {dl} | {overhead(code[0], code[1], dl):.1f} |" if dl else f"| {CODE_LABEL[code]} | {dn} | - | - |")
+    NUMBERS["literal"] = out
+    open(os.path.join(OUT, "literal_reading.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1545,6 +1589,7 @@ if __name__ == "__main__":
         plot_maps(pzl_model, "this-work-pZL")
         fig1_this_work(pzl_model, "this-work-pZL")
         assumptions_table()
+        literal_reading()
         fig2_this_work(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
