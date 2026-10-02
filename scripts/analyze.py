@@ -377,6 +377,56 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
     return res, rows
 
 
+def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1)],
+               target=1e-12, pz=1e-3, px=1e-9):
+    """Minimum flag efficiency for each (code, d_Z, flag classes, window) to reach the target:
+    log p_XL interpolated linearly in f between simulated efficiencies (bit-flip upper bound used
+    for the conservative column)."""
+    rows = [r for r in flag_rows(dirs + ("flag_alt", "flag_ham63")) if r["idle"] == "edge,cnot" and r["p_x"] == px and r["r"] == 0]
+    groups = defaultdict(dict)
+    zero = {}
+    for r in rows:
+        if r["f"] == 0:
+            zero[(r["code"], r["n_anc"], r["d"])] = r
+    for r in rows:
+        if r["f"] > 0:
+            groups[(r["code"], r["n_anc"], r["d"], r["classes"], r["window"])][r["f"]] = r
+    lines = [f"\n## Minimum flag efficiency to reach {target:g} at p_Z = {pz:g}, eta = {pz/px:g} (phase flips: {tag})\n",
+             "| code | d_Z | overhead | flags on | window | f required (central) | f required (95% upper bound on p_XL) |",
+             "|---|---|---|---|---|---|---|"]
+    out = {}
+    for key in sorted(groups):
+        code, n_anc, d, cls, w = key
+        if (code, n_anc) not in codes:
+            continue
+        pts = dict(groups[key])
+        if (code, n_anc, d) in zero:
+            pts[0.0] = zero[(code, n_anc, d)]
+        fs = sorted(pts)
+        budget = target - pzl_fn(code, n_anc, d, pz)
+        res = []
+        for use in ("pL", "hi"):
+            if budget <= 0:
+                res.append("phase flips alone exceed target")
+                continue
+            val = None
+            for i, f in enumerate(fs):
+                if pts[f][use] <= budget:
+                    if i == 0:
+                        val = f
+                    else:
+                        f0, f1 = fs[i - 1], f
+                        y0, y1 = math.log(max(pts[f0][use], 1e-300)), math.log(max(pts[f1][use], 1e-300))
+                        yb = math.log(budget)
+                        val = f0 + (f1 - f0) * (y0 - yb) / (y0 - y1) if y0 != y1 else f1
+                    break
+            res.append("not reached with f <= 1" if val is None else f"{val:.3f}")
+        out[f"{code}|a{n_anc}|d{d}|{cls}|w{w}"] = res
+        lines.append(f"| {CODE_LABEL[(code, n_anc)]} | {d} | {overhead(code, n_anc, d):.1f} | {cls} | {w or 'exact'} | {res[0]} | {res[1]} |")
+    NUMBERS.setdefault("required_f", {})[tag] = out
+    open(os.path.join(OUT, f"required_f_{tag}.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 4. validation (held-out direct MC)
 def validation_table():
     from elevator.decode import wilson
@@ -646,6 +696,7 @@ if __name__ == "__main__":
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_main", "flag_supp", "flag_falseflag"))
         if "two" in PHASE:
             phase_floor_table()
+            required_f(pzl_model, "this-work-pZL")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt", "flag_ham63"), label="alt",
                     codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)])
@@ -654,6 +705,7 @@ if __name__ == "__main__":
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
     pz1e2(pzl_paper, "paper-pZL")
+    required_f(pzl_paper, "paper-pZL")
     frontier(pzl_paper, "paper-pZL")
     save_numbers()
     print("wrote", OUT)
