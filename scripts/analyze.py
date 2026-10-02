@@ -933,35 +933,88 @@ CLASS_RANK = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
 
 
 def frontier(pzl_fn, tag):
-    """Non-dominated (overhead, p_L, f, window, flag classes, false-flag rate) at p_Z=1e-3, eta=1e6."""
-    rows = [r for r in flag_rows(("flag_main", "flag_alt", "flag_supp", "flag_falseflag", "flag_ham63")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
+    """Frontier at p_Z = 1e-3, eta = 1e6 over every simulated code (main codes, Hamming alternatives),
+    flag setting and noise alternative (exact MLE decoder, shown ML-optimal at the leading order).
+
+    (a) requirements frontier: points with p_L <= 1e-12 non-dominated in (overhead, flag efficiency
+        f, flag classes needed, timing window allowed, false-flag rate tolerated); p_L reported.
+    (b) full frontier: non-dominated in (overhead, p_L, f, window) without a target."""
+    rows = [r for r in flag_rows(("flag_main", "flag_alt", "flag_supp", "flag_falseflag", "flag_ham63"))
+            if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9 and r.get("mode", "erasure") == "erasure"]
     pts = []
     for r in rows:
         pl = r["pL"] + pzl_fn(r["code"], r["n_anc"], r["d"], 1e-3)
         pts.append(dict(code=r["code"], n_anc=r["n_anc"], d=r["d"], overhead=overhead(r["code"], r["n_anc"], r["d"]),
-                        pL=pl, f=r["f"], window=(10 ** 9 if r["f"] == 0 else (r["window"] if r["window"] else 0)),
-                        cls=CLASS_RANK[r["classes"]], classes=r["classes"], r=r["r"]))
+                        pL=pl, pXL_hi=r["hi"], f=r["f"], window=(10 ** 9 if r["f"] == 0 else r["window"]),
+                        cls=CLASS_RANK[r["classes"]], classes=r["classes"], r=r["r"], transferred=bool(r.get("transferred"))))
 
-    def dominates(a, b):
-        ge = (a["overhead"] <= b["overhead"] and a["pL"] <= b["pL"] and a["f"] <= b["f"] and a["cls"] <= b["cls"]
+    def dom_req(a, b):
+        ge = (a["overhead"] <= b["overhead"] and a["f"] <= b["f"] and a["cls"] <= b["cls"]
               and a["window"] >= b["window"] and a["r"] >= b["r"])
-        gt = (a["overhead"] < b["overhead"] or a["pL"] < b["pL"] or a["f"] < b["f"] or a["cls"] < b["cls"]
+        gt = (a["overhead"] < b["overhead"] or a["f"] < b["f"] or a["cls"] < b["cls"]
               or a["window"] > b["window"] or a["r"] > b["r"])
         return ge and gt
 
-    nd = [p for p in pts if p["pL"] <= 1e-12 and not any(dominates(q, p) for q in pts if q["pL"] <= 1e-12)]
-    nd.sort(key=lambda p: (p["overhead"], p["f"]))
-    lines = [f"\n## Frontier at p_Z = 1e-3, eta = 1e6, p_L <= 1e-12 (phase flips: {tag})\n",
-             "Non-dominated in (overhead, p_L, flag efficiency f required, flag classes required, timing window "
-             "allowed, false-flag rate allowed) among all simulated codes and flag settings (exact MLE decoder).\n",
-             "| overhead | code | d_Z | p_L | f | flags on | window (ticks) | false flags |", "|---|---|---|---|---|---|---|---|"]
-    for p in nd:
-        w = "any (no flags)" if p["window"] == 10 ** 9 else ("exact" if p["window"] == 0 else p["window"])
-        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL']:.2e} | {p['f']} | "
-                     f"{p['classes']} | {w} | {p['r']:g} |")
+    for p in pts:
+        p["pL_cons"] = p["pXL_hi"] + (p["pL"] - (p["pL"] - pzl_fn(p["code"], p["n_anc"], p["d"], 1e-3)))
+    for p in pts:
+        p["pL_cons"] = p["pXL_hi"] + pzl_fn(p["code"], p["n_anc"], p["d"], 1e-3)
+    ok = [p for p in pts if p["pL_cons"] <= 1e-12]          # conservative: 95% upper bound of p_XL
+    req = [p for p in ok if not any(dom_req(q, p) for q in ok)]
+    # one line per distinct requirement vector (the lowest p_L among equals)
+    uniq = {}
+    for p in req:
+        k = (round(p["overhead"], 3), p["f"], p["cls"], p["window"], p["r"])
+        if k not in uniq or p["pL"] < uniq[k]["pL"]:
+            uniq[k] = p
+    req = sorted(uniq.values(), key=lambda p: (p["overhead"], p["f"], p["cls"], -p["window"]))
+
+    # (b) per code and d_Z: the lowest p_L reached by any flag setting, and the least demanding settings
+    #     that come within a factor 1.5 of it (smallest f; then the coarsest window and fewest classes)
+    by = defaultdict(list)
+    for p in pts:
+        if p["r"] == 0:
+            by[(p["code"], p["n_anc"], p["d"])].append(p)
+    full = []
+    for key, ps in by.items():
+        best = min(ps, key=lambda p: p["pL"])
+        near = [p for p in ps if p["pL"] <= 1.5 * best["pL"]]
+        easy = min(near, key=lambda p: (p["f"], p["cls"], -p["window"]))
+        coarse = max([p for p in near if p["f"] == easy["f"]], key=lambda p: (p["window"], -p["cls"]))
+        noflag = [p for p in ps if p["f"] == 0]
+        full.append(dict(code=key[0], n_anc=key[1], d=key[2], overhead=best["overhead"], pL_best=best["pL"],
+                         pZL=pzl_fn(key[0], key[1], key[2], 1e-3), f=easy["f"], classes=easy["classes"],
+                         window=coarse["window"], pL_noflags=(noflag[0]["pL"] if noflag else None)))
+    full.sort(key=lambda p: (p["overhead"], p["pL_best"]))
+
+    def wtxt(w):
+        return "any (no flags)" if w == 10 ** 9 else ("exact" if w == 0 else str(w))
+
+    lines = [f"\n## Frontier at p_Z = 1e-3, eta = 1e6 (phase flips: {tag})\n",
+             "All simulated codes ([15,9,3], [15,6,5] with 1 and 2 ancillas, Hamming [15,11,3], [31,26,3], [63,57,3], "
+             "extended Hamming [16,11,4]) and flag settings; decoder: exclusive-window MLE (ML at the leading order, "
+             "results/decoder_optimality*.json; BP+OSD is worse on the same configurations).  p_L = p_XL + p_ZL.\n",
+             "### (a) Requirements frontier for p_L <= 1e-12\n",
+             "Non-dominated in overhead, flag efficiency f, flag classes needed, timing window allowed and false-flag "
+             "rate tolerated, among the settings that reach 1e-12 with the 95% upper bound of p_XL (conservative).\n",
+             "| overhead | code | d_Z | p_L | p_XL 95% upper | f | flags on | window (ticks) | false flags tolerated |",
+             "|---|---|---|---|---|---|---|---|---|"]
+    for p in req:
+        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL']:.2e} | {p['pXL_hi']:.1e} | "
+                     f"{p['f']} | {p['classes']} | {wtxt(p['window'])} | {p['r']:g} |" + (" (transferred)" if p["transferred"] else ""))
+    lines += ["\n### (b) Lowest p_L per code and d_Z, and what it takes\n",
+              "For every simulated (or transferred) code and d_Z: the lowest p_L of any flag setting, the phase-flip part "
+              "of it (flags cannot lower it), the flag-free p_L, and the least demanding setting within a factor 1.5 of "
+              "the lowest (smallest f, then fewest flag classes, then coarsest window).\n",
+              "| overhead | code | d_Z | lowest p_L | of which p_ZL | p_L without flags | f needed | flags on | coarsest window |",
+              "|---|---|---|---|---|---|---|---|---|"]
+    for p in full:
+        nf = f"{p['pL_noflags']:.2e}" if p["pL_noflags"] is not None else "-"
+        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL_best']:.2e} | {p['pZL']:.2e} | "
+                     f"{nf} | {p['f']} | {p['classes']} | {wtxt(p['window'])} |")
     open(os.path.join(OUT, f"frontier_{tag}.md"), "w").write("\n".join(lines) + "\n")
-    NUMBERS.setdefault("frontier", {})[tag] = nd
-    return nd
+    NUMBERS.setdefault("frontier", {})[tag] = dict(requirements=req, per_code=full)
+    return req
 
 
 # ------------------------------------------------------------------ 8. figures
