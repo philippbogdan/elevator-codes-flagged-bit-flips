@@ -19,10 +19,11 @@ ALL = ["edge", "cnot", "op"]
 
 
 def spec(code, n_anc, d, p_x, f, classes, window, r=0.0, idle_ctx=NOOP, seed=0, budget=30000, tag=""):
+    dist = {"15_9_3": 3, "15_6_5": 5, "ham15": 3, "ham31": 3, "xham16": 4, "16_3_8": 8}[code]
     return dict(kind="strata", code=code, n_anc=n_anc, d=d, mode="full", compress=False,
                 idle_ctx=idle_ctx, n_outer=5, p_x=p_x,
                 flag=dict(f=f, classes=CLASSES[classes], window=window, false_rate=r),
-                decoder="mle_excl", kmax=4 if code == "15_9_3" else 6, budget=budget, n1=400,
+                decoder="mle_excl", kmax=dist + 1, budget=budget, n1=400,
                 rel_tol=0.15, seed=seed, tag=tag)
 
 
@@ -69,13 +70,25 @@ def literal_tasks():
     return ts
 
 
+def alt_tasks():
+    """Alternative outer codes tried for the frontier (Hamming family), p_X = 1e-9."""
+    ts = []
+    seed = 200000
+    for code, n_anc in [("ham15", 1), ("ham31", 1), ("xham16", 1)]:
+        for d in ([13, 15, 17] if code != "xham16" else [15, 17]):
+            for (f, cls, w, r) in flag_settings(windows=True, false_flags=False):
+                seed += 1
+                ts.append(spec(code, n_anc, d, 1e-9, f, cls, w, r, seed=seed, tag="alt"))
+    return ts
+
+
 def bias_tasks():
     """p_X grid for the bias sweep at p_Z = 1e-3 (eta = 4e4 ... 1e7)."""
     ts = []
     seed = 100000
     pxs = [2.5e-8, 1e-8, 4e-9, 2e-9, 5e-10, 2e-10, 1e-10]
-    for code, n_anc in CODES:
-        for d in [15, 17, 19, 21]:
+    for code, n_anc in CODES + [("ham15", 1)]:
+        for d in [15, 17, 19]:
             for px in pxs:
                 for (f, cls, w) in [(0.0, "idle", 0), (0.9, "all", 0), (0.99, "all", 0), (1.0, "all", 0),
                                     (0.9, "idle", 0), (0.99, "idle", 0), (0.99, "all", 64), (0.99, "all", 1024)]:
@@ -86,7 +99,7 @@ def bias_tasks():
 
 if __name__ == "__main__":
     which = sys.argv[1]
-    ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks}[which]()
+    ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
