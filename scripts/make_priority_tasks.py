@@ -69,7 +69,10 @@ def pick():
     # 8. rest of the validation
     G["validation"] = load("flag_validation.jsonl", "results/flag_validation")
     # 9. flag-free reproduction and phase-flip points still missing
-    G["repro"] = load("repro_x.jsonl", "results/repro_x") + load("repro_16_3_8.jsonl", "results/repro_16_3_8")
+    # (X memory at the paper's sampled points: the min-sum BP+LSD runs of phase_xlow / phase_ancdiag
+    #  cover them; the one missing point is tasks/phase_xrepro.jsonl.  The product-sum repro_x runs
+    #  cost ~3 s per shot and are not continued beyond d_Z = 9.)
+    G["repro"] = load("phase_xrepro.jsonl", "results/phase_xlow") + load("repro_16_3_8.jsonl", "results/repro_16_3_8")
     G["phase"] = load("phase_xlarge.jsonl", "results/phase_xlarge") + load("phase_rep_literal.jsonl", "results/phase_rep_literal")
     order = ["pz1e2", "repro", "alt", "validation", "bias", "dcheck", "phase", "false", "herald", "literal"]
     out = [t for g in order for t in G[g]]
