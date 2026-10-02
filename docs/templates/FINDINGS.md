@@ -35,7 +35,8 @@ this work's own.
   {{ reqf("this-work-pZL", "15_9_3|a1", 15, "all", 4096) }} with windows of 4096 CNOT layers, longer
   than the whole simulated memory (five outer rounds), i.e. a flag that only says *which qubit*
   flipped (this-work pZL; paper pZL at d_Z = 17: {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 0) }}
-  and {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 4096) }}).  §4.
+  and {{ reqf("paper-pZL", "15_9_3|a1", 17, "all", 4096) }}).  Counting each logical qubit's errors
+  separately raises the requirement to between 0.8 and 0.9 (item 13e).  §4.
 * **Idle-only flags — the case arXiv:2607.01375 establishes — are not enough.**
   {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
   inside CNOTs (the rest while idle; preparation and measurement
