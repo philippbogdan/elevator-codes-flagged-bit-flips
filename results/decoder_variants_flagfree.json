@@ -1,0 +1,30 @@
+[
+ {
+  "code": "15_9_3",
+  "d": 9,
+  "memory": "X",
+  "p_x": 0.0,
+  "p_z": 0.01,
+  "shots": 600,
+  "rounds": 96,
+  "k": 9,
+  "decoders": {
+   "bplsd_cs4": {
+    "fails": 163,
+    "seconds": 81.36407780647278
+   },
+   "bposd_cs7": {
+    "fails": 151,
+    "seconds": 1943.7791261672974
+   },
+   "bposd0_ps": {
+    "fails": 159,
+    "seconds": 75.82216715812683
+   },
+   "bposd0_ms": {
+    "fails": 170,
+    "seconds": 15.591039419174194
+   }
+  }
+ }
+]
