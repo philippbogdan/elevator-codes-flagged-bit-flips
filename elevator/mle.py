@@ -7,9 +7,17 @@ x, y binary.  Returns the error vector x + scatter(y) restricted to the columns 
 """
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import scipy.sparse as sp
 from scipy.optimize import Bounds, LinearConstraint, milp
+
+# HiGHS would start a thread pool of half the machine's hardware threads in every process; with many
+# worker processes on a large node that oversubscribes the allocated cores.  One thread per solve.
+# (scipy passes the option to HiGHS verbatim and warns that it does so.)
+warnings.filterwarnings("ignore", message="Unrecognized options detected")
+HIGHS_OPTIONS = dict(disp=False, threads=1)
 
 
 def mle_solve(H: sp.csc_matrix, w: np.ndarray, det: np.ndarray, ycols=(), ycost=(), ygroup=()):
@@ -29,7 +37,7 @@ def mle_solve(H: sp.csc_matrix, w: np.ndarray, det: np.ndarray, ycols=(), ycost=
     lb = np.zeros(nc + ny + nd)
     ub = np.concatenate([np.ones(nc + ny), zmax])
     res = milp(c, constraints=cons, integrality=np.ones(nc + ny + nd), bounds=Bounds(lb, ub),
-               options=dict(disp=False))
+               options=dict(HIGHS_OPTIONS))
     if res.x is None:
         raise RuntimeError("MLE infeasible")
     x = np.round(res.x[:nc]).astype(np.int64)

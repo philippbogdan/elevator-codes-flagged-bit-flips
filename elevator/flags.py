@@ -26,7 +26,7 @@ from ldpc import BpOsdDecoder
 from scipy.optimize import Bounds, LinearConstraint, milp
 
 from .blocklevel import BlockModel
-from .mle import mle_solve
+from .mle import HIGHS_OPTIONS, mle_solve
 
 
 @dataclass
@@ -233,7 +233,7 @@ class MleFlagDecoder:
         ub = np.concatenate([np.ones(nc), zmax])
         integrality = np.ones(nc + nd)
         res = milp(c, constraints=LinearConstraint(A, det.astype(float), det.astype(float)),
-                   integrality=integrality, bounds=Bounds(lb, ub), options=dict(disp=False))
+                   integrality=integrality, bounds=Bounds(lb, ub), options=dict(HIGHS_OPTIONS))
         if res.x is None:
             raise RuntimeError("MLE infeasible")
         x = np.round(res.x[:nc]).astype(np.uint8)
