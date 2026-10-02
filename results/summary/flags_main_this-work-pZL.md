@@ -19,6 +19,8 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | all | 16 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 0.00e+00 | 51.6 | 51.6 (d=15) | n.r. | 82.2 (d=15) |
 | all | 64 | 0.9 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 7.42e-19 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | all | 64 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 2.87e-20 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
+| all | 64 | 0.99 | 1e-07 | 82.2 | [15,6,5] 2 anc, 15 | 1.60e-22 | not reached | n.r. | n.r. | 82.2 (d=15) |
+| all | 64 | 0.99 | 1e-06 | 82.2 | [15,6,5] 2 anc, 15 | 7.92e-23 | not reached | n.r. | n.r. | 82.2 (d=15) |
 | all | 64 | 1.0 | 0 | 51.6 | [15,9,3], 15 | 2.93e-14 | 51.6 | 51.6 (d=15) | n.r. | 82.2 (d=15) |
 | all | 256 | 0.9 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 1.41e-18 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | all | 256 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 7.27e-21 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
@@ -33,9 +35,9 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | exact | 0.8 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | exact | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | exact | 0.95 | 0 | 51.6 | [15,9,3], 15 | 8.98e-13 | not reached | 51.6 (d=15) | n.r. | n.r. |
-| idle | exact | 0.98 | 0 | 51.6 | [15,9,3], 15 | 8.68e-13 | not reached | 51.6 (d=15) | n.r. | n.r. |
+| idle | exact | 0.98 | 0 | 51.6 | [15,9,3], 15 | 8.68e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
 | idle | exact | 0.99 | 0 | 51.6 | [15,9,3], 15 | 8.69e-13 | not reached | 51.6 (d=15) | n.r. | n.r. |
-| idle | exact | 0.995 | 0 | 51.6 | [15,9,3], 15 | 8.67e-13 | not reached | 51.6 (d=15) | n.r. | n.r. |
+| idle | exact | 0.995 | 0 | 51.6 | [15,9,3], 15 | 8.67e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
 | idle | exact | 0.999 | 0 | 51.6 | [15,9,3], 15 | 8.26e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
 | idle | exact | 1.0 | 0 | 51.6 | [15,9,3], 15 | 8.39e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
 | idle | 1 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 9.69e-18 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
@@ -45,6 +47,8 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | 16 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 5.66e-18 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle | 16 | 1.0 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 1.73e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle | 64 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 1.21e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
+| idle | 64 | 0.99 | 1e-07 | 82.2 | [15,6,5] 2 anc, 15 | 3.81e-17 | not reached | n.r. | n.r. | 82.2 (d=15) |
+| idle | 64 | 0.99 | 1e-06 | 82.2 | [15,6,5] 2 anc, 15 | 1.22e-17 | not reached | n.r. | n.r. | 82.2 (d=15) |
 | idle | 64 | 1.0 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 1.89e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle | 256 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 1.37e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle | 256 | 1.0 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 2.99e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
@@ -55,3 +59,11 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | 4096 | 0.99 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 3.09e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle | 4096 | 1.0 | 0 | 82.2 | [15,6,5] 2 anc, 15 | 2.29e-17 | 82.2 | n.r. | n.r. | 82.2 (d=15) |
 | idle+gate | exact | 0.5 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| idle+gate | exact | 0.8 | 0 | 51.6 | [15,9,3], 15 | 3.47e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.9 | 0 | 51.6 | [15,9,3], 15 | 1.68e-13 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.95 | 0 | 51.6 | [15,9,3], 15 | 7.75e-14 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.98 | 0 | 51.6 | [15,9,3], 15 | 6.57e-15 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.99 | 0 | 51.6 | [15,9,3], 15 | 1.23e-14 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.995 | 0 | 51.6 | [15,9,3], 15 | 9.40e-15 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 0.999 | 0 | 51.6 | [15,9,3], 15 | 2.91e-15 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
+| idle+gate | exact | 1.0 | 0 | 51.6 | [15,9,3], 15 | 7.52e-16 | 51.6 | 51.6 (d=15) | n.r. | n.r. |
