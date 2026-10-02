@@ -117,7 +117,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL"]["pL"]) }} and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }}.  1e-12 is reached with
   {{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("code", "no code") }} from f = {{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("f", "–") }} on all locations
-  ({{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("f", "–") }} with p_XL at its 95 % upper bound; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
+  ({{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("code", "no code") }} from f = {{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("f", "–") }} with p_XL at its 95 % upper bound; [15,6,5] at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
   qubits per logical qubit at f = 0.99, paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} with p_XL at
   its 95 % upper bound, which the analytic stratum bounds make tight); this work's phase-flip model
   places every floor higher and at larger d_Z (both in the tables).

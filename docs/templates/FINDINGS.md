@@ -73,8 +73,9 @@ this work's own.
 * **p_Z = 1e-2.**  Flags push the memory past the bit-flip wall: [15,6,5] reaches 1e-12, which no
   code reaches without flags, at {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL") }}
   qubits per logical qubit (f = 0.99, paper pZL; {{ reach("p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL", True) }} with the 95 % upper
-  bound of p_XL), from f = {{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("f", "–") }} on all locations
-  ({{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("f", "–") }} with the 95 % bound); [15,9,3] bottoms out at
+  bound of p_XL); with flags on all locations 1e-12 is reached from f =
+  {{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("f", "–") }} ({{ (N["pz1e2_min_f"]["paper-pZL|reach"] or {}).get("code", "–") }}, central estimate) and
+  f = {{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("f", "–") }} ({{ (N["pz1e2_min_f"]["paper-pZL|reach_hi"] or {}).get("code", "–") }}, 95 % bound); [15,9,3] bottoms out at
   {{ e1(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL"]["pL"]) }} even with perfect flags (its
   distance).  §6.
 

@@ -73,8 +73,9 @@ this work's own.
 * **p_Z = 1e-2.**  Flags push the memory past the bit-flip wall: [15,6,5] reaches 1e-12, which no
   code reaches without flags, at 269.3
   qubits per logical qubit (f = 0.99, paper pZL; 269.3 with the 95 % upper
-  bound of p_XL), from f = 0.8 on all locations
-  (0.95 with the 95 % bound); [15,9,3] bottoms out at
+  bound of p_XL); with flags on all locations 1e-12 is reached from f =
+  0.8 ([15,6,5] 2 anc, central estimate) and
+  f = 0.95 ([15,6,5], 95 % bound); [15,9,3] bottoms out at
   2.2e-12 even with perfect flags (its
   distance).  §6.
 

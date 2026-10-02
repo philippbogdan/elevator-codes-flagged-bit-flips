@@ -117,7 +117,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   8.6e-17 and
   2.2e-12.  1e-12 is reached with
   [15,6,5] 2 anc from f = 0.8 on all locations
-  (0.95 with p_XL at its 95 % upper bound; 269.3
+  ([15,6,5] from f = 0.95 with p_XL at its 95 % upper bound; [15,6,5] at 269.3
   qubits per logical qubit at f = 0.99, paper pZL; 269.3 with p_XL at
   its 95 % upper bound, which the analytic stratum bounds make tight); this work's phase-flip model
   places every floor higher and at larger d_Z (both in the tables).
