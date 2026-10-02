@@ -1243,7 +1243,11 @@ def limits_table():
         for pz, tgt in ((1e-3, 1e-12),):
             dm = next((d for d in range(3, 400, 2) if a_ * float(m.predict(d, pz)) <= tgt), None)
             dp = next((d for d in range(3, 400, 2) if (9 / 16) * 0.12 * (34.4 * pz) ** (0.94 * (d + 1) / 2) <= tgt), None)
+            ai = ideal_penalty()
+            di = next((d for d in range(3, 400, 2) if ai * float(m.predict(d, pz)) <= tgt), None)
             L[f"elevator_floor|{pz:g}|{tgt:g}"] = {
+                "ideal": dict(d=di, overhead=(2 * di - 1) if di else None, factor=ai,
+                              rate=ai * float(m.predict(di, pz)) if di else None),
                 "this-work-pZL": dict(d=dm, overhead=(2 * dm - 1) if dm else None,
                                       rate_below=a_ * float(m.predict(dm - 2, pz)) if dm else None),
                 "paper-pZL": dict(d=dp, overhead=(2 * dp - 1) if dp else None,

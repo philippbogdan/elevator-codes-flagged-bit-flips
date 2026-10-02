@@ -568,7 +568,9 @@ this work's own.
       outer code of rate k/n → 1 needs d_Z = 15
       (at d_Z = 13: 1.2e-12 and
       1.6e-11 per logical qubit), i.e. at least
-      29 n_b/k qubits: the frontier's
+      29 n_b/k qubits (with only the decoder-independent factor
+      1.24 it would be d_Z = 13 as k/n → 1, at
+      9.4e-13; for every code simulated here the floor is d_Z = 15 either way): the frontier's
       30.9 is within
       7 % of that, the rest being its
       outer code's rate, which higher-rate codes buy only with better flags (§7).

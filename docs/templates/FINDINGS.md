@@ -464,7 +464,9 @@ this work's own.
       outer code of rate k/n → 1 needs d_Z = {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["d"] }}
       (at d_Z = {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["d"] - 2 }}: {{ e1(N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["rate_below"]) }} and
       {{ e1(N["limits"]["elevator_floor|0.001|1e-12"]["paper-pZL"]["rate_below"]) }} per logical qubit), i.e. at least
-      {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] }} n_b/k qubits: the frontier's
+      {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] }} n_b/k qubits (with only the decoder-independent factor
+      {{ f2(N["limits"]["elevator_floor|0.001|1e-12"]["ideal"]["factor"]) }} it would be d_Z = {{ N["limits"]["elevator_floor|0.001|1e-12"]["ideal"]["d"] }} as k/n → 1, at
+      {{ e1(N["limits"]["elevator_floor|0.001|1e-12"]["ideal"]["rate"]) }}; for every code simulated here the floor is d_Z = 15 either way): the frontier's
       {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} is within
       {{ pct(N["headline"]["this-work-pZL:best_flagged_all_codes"] / N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] - 1) }} of that, the rest being its
       outer code's rate, which higher-rate codes buy only with better flags (§7).
