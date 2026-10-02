@@ -2131,7 +2131,7 @@
    ],
    "all|w64|f0.9|r0.0|per_code": {
     "[15,9,3]": 58.666666666666664,
-    "[15,6,5]": "-",
+    "[15,6,5]": 88.0,
     "[15,6,5] 2 anc": 93.5
    },
    "all|w64|f0.9|r0.0|sim15": {
@@ -2140,6 +2140,12 @@
      1.86118913624823e-13,
      2.921651257701142e-13,
      741
+    ],
+    "[15,6,5]": [
+     4.126383176794872e-19,
+     2.5037018229477676e-19,
+     8.388789432307837e-14,
+     66
     ],
     "[15,6,5] 2 anc": [
      1.432257037328633e-18,
@@ -2493,7 +2499,7 @@
    ],
    "all|w256|f0.9|r0.0|per_code": {
     "[15,9,3]": 58.666666666666664,
-    "[15,6,5]": "-",
+    "[15,6,5]": 88.0,
     "[15,6,5] 2 anc": 93.5
    },
    "all|w256|f0.9|r0.0|sim15": {
@@ -2502,6 +2508,12 @@
      2.388954619668743e-13,
      3.651516667444962e-13,
      774
+    ],
+    "[15,6,5]": [
+     2.0820356183177194e-18,
+     5.139576340689947e-19,
+     8.389093792599276e-14,
+     76
     ],
     "[15,6,5] 2 anc": [
      1.3819302365462858e-18,
@@ -6712,7 +6724,7 @@
    ],
    "all|w64|f0.9|r0.0|per_code": {
     "[15,9,3]": 51.55555555555556,
-    "[15,6,5]": "-",
+    "[15,6,5]": 77.33333333333333,
     "[15,6,5] 2 anc": 82.16666666666667
    },
    "all|w64|f0.9|r0.0|sim15": {
@@ -6721,6 +6733,12 @@
      1.86118913624823e-13,
      2.921651257701142e-13,
      741
+    ],
+    "[15,6,5]": [
+     4.126383176794872e-19,
+     2.5037018229477676e-19,
+     8.388789432307837e-14,
+     66
     ],
     "[15,6,5] 2 anc": [
      1.432257037328633e-18,
@@ -7074,7 +7092,7 @@
    ],
    "all|w256|f0.9|r0.0|per_code": {
     "[15,9,3]": 51.55555555555556,
-    "[15,6,5]": "-",
+    "[15,6,5]": 77.33333333333333,
     "[15,6,5] 2 anc": 82.16666666666667
    },
    "all|w256|f0.9|r0.0|sim15": {
@@ -7083,6 +7101,12 @@
      2.388954619668743e-13,
      3.651516667444962e-13,
      774
+    ],
+    "[15,6,5]": [
+     2.0820356183177194e-18,
+     5.139576340689947e-19,
+     8.389093792599276e-14,
+     76
     ],
     "[15,6,5] 2 anc": [
      1.3819302365462858e-18,
@@ -17202,6 +17226,13 @@
    ]
   }
  },
+ "md": {
+  "frontier_req_this-work-pZL": "| overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |\n|---|---|---|---|---|---|---|---|\n| 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |\n| 42.2 | Hamming [15,11,3] | 15 | 5.8e-13 | 0.8 | all | exact | 0 |\n| 42.2 | Hamming [15,11,3] | 15 | 4.3e-13 | 0.99 | all | 4096 | 0 |\n| 51.6 | [15,9,3] | 15 | 4.6e-13 | 0.8 | idle+gate | exact | 0 |\n| 51.6 | [15,9,3] | 15 | 7.5e-13 | 0.8 | all | 4096 | 0 |\n| 51.6 | [15,9,3] | 15 | 1.4e-13 | 0.99 | all | exact | 1e-06 |\n| 77.3 | [15,6,5] | 15 | 1.7e-13 | 0.0 | none | any (no flags) | 0 |",
+  "frontier_rate_this-work-pZL": "| overhead | code | d_Z | lowest p_L | of which phase flips | without flags | least f within 1.5x | flags on | coarsest window |\n|---|---|---|---|---|---|---|---|---|\n| 30.8 | Hamming [31,26,3] | 13 | 1.8e-12 | 1.8e-12 | 1.1e-11 | 0.99 | all | 1024 |\n| 35.7 | Hamming [31,26,3] | 15 | 5.5e-14 | 5.5e-14 | 1.3e-11 | 1.0 | all | exact |\n| 36.4 | Hamming [15,11,3] | 13 | 2.6e-12 | 2.6e-12 | - | 0.5 | all | exact |\n| 38.6 | ext. Hamming [16,11,4] | 13 | 2.7e-12 | 2.7e-12 | - | 0.95 | all | exact |\n| 40.6 | Hamming [31,26,3] | 17 | 2.0e-15 | 2.0e-15 | 1.6e-11 | 1.0 | all | exact |\n| 42.2 | Hamming [15,11,3] | 15 | 1.6e-13 | 9.2e-14 | - | 0.98 | all | exact |\n| 44.4 | [15,9,3] | 13 | 3.2e-12 | 3.2e-12 | 5.5e-12 | 0.5 | idle | 4096 |\n| 44.8 | ext. Hamming [16,11,4] | 15 | 9.5e-14 | 9.5e-14 | - | 0.95 | all | exact |\n| 45.5 | Hamming [31,26,3] | 19 | 1.5e-16 | 8.1e-17 | 2.0e-11 | 1.0 | all | exact |\n| 48.0 | Hamming [15,11,3] | 17 | 9.0e-14 | 3.6e-15 | - | 0.98 | all | exact |\n| 50.5 | Hamming [31,26,3] | 21 | 9.2e-17 | 3.7e-18 | 2.5e-11 | 1.0 | all | exact |\n| 51.0 | ext. Hamming [16,11,4] | 17 | 3.8e-15 | 3.8e-15 | - | 0.98 | all | exact |\n| 51.6 | [15,9,3] | 15 | 1.1e-13 | 1.1e-13 | 3.2e-12 | 0.98 | idle+gate | 4 |\n| 53.8 | Hamming [15,11,3] | 19 | 1.2e-13 | 1.5e-16 | - | 0.98 | all | exact |\n| 55.4 | Hamming [31,26,3] | 23 | 6.1e-17 | 1.8e-19 | 2.2e-11 | 1.0 | all | exact |\n| 57.2 | ext. Hamming [16,11,4] | 19 | 1.6e-16 | 1.6e-16 | - | 0.999 | all | exact |\n| 58.7 | [15,9,3] | 17 | 4.4e-15 | 4.4e-15 | 4.1e-12 | 0.999 | all | exact |\n| 59.6 | Hamming [15,11,3] | 21 | 1.6e-13 | 6.3e-18 | - | 0.98 | all | exact |\n| 66.7 | [15,6,5] | 13 | 4.8e-12 | 4.8e-12 | 4.8e-12 | 0.0 | none | any (no flags) |\n| 70.8 | [15,6,5] 2 anc | 13 | 6.8e-12 | 6.8e-12 | 6.8e-12 | 0.0 | none | any (no flags) |",
+  "frontier_req_paper-pZL": "| overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |\n|---|---|---|---|---|---|---|---|\n| 35.7 | Hamming [31,26,3] | 15 | 8.2e-13 | 1.0 | all | exact | 0 |\n| 40.6 | Hamming [31,26,3] | 17 | 2.4e-13 | 0.99 | all | 64 | 0 |\n| 48.0 | Hamming [15,11,3] | 17 | 7.0e-13 | 0.8 | all | exact | 0 |\n| 48.0 | Hamming [15,11,3] | 17 | 5.0e-13 | 0.99 | all | 4096 | 0 |\n| 58.7 | [15,9,3] | 17 | 5.2e-13 | 0.8 | idle+gate | exact | 0 |\n| 58.7 | [15,9,3] | 17 | 5.7e-13 | 0.8 | all | 64 | 0 |\n| 58.7 | [15,9,3] | 17 | 5.1e-13 | 0.9 | all | 4096 | 0 |\n| 88.0 | [15,6,5] | 17 | 7.5e-14 | 0.0 | none | any (no flags) | 0 |",
+  "frontier_rate_paper-pZL": "| overhead | code | d_Z | lowest p_L | of which phase flips | without flags | least f within 1.5x | flags on | coarsest window |\n|---|---|---|---|---|---|---|---|---|\n| 30.8 | Hamming [31,26,3] | 13 | 2.0e-11 | 2.0e-11 | 2.9e-11 | 0.0 | none | any (no flags) |\n| 35.7 | Hamming [31,26,3] | 15 | 8.2e-13 | 8.2e-13 | 1.3e-11 | 0.99 | all | 64 |\n| 36.4 | Hamming [15,11,3] | 13 | 2.3e-11 | 2.3e-11 | - | 0.5 | all | exact |\n| 38.6 | ext. Hamming [16,11,4] | 13 | 2.4e-11 | 2.4e-11 | - | 0.95 | all | exact |\n| 40.6 | Hamming [31,26,3] | 17 | 3.5e-14 | 3.5e-14 | 1.6e-11 | 1.0 | all | exact |\n| 42.2 | Hamming [15,11,3] | 15 | 1.0e-12 | 9.7e-13 | - | 0.8 | all | exact |\n| 44.4 | [15,9,3] | 13 | 2.8e-11 | 2.8e-11 | 3.0e-11 | 0.0 | none | any (no flags) |\n| 44.8 | ext. Hamming [16,11,4] | 15 | 1.0e-12 | 1.0e-12 | - | 0.95 | all | exact |\n| 45.5 | Hamming [31,26,3] | 19 | 1.5e-15 | 1.5e-15 | 2.0e-11 | 1.0 | all | exact |\n| 48.0 | Hamming [15,11,3] | 17 | 1.3e-13 | 4.1e-14 | - | 0.98 | all | exact |\n| 50.5 | Hamming [31,26,3] | 21 | 1.5e-16 | 6.1e-17 | 2.5e-11 | 1.0 | all | exact |\n| 51.0 | ext. Hamming [16,11,4] | 17 | 4.3e-14 | 4.3e-14 | - | 0.95 | all | exact |\n| 51.6 | [15,9,3] | 15 | 1.2e-12 | 1.2e-12 | 4.2e-12 | 0.8 | idle+gate | 64 |\n| 53.8 | Hamming [15,11,3] | 19 | 1.2e-13 | 1.7e-15 | - | 0.98 | all | exact |\n| 55.4 | Hamming [31,26,3] | 23 | 6.4e-17 | 2.6e-18 | 2.2e-11 | 1.0 | all | exact |\n| 57.2 | ext. Hamming [16,11,4] | 19 | 1.8e-15 | 1.8e-15 | - | 0.99 | all | 16 |\n| 58.7 | [15,9,3] | 17 | 5.0e-14 | 5.0e-14 | 4.1e-12 | 0.98 | idle+gate | exact |\n| 59.6 | Hamming [15,11,3] | 21 | 1.6e-13 | 7.2e-17 | - | 0.98 | all | exact |\n| 66.7 | [15,6,5] | 13 | 4.2e-11 | 4.2e-11 | 4.2e-11 | 0.0 | none | any (no flags) |\n| 70.8 | [15,6,5] 2 anc | 13 | 4.5e-11 | 4.5e-11 | 4.5e-11 | 0.0 | none | any (no flags) |",
+  "pz1e2_table": "| code | flags | lowest p_L, paper pZL (d_Z, overhead) | this-work pZL (d_Z, overhead) | 1e-12 reached at overhead (paper / this work) | floor made of (this work: phase / flagged-only / unflagged) |\n|---|---|---|---|---|---|\n| [15,9,3] | none | 4.7e-09 (37, 130) | 1.3e-08 (51, 180) | no / no | 0.20 / 0.00 / 0.80 |\n| [15,9,3] | f=0.9 idle w=exact | 1.8e-09 (39, 137) | 5.5e-09 (55, 194) | no / no | 0.20 / 0.00 / 0.80 |\n| [15,9,3] | f=0.99 idle+gate w=exact | 4.5e-11 (47, 165) | 1.9e-10 (71, 251) (extrap.) | no / no | 0.20 / 0.16 / 0.64 |\n| [15,9,3] | f=0.99 all w=exact | 4.3e-11 (47, 165) | 1.7e-10 (73, 258) (extrap.) | no / no | 0.15 / 0.03 / 0.82 |\n| [15,9,3] | f=0.99 all w=64 | 1.1e-10 (45, 158) | 3.9e-10 (69, 244) | no / no | 0.15 / 0.50 / 0.35 |\n| [15,9,3] | f=1.0 all w=exact | 2.2e-12 (53, 187) | 2.2e-11 (81, 286) (extrap.) | no / no | 0.22 / 0.78 / 0.00 |\n| [15,6,5] | none | 5.6e-11 (47, 248) | 4.2e-10 (69, 365) | no / no | 0.21 / 0.00 / 0.79 |\n| [15,6,5] | f=0.99 all w=exact | 8.4e-15 (63, 333) | 2.1e-13 (105, 557) (extrap.) | 269 / 483 | 0.25 / 0.00 / 0.75 |\n| [15,6,5] | f=1.0 all w=exact | 3.5e-16 (69, 365) | 2.8e-14 (115, 611) (extrap.) | 269 / 483 | 0.25 / 0.75 / 0.00 |\n| [15,6,5] 2 anc | none | 2.2e-11 (49, 275) | 2.1e-10 (75, 422) (extrap.) | no / no | 0.24 / 0.00 / 0.76 |\n| [15,6,5] 2 anc | f=0.9 idle w=exact | 3.2e-12 (53, 298) | 3.7e-11 (83, 468) (extrap.) | no / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] 2 anc | f=0.99 idle w=exact | 5.4e-12 (51, 286) | 5.6e-11 (81, 456) (extrap.) | no / no | 0.26 / 0.00 / 0.74 |\n| [15,6,5] 2 anc | f=0.9 all w=exact | 4.4e-13 (57, 320) | 5.6e-12 (93, 524) (extrap.) | 298 / no | 0.22 / 0.00 / 0.78 |\n| [15,6,5] 2 anc | f=0.99 idle+gate w=exact | 2.5e-16 (71, 400) (extrap.) | 1.6e-14 (121, 683) (extrap.) | 286 / 536 | 0.26 / 0.00 / 0.74 |\n| [15,6,5] 2 anc | f=0.99 all w=exact | 7.0e-15 (65, 366) | 9.3e-14 (115, 649) (extrap.) | 286 / 536 | 0.15 / 0.00 / 0.85 |\n| [15,6,5] 2 anc | f=0.99 all w=64 | 8.3e-15 (65, 366) | 1.4e-13 (113, 638) (extrap.) | 286 / 536 | 0.15 / 0.00 / 0.85 |\n| [15,6,5] 2 anc | f=0.99 all w=1024 | 1.7e-13 (57, 320) | 5.9e-12 (91, 513) (extrap.) | 286 / no | 0.31 / 0.35 / 0.33 |\n| [15,6,5] 2 anc | f=1.0 all w=exact | 8.1e-18 (77, 434) (extrap.) | 2.3e-15 (131, 740) (extrap.) | 286 / 536 | 0.24 / 0.76 / 0.00 |\n| Hamming [15,11,3] | none | 4.5e-09 (37, 106) | 1.2e-08 (49, 141) | no / no | 0.26 / 0.00 / 0.74 |\n| Hamming [15,11,3] | f=0.9 idle w=exact | 2.0e-09 (39, 112) | 5.8e-09 (53, 153) | no / no | 0.24 / 0.00 / 0.76 |\n| Hamming [15,11,3] | f=0.99 idle w=exact | 1.7e-09 (39, 112) | 5.1e-09 (55, 159) | no / no | 0.18 / 0.00 / 0.82 |\n| Hamming [15,11,3] | f=0.9 all w=exact | 4.8e-10 (41, 118) | 1.6e-09 (61, 176) | no / no | 0.16 / 0.00 / 0.84 |\n| Hamming [15,11,3] | f=0.99 idle+gate w=exact | 5.9e-11 (45, 129) | 2.2e-10 (71, 205) (extrap.) | no / no | 0.14 / 0.01 / 0.85 |\n| Hamming [15,11,3] | f=0.99 all w=exact | 6.0e-11 (45, 129) | 2.3e-10 (69, 199) | no / no | 0.21 / 0.00 / 0.79 |\n| Hamming [15,11,3] | f=0.99 all w=64 | 1.3e-10 (45, 129) | 4.5e-10 (67, 193) | no / no | 0.16 / 0.39 / 0.45 |\n| Hamming [15,11,3] | f=0.99 all w=1024 | 6.2e-10 (41, 118) | 2.0e-09 (59, 170) | no / no | 0.19 / 0.72 / 0.09 |\n| Hamming [15,11,3] | f=1.0 all w=exact | 1.8e-12 (53, 153) | 1.7e-11 (81, 234) (extrap.) | no / no | 0.23 / 0.77 / 0.00 |"
+ },
  "headline": {
   "published": {
    "overhead": 88.0,
@@ -19035,378 +19066,486 @@
    "d": 69,
    "pZL": 8.656818949268913e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 3.3212384991022947e-10
+   "with_unflagged": 3.3212384991022947e-10,
+   "overhead": 365.3333333333333,
+   "reach": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 2.124535043685191e-13,
    "d": 105,
    "pZL": 5.2788649541229274e-14,
    "flagged_only": 0.0,
-   "with_unflagged": 1.5966485482728984e-13
+   "with_unflagged": 1.5966485482728984e-13,
+   "overhead": 557.3333333333334,
+   "reach": 482.6666666666667
   },
   "p1e-2|[15,6,5]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 2.8208578934135183e-14,
    "d": 115,
    "pZL": 6.929104782842879e-15,
    "flagged_only": 2.1279474151292303e-14,
-   "with_unflagged": 0.0
+   "with_unflagged": 0.0,
+   "overhead": 610.6666666666666,
+   "reach": 482.6666666666667
   },
   "p1e-2|[15,6,5] 2 anc|none|this-work-pZL": {
    "pL": 2.0624311319051061e-10,
    "d": 75,
    "pZL": 4.9746579929133007e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 1.5649653326137756e-10
+   "with_unflagged": 1.5649653326137756e-10,
+   "overhead": 422.1666666666667,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 all w=exact|this-work-pZL": {
    "pL": 5.579023203113777e-12,
    "d": 93,
    "pZL": 1.2220887779304295e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 4.3569344251833476e-12
+   "with_unflagged": 4.3569344251833476e-12,
+   "overhead": 524.1666666666666,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 3.733130535527036e-11,
    "d": 83,
    "pZL": 9.524945382352754e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 2.7806359972917617e-11
+   "with_unflagged": 2.7806359972917617e-11,
+   "overhead": 467.5,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|this-work-pZL": {
    "pL": 9.282064196046393e-14,
    "d": 115,
    "pZL": 1.3858209565685758e-14,
    "flagged_only": 0.0,
-   "with_unflagged": 7.896243239477817e-14
+   "with_unflagged": 7.896243239477817e-14,
+   "overhead": 648.8333333333334,
+   "reach": 535.5
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=1024|this-work-pZL": {
    "pL": 5.8595172017941584e-12,
    "d": 91,
    "pZL": 1.840836804300407e-12,
    "flagged_only": 2.0695145362500355e-12,
-   "with_unflagged": 1.949165861243715e-12
+   "with_unflagged": 1.949165861243715e-12,
+   "overhead": 512.8333333333334,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=64|this-work-pZL": {
    "pL": 1.40051998806213e-13,
    "d": 113,
    "pZL": 2.078727194830514e-14,
    "flagged_only": 0.0,
-   "with_unflagged": 1.1926472685790783e-13
+   "with_unflagged": 1.1926472685790783e-13,
+   "overhead": 637.5,
+   "reach": 535.5
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 5.558531780374825e-11,
    "d": 81,
    "pZL": 1.4385552419360516e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 4.119976538438774e-11
+   "with_unflagged": 4.119976538438773e-11,
+   "overhead": 456.1666666666667,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 1.5622272087575903e-14,
    "d": 121,
    "pZL": 4.113454193862905e-15,
    "flagged_only": 0.0,
-   "with_unflagged": 1.1508817893712999e-14
+   "with_unflagged": 1.1508817893712997e-14,
+   "overhead": 682.8333333333334,
+   "reach": 535.5
   },
   "p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|this-work-pZL": {
    "pL": 2.2640964081982284e-15,
    "d": 131,
    "pZL": 5.4621781222516365e-16,
    "flagged_only": 1.7178785959730647e-15,
-   "with_unflagged": 0.0
+   "with_unflagged": 0.0,
+   "overhead": 739.5,
+   "reach": 535.5
   },
   "p1e-2|[15,9,3]|none|this-work-pZL": {
    "pL": 1.3106028132309761e-08,
    "d": 51,
    "pZL": 2.5632155340439354e-09,
    "flagged_only": 0.0,
-   "with_unflagged": 1.0542812598265824e-08
+   "with_unflagged": 1.0542812598265824e-08,
+   "overhead": 179.55555555555554,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 5.480762734711026e-09,
    "d": 55,
    "pZL": 1.094083278632895e-09,
    "flagged_only": 3.90473994042948e-12,
-   "with_unflagged": 4.382774716137701e-09
+   "with_unflagged": 4.382774716137701e-09,
+   "overhead": 193.77777777777777,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 1.7205412787517162e-10,
    "d": 73,
    "pZL": 2.511026831359039e-11,
    "flagged_only": 5.049601685365702e-12,
-   "with_unflagged": 1.4189425787621553e-10
+   "with_unflagged": 1.418942578762155e-10,
+   "overhead": 257.77777777777777,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=64|this-work-pZL": {
    "pL": 3.8918070937490866e-10,
    "d": 69,
    "pZL": 5.771212632845942e-11,
    "flagged_only": 1.9485542635060063e-10,
-   "with_unflagged": 1.3661315669584857e-10
+   "with_unflagged": 1.3661315669584857e-10,
+   "overhead": 243.55555555555554,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 1.8716375653558042e-10,
    "d": 71,
    "pZL": 3.805281950717074e-11,
    "flagged_only": 2.975318740947658e-11,
-   "with_unflagged": 1.1935774961893309e-10
+   "with_unflagged": 1.193577496189331e-10,
+   "overhead": 250.66666666666666,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 2.1643170631488114e-11,
    "d": 81,
    "pZL": 4.795184139796429e-12,
    "flagged_only": 1.6847986491691684e-11,
-   "with_unflagged": 0.0
+   "with_unflagged": 0.0,
+   "overhead": 286.22222222222223,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|none|this-work-pZL": {
    "pL": 1.2247507805725491e-08,
    "d": 49,
    "pZL": 3.217217741316378e-09,
    "flagged_only": 0.0,
-   "with_unflagged": 9.030290064409113e-09
+   "with_unflagged": 9.030290064409113e-09,
+   "overhead": 141.0909090909091,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 all w=exact|this-work-pZL": {
    "pL": 1.5804269452860283e-09,
    "d": 61,
    "pZL": 2.5206936474331635e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 1.3283575805427123e-09
+   "with_unflagged": 1.328357580542712e-09,
+   "overhead": 176.0,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 idle w=exact|this-work-pZL": {
    "pL": 5.77072077457321e-09,
    "d": 53,
    "pZL": 1.3691722471678393e-09,
    "flagged_only": 1.2161801655458003e-12,
-   "with_unflagged": 4.400332347239825e-09
+   "with_unflagged": 4.400332347239825e-09,
+   "overhead": 152.72727272727272,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=exact|this-work-pZL": {
    "pL": 2.2933517960437222e-10,
    "d": 69,
    "pZL": 4.7219012450557704e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 1.8211616715381458e-10
+   "with_unflagged": 1.8211616715381455e-10,
+   "overhead": 199.27272727272728,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=1024|this-work-pZL": {
    "pL": 2.0022161103273278e-09,
    "d": 59,
    "pZL": 3.8412172831411597e-10,
    "flagged_only": 1.4464876060801904e-09,
-   "with_unflagged": 1.7160677593302147e-10
+   "with_unflagged": 1.7160677593302147e-10,
+   "overhead": 170.1818181818182,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=64|this-work-pZL": {
    "pL": 4.511530799741002e-10,
    "d": 67,
    "pZL": 7.16740861855436e-11,
    "flagged_only": 1.7597882680083179e-10,
-   "with_unflagged": 2.035001669877248e-10
+   "with_unflagged": 2.0350016698772476e-10,
+   "overhead": 193.45454545454547,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle w=exact|this-work-pZL": {
    "pL": 5.072572364185937e-09,
    "d": 55,
    "pZL": 8.951590461541868e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 4.17741331803175e-09
+   "with_unflagged": 4.17741331803175e-09,
+   "overhead": 158.54545454545453,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle+gate w=exact|this-work-pZL": {
    "pL": 2.159801447550107e-10,
    "d": 71,
    "pZL": 3.113412505132151e-11,
    "flagged_only": 1.6087876625640365e-12,
-   "with_unflagged": 1.8323723204112513e-10
+   "with_unflagged": 1.8323723204112516e-10,
+   "overhead": 205.0909090909091,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=1.0 all w=exact|this-work-pZL": {
    "pL": 1.7191417038165326e-11,
    "d": 81,
    "pZL": 3.9233324780152606e-12,
-   "flagged_only": 1.3268084560150064e-11,
-   "with_unflagged": 0.0
+   "flagged_only": 1.3268084560150066e-11,
+   "with_unflagged": 0.0,
+   "overhead": 234.1818181818182,
+   "reach": null
   },
   "p1e-2|[15,6,5]|none|paper-pZL": {
    "pL": 5.646493726752722e-11,
    "d": 47,
    "pZL": 6.310023396200508e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 5.0154913871326714e-11
+   "with_unflagged": 5.0154913871326714e-11,
+   "overhead": 248.0,
+   "reach": null
   },
   "p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL": {
    "pL": 8.374994901875813e-15,
    "d": 63,
    "pZL": 2.0651445600464894e-15,
    "flagged_only": 0.0,
-   "with_unflagged": 6.309850341829324e-15
+   "with_unflagged": 6.309850341829324e-15,
+   "overhead": 333.3333333333333,
+   "reach": 269.3333333333333
   },
   "p1e-2|[15,6,5]|f=1.0 all w=exact|paper-pZL": {
    "pL": 3.472681814420353e-16,
    "d": 69,
    "pZL": 1.018697559474215e-16,
    "flagged_only": 2.453984254946138e-16,
-   "with_unflagged": 0.0
+   "with_unflagged": 0.0,
+   "overhead": 365.3333333333333,
+   "reach": 269.3333333333333
   },
   "p1e-2|[15,6,5] 2 anc|none|paper-pZL": {
    "pL": 2.191846827474668e-11,
    "d": 49,
    "pZL": 2.4588092839471358e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 1.945965899079954e-11
+   "with_unflagged": 1.945965899079954e-11,
+   "overhead": 274.8333333333333,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 all w=exact|paper-pZL": {
    "pL": 4.392204916428636e-13,
    "d": 57,
    "pZL": 4.448202894092046e-14,
    "flagged_only": 0.0,
-   "with_unflagged": 3.9473846270194315e-13
+   "with_unflagged": 3.9473846270194315e-13,
+   "overhead": 320.1666666666667,
+   "reach": 297.5
   },
   "p1e-2|[15,6,5] 2 anc|f=0.9 idle w=exact|paper-pZL": {
    "pL": 3.1661332835051945e-12,
    "d": 53,
    "pZL": 3.307156266775739e-13,
    "flagged_only": 0.0,
-   "with_unflagged": 2.835417656827621e-12
+   "with_unflagged": 2.835417656827621e-12,
+   "overhead": 297.5,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=exact|paper-pZL": {
    "pL": 6.974270744638882e-15,
    "d": 65,
    "pZL": 8.047191425617779e-16,
    "flagged_only": 0.0,
-   "with_unflagged": 6.169551602077104e-15
+   "with_unflagged": 6.169551602077105e-15,
+   "overhead": 365.5,
+   "reach": 286.1666666666667
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=1024|paper-pZL": {
    "pL": 1.734604241305822e-13,
    "d": 57,
    "pZL": 4.448202894092046e-14,
    "flagged_only": 3.7954241971037153e-14,
-   "with_unflagged": 9.102415321862462e-14
+   "with_unflagged": 9.102415321862462e-14,
+   "overhead": 320.1666666666667,
+   "reach": 286.1666666666667
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 all w=64|paper-pZL": {
    "pL": 8.297784100729269e-15,
    "d": 65,
    "pZL": 8.047191425617779e-16,
    "flagged_only": 0.0,
-   "with_unflagged": 7.49306495816749e-15
+   "with_unflagged": 7.49306495816749e-15,
+   "overhead": 365.5,
+   "reach": 286.1666666666667
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle w=exact|paper-pZL": {
    "pL": 5.4360510016186634e-12,
    "d": 51,
    "pZL": 9.017575357163459e-13,
    "flagged_only": 0.0,
-   "with_unflagged": 4.534293465902318e-12
+   "with_unflagged": 4.5342934659023175e-12,
+   "overhead": 286.1666666666667,
+   "reach": null
   },
   "p1e-2|[15,6,5] 2 anc|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 2.493692141199152e-16,
    "d": 71,
    "pZL": 3.969530474764513e-17,
    "flagged_only": 0.0,
-   "with_unflagged": 2.0967390937227005e-16
+   "with_unflagged": 2.0967390937227007e-16,
+   "overhead": 399.5,
+   "reach": 286.1666666666667
   },
   "p1e-2|[15,6,5] 2 anc|f=1.0 all w=exact|paper-pZL": {
    "pL": 8.063155169951991e-18,
    "d": 77,
    "pZL": 1.958095856887666e-18,
    "flagged_only": 6.105059313064324e-18,
-   "with_unflagged": 0.0
+   "with_unflagged": 0.0,
+   "overhead": 433.5,
+   "reach": 286.1666666666667
   },
   "p1e-2|[15,9,3]|none|paper-pZL": {
    "pL": 4.731770392373404e-09,
    "d": 37,
    "pZL": 6.340376248060858e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 4.097732767567318e-09
+   "with_unflagged": 4.097732767567318e-09,
+   "overhead": 129.77777777777777,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.9 idle w=exact|paper-pZL": {
    "pL": 1.8229809901656523e-09,
    "d": 39,
    "pZL": 2.3253052191943556e-10,
    "flagged_only": 7.415526478698439e-13,
-   "with_unflagged": 1.5897089155983468e-09
+   "with_unflagged": 1.5897089155983468e-09,
+   "overhead": 136.88888888888889,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=exact|paper-pZL": {
    "pL": 4.298764498627666e-11,
    "d": 47,
    "pZL": 4.2066822641336725e-12,
    "flagged_only": 2.661528812599811e-13,
-   "with_unflagged": 3.8514809840883016e-11
+   "with_unflagged": 3.8514809840883016e-11,
+   "overhead": 165.33333333333334,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 all w=64|paper-pZL": {
    "pL": 1.056644226077119e-10,
    "d": 45,
    "pZL": 1.1470299937611244e-11,
    "flagged_only": 5.5915105969053394e-11,
-   "with_unflagged": 3.827901670104726e-11
+   "with_unflagged": 3.8279016701047256e-11,
+   "overhead": 158.22222222222223,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 4.476138759096095e-11,
    "d": 47,
    "pZL": 4.2066822641336725e-12,
    "flagged_only": 3.76908113683087e-12,
-   "with_unflagged": 3.6785624189996405e-11
+   "with_unflagged": 3.6785624189996405e-11,
+   "overhead": 165.33333333333334,
+   "reach": null
   },
   "p1e-2|[15,9,3]|f=1.0 all w=exact|paper-pZL": {
    "pL": 2.2496314518090287e-12,
    "d": 53,
    "pZL": 2.075078441898503e-13,
-   "flagged_only": 2.0421236076191786e-12,
-   "with_unflagged": 0.0
+   "flagged_only": 2.0421236076191782e-12,
+   "with_unflagged": 0.0,
+   "overhead": 186.66666666666666,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|none|paper-pZL": {
    "pL": 4.463556174692747e-09,
    "d": 37,
    "pZL": 5.187580566595248e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 3.9447981180332215e-09
+   "with_unflagged": 3.9447981180332215e-09,
+   "overhead": 106.18181818181819,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 all w=exact|paper-pZL": {
    "pL": 4.817525712800414e-10,
    "d": 41,
    "pZL": 6.977417765675058e-11,
    "flagged_only": 0.0,
-   "with_unflagged": 4.1197839362329083e-10
+   "with_unflagged": 4.1197839362329083e-10,
+   "overhead": 117.81818181818181,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.9 idle w=exact|paper-pZL": {
    "pL": 1.9686657477409034e-09,
    "d": 39,
    "pZL": 1.9025224520681093e-10,
    "flagged_only": 2.7297728528130976e-13,
-   "with_unflagged": 1.7781405252488114e-09
+   "with_unflagged": 1.7781405252488114e-09,
+   "overhead": 112.0,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=exact|paper-pZL": {
    "pL": 6.030515005427976e-11,
    "d": 45,
    "pZL": 9.384790858045563e-12,
    "flagged_only": 0.0,
-   "with_unflagged": 5.092035919623421e-11
+   "with_unflagged": 5.0920359196234206e-11,
+   "overhead": 129.45454545454547,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=1024|paper-pZL": {
    "pL": 6.200215578034041e-10,
    "d": 41,
    "pZL": 6.977417765675058e-11,
    "flagged_only": 4.930705490743605e-10,
-   "with_unflagged": 5.717683107229326e-11
+   "with_unflagged": 5.717683107229327e-11,
+   "overhead": 117.81818181818181,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 all w=64|paper-pZL": {
    "pL": 1.2925466172382718e-10,
    "d": 45,
    "pZL": 9.384790858045563e-12,
    "flagged_only": 5.699037153327944e-11,
-   "with_unflagged": 6.287949933250216e-11
+   "with_unflagged": 6.287949933250216e-11,
+   "overhead": 129.45454545454547,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle w=exact|paper-pZL": {
    "pL": 1.7048374073761547e-09,
    "d": 39,
    "pZL": 1.9025224520681093e-10,
    "flagged_only": 0.0,
-   "with_unflagged": 1.5145851621693436e-09
+   "with_unflagged": 1.5145851621693438e-09,
+   "overhead": 112.0,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=0.99 idle+gate w=exact|paper-pZL": {
    "pL": 5.88367758147552e-11,
    "d": 45,
    "pZL": 9.384790858045563e-12,
    "flagged_only": 7.263878903245762e-14,
-   "with_unflagged": 4.937934616767719e-11
+   "with_unflagged": 4.937934616767718e-11,
+   "overhead": 129.45454545454547,
+   "reach": null
   },
   "p1e-2|Hamming [15,11,3]|f=1.0 all w=exact|paper-pZL": {
    "pL": 1.7719090213421642e-12,
    "d": 53,
    "pZL": 1.6977914524624116e-13,
-   "flagged_only": 1.6021298760959235e-12,
-   "with_unflagged": 0.0
+   "flagged_only": 1.6021298760959233e-12,
+   "with_unflagged": 0.0,
+   "overhead": 152.72727272727272,
+   "reach": null
   }
  }
 }

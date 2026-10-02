@@ -238,14 +238,75 @@ this work's own.
     {{ e2(first_eta("this-work-pZL", "all|w1024|f0.99", "[15,9,3]")) }}.  The bit-flip rates at other
     p_X re-weight the p_X = 1e-9 failure fractions with exact intensities (validated in §2, item 7).
 
-## 6. p_Z = 1e-2, η = 1e6
+## 6. p_Z = 1e-2, η = 1e6: the lowest reachable rate and its overhead
 
-<!-- PZ1E2 -->
+15. **Without flags this work reproduces the published floors where its bit-flip rates agree with
+    the fits.**  With the paper's phase-flip fit the flag-free floors are
+    {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas, d_Z =
+    {{ N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["d"] }}; published 2.08e-11 at 49) and
+    {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3], d_Z =
+    {{ N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["d"] }}; published 1.94e-9 at 39, the gap being the
+    [15,9,3] bit-flip excess of item 4).  This work's phase-flip model, which decays more slowly at
+    large d_Z (the moving ancilla, §3), puts them higher:
+    {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|this-work-pZL"]["pL"]) }} and
+    {{ e1(N["limits"]["p1e-2|[15,9,3]|none|this-work-pZL"]["pL"]) }}.
+
+16. **Flags push the memory past the bit-flip wall.**  Lowest p_L per flag setting (phase flips
+    beyond d_Z ≈ 70 are extrapolations of the phase-flip model, marked), the overhead at which 1e-12
+    is reached, and what the floor is made of (`pz1e2_*.md`, `limits.md`, `fig2_this_work_*.md`):
+
+{{ N["md"]["pz1e2_table"] }}
+
+    With flags on all locations [15,6,5] reaches 1e-12 — which neither code reaches without flags —
+    at {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|paper-pZL"]["reach"]) }} qubits per logical
+    qubit (paper pZL; {{ f1(N["limits"]["p1e-2|[15,6,5]|f=0.99 all w=exact|this-work-pZL"]["reach"]) }}
+    with this work's phase-flip model), and its floor drops by 3–4 orders of magnitude.  [15,9,3]
+    stays above 1e-12 even with perfect flags: there its floor is made of sets of ≥ 3 flagged events
+    that contain an undetectable logical — its distance.
 
 ## 7. Alternatives and the frontier
 
-<!-- FRONTIER -->
+17. **Higher-rate outer codes become usable with flags, and push the overhead towards the bare
+    repetition-code floor.**  The frontier at p_Z = 1e-3, η = 1e6 over every code, decoder and flag
+    setting simulated — Hamming [15,11,3], [31,26,3], [63,57,3] and extended Hamming [16,11,4]
+    besides the paper's codes — requiring p_L ≤ 1e-12 with the 95 % upper bound of p_XL
+    (`frontier_*.md`; this-work pZL):
+
+{{ N["md"]["frontier_req_this-work-pZL"] }}
+
+    and with the paper's phase-flip fit:
+
+{{ N["md"]["frontier_req_paper-pZL"] }}
+
+    Each step outward came from relaxing the criterion furthest from its limit: the overhead (codes
+    of higher rate, which flags make admissible), then the timing window (to 4096 ticks), then the
+    efficiency.  The decoder axis is closed: the MLE is ML at the leading order (item 5) and
+    BP+OSD is worse on the same configurations.  Lowest p_L per code and d_Z and what it takes:
+
+{{ N["md"]["frontier_rate_this-work-pZL"] }}
 
 ## 8. Limits
 
-<!-- LIMITS -->
+18. **Every remaining limit is one of three properties of the problem** (`limits.md`):
+    * *Phase flips, which flags cannot reveal.*  At p_Z = 1e-3 every code on the frontier sits at
+      its phase-flip floor: one step lower in d_Z its phase flips alone exceed 1e-12, at the floor its
+      bit flips are orders of magnitude below them (e.g. [15,9,3]: p_ZL(13) =
+      {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL_below"]) }}, p_ZL(15) =
+      {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL"]) }}, lowest p_XL(15) =
+      {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pXL"]) }}).  The floor does not move with an
+      ideal decoder for the data blocks (§3), and no Elevator-type memory can go below
+      {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit at this
+      operating point (one repetition-code block of distance
+      {{ N["limits"]["absolute_floor|0.001|1e-12"]["d_rep"] }} per logical qubit, k/n → 1, no ancilla).
+    * *The code distance.*  With perfect, exactly timed flags failures need ≥ d flagged events that
+      contain an undetectable logical (computed without a decoder, item 7); at p_Z = 1e-2 this
+      sets the [15,9,3] and Hamming floors (flagged-only share
+      {{ f2(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["flagged_only"] / N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["pL"]) }}
+      of the [15,9,3] floor).
+    * *Unflagged bit flips, i.e. the flag efficiency (and which locations can raise flags).*  With
+      f < 1 the remaining bit flips involve unflagged errors (shares in `limits.md`); the efficiency
+      needed is that of an ML-optimal decoder (item 5), so it is a property of the code and the flag
+      model, not of this decoder.
+    Timing precision is not a limit anywhere in the range tested when gates are flagged.  The
+    remaining open problems — the two fit-level reproduction residuals, and whether flags exist
+    during gates — are listed in `REPORT.md`.
