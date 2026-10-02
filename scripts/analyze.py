@@ -938,6 +938,114 @@ def aux_checks():
     NUMBERS["checks"] = A
 
 
+def strata_split(row, d_target=None, p_x=None):
+    """Split p_XL of a row (optionally transferred) into the part from strata with only flagged events
+    (a = 0: limited by the code distance) and the part with unflagged errors (a >= 1: limited by the
+    flag efficiency).  Central values, per round per logical qubit."""
+    from elevator.strata import pois
+    if d_target is None or (d_target == row["d"] and (p_x is None or p_x == row["p_x"])):
+        U, S, R, k = row["U"], row["S"], row["rounds"], row["k"]
+    else:
+        sums = class_sums_for(row["code"], row["n_anc"], d_target, row.get("n_outer", 5))
+        p_x = row["p_x"] if p_x is None else p_x
+        eff = {c: (row["f"] if c in CLASSES_OF[row["classes"]] else 0.0) for c in CLASS_LIST}
+        U = p_x * sum((1 - eff[c]) * sums["sums"][c][0] for c in CLASS_LIST)
+        S = p_x * sum(2 * eff[c] * sums["sums"][c][1] for c in CLASS_LIST)
+        R, k = sums["rounds"], sums["k"]
+    parts = {"flagged_only": 0.0, "with_unflagged": 0.0}
+    keys = set(row["strata"]) | set(row["exact"])
+    for key in keys:
+        a, b = map(int, key.split(","))
+        w = pois(a, U) * pois(b, S)
+        if key in row["exact"]:
+            v = row["exact"][key]
+        else:
+            f, n = row["strata"][key]
+            v = f / n if n else 0.0
+        parts["flagged_only" if a == 0 else "with_unflagged"] += w * v / (R * k)
+    return parts
+
+
+def limits_table():
+    """What limits each result (evidence for 'every remaining limit belongs to the problem')."""
+    L = {}
+    lines = ["\n## Limits\n"]
+    m = PHASE["rep"]
+    # absolute floor of the construction: one repetition-code block per logical qubit (k/n -> 1, no
+    # ancilla, ML decoding of the block): d_Z >= d_rep, overhead >= 2 d_rep - 1
+    for pz, tgt in ((1e-3, 1e-12), (1e-2, 1e-9), (1e-2, 1e-12)):
+        d_rep = next((d for d in range(3, 400, 2) if float(m.predict(d, pz)) <= tgt), None)
+        L[f"absolute_floor|{pz:g}|{tgt:g}"] = dict(d_rep=d_rep, overhead=(2 * d_rep - 1) if d_rep else None)
+    lines += ["### Absolute phase-flip floor of the construction\n",
+              "Any Elevator-type memory spends at least one repetition-code block of distance d_Z per logical qubit; "
+              "its phase flips alone reach the target only from d_rep (this work's repetition-code model), so the "
+              "overhead is at least 2 d_rep - 1 even for k/n -> 1 and without ancilla noise.\n",
+              "| p_Z | target | d_rep | overhead floor |", "|---|---|---|---|"]
+    for k_, v in L.items():
+        if k_.startswith("absolute_floor"):
+            _, pz, tgt = k_.split("|")
+            lines.append(f"| {pz} | {tgt} | {v['d_rep']} | {v['overhead']} |")
+    # p_Z = 1e-3: per code, is the flagged overhead at its phase-flip floor?
+    rows = [r for r in flag_rows(("flag_main", "flag_supp", "flag_alt", "flag_ham63")) if r["idle"] == "edge,cnot"
+            and r["p_x"] == 1e-9 and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
+    lines += ["\n### p_Z = 1e-3, eta = 1e6, 1e-12: is each code at its phase-flip floor?\n",
+              "d_floor: smallest d_Z whose phase flips alone meet the target (flags cannot lower it).  At d_floor - 2 the "
+              "phase flips alone exceed the target; at d_floor the lowest bit-flip rate over the flag settings is shown "
+              "against the phase-flip rate.\n",
+              "| code | phase model | d_floor | overhead | p_ZL(d_floor - 2) | p_ZL(d_floor) | lowest p_XL(d_floor) [95% upper] | setting |",
+              "|---|---|---|---|---|---|---|---|"]
+    for code in CODES_MAIN + ALT_CODES:
+        for tag, fn in (("this-work-pZL", pzl_model), ("paper-pZL", pzl_paper)):
+            try:
+                dfl = next(d for d in range(3, 200, 2) if fn(code[0], code[1], d, 1e-3) <= 1e-12)
+            except (StopIteration, KeyError):
+                continue
+            cand = [r for r in rows if (r["code"], r["n_anc"]) == code and r["d"] == dfl]
+            if not cand:
+                continue
+            best = min(cand, key=lambda r: r["hi"])
+            st = f"f={best['f']} {best['classes']} w={best['window'] or 'exact'}" + (" (transferred)" if best.get("transferred") else "")
+            L[f"p1e-3|{CODE_LABEL[code]}|{tag}"] = dict(d_floor=dfl, overhead=overhead(code[0], code[1], dfl),
+                                                       pZL_below=fn(code[0], code[1], dfl - 2, 1e-3), pZL=fn(code[0], code[1], dfl, 1e-3),
+                                                       pXL=best["pL"], pXL_hi=best["hi"], setting=st)
+            lines.append(f"| {CODE_LABEL[code]} | {tag} | {dfl} | {overhead(code[0], code[1], dfl):.1f} | "
+                         f"{fn(code[0], code[1], dfl - 2, 1e-3):.2e} | {fn(code[0], code[1], dfl, 1e-3):.2e} | "
+                         f"{best['pL']:.2e} [{best['hi']:.2e}] | {st} |")
+    # p_Z = 1e-2 floors: what the remaining p_L is made of
+    lines += ["\n### p_Z = 1e-2, eta = 1e6: composition of the lowest reachable p_L\n",
+              "At each floor: phase flips (cannot be flagged), bit flips from sets of flagged events only (need >= d "
+              "events forming a logical: the code's distance) and bit flips involving unflagged errors (fraction 1 - f).\n",
+              "| code | flags | phase model | floor p_L | d_Z | p_ZL share | flagged-only share | unflagged share |",
+              "|---|---|---|---|---|---|---|---|"]
+    prow = [r for r in flag_rows(("flag_pz1e2",), transfers=False) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-8]
+    refs = defaultdict(dict)
+    for r in prow:
+        refs[(r["code"], r["n_anc"], r["f"], r["classes"], r["window"])][r["d"]] = r
+    for tag, fn in (("this-work-pZL", pzl_model), ("paper-pZL", pzl_paper)):
+        for key, byd in sorted(refs.items(), key=str):
+            best = None
+            for d in range(15, 302, 2):
+                ref = byd[min(byd, key=lambda x: abs(x - d))]
+                t = transfer_pxl(ref, d)
+                if t is None:
+                    continue
+                tot = t[0] + fn(key[0], key[1], d, 1e-2)
+                if best is None or tot < best[0]:
+                    best = (tot, d, ref, t[0])
+            if best is None:
+                continue
+            tot, d, ref, pxl = best
+            sp = strata_split(ref, d_target=d)
+            pzl = fn(key[0], key[1], d, 1e-2)
+            fo, wu = sp["flagged_only"], sp["with_unflagged"]
+            fl = "none" if key[2] == 0 else f"f={key[2]} {key[3]} w={key[4] or 'exact'}"
+            L[f"p1e-2|{CODE_LABEL[key[:2]]}|{fl}|{tag}"] = dict(pL=tot, d=d, pZL=pzl, flagged_only=fo, with_unflagged=wu)
+            lines.append(f"| {CODE_LABEL[key[:2]]} | {fl} | {tag} | {tot:.2e} | {d} | {pzl / tot:.2f} | "
+                         f"{fo / tot:.2f} | {wu / tot:.2f} |")
+    NUMBERS["limits"] = L
+    open(os.path.join(OUT, "limits.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1397,5 +1505,6 @@ if __name__ == "__main__":
     frontier(pzl_paper, "paper-pZL")
     if "two" in PHASE:
         headline()
+        limits_table()
     save_numbers()
     print("wrote", OUT)

@@ -39,7 +39,7 @@ For every simulated (or transferred) code and d_Z: the lowest p_L of any flag se
 | 51.6 | [15,9,3] | 15 | 1.19e-12 | 1.19e-12 | 4.25e-12 | 0.8 | idle+gate | 64 |
 | 53.8 | Hamming [15,11,3] | 19 | 1.21e-13 | 1.72e-15 | - | 0.98 | all | exact |
 | 55.4 | Hamming [31,26,3] | 23 | 6.38e-17 | 2.58e-18 | 2.16e-11 | 1.0 | all | exact |
-| 57.2 | ext. Hamming [16,11,4] | 19 | 1.83e-15 | 1.83e-15 | - | 0.99 | all | exact |
+| 57.2 | ext. Hamming [16,11,4] | 19 | 1.83e-15 | 1.83e-15 | - | 0.99 | all | 16 |
 | 58.7 | [15,9,3] | 17 | 4.99e-14 | 4.99e-14 | 4.15e-12 | 0.98 | idle+gate | exact |
 | 59.6 | Hamming [15,11,3] | 21 | 1.60e-13 | 7.25e-17 | - | 0.98 | all | exact |
 | 60.3 | Hamming [31,26,3] | 25 | 1.49e-16 | 1.09e-19 | 3.48e-11 | 1.0 | all | exact |
