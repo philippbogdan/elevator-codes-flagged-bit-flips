@@ -17,20 +17,20 @@ d_floor: smallest d_Z whose phase flips alone meet the target (flags cannot lowe
 
 | code | phase model | d_floor | overhead | p_ZL(d_floor - 2) | p_ZL(d_floor) | lowest p_XL(d_floor) [95% upper] | setting |
 |---|---|---|---|---|---|---|---|
-| [15,9,3] | this-work-pZL | 15 | 51.6 | 3.15e-12 | 1.12e-13 | 4.81e-18 [5.22e-18] | f=1.0 all w=exact |
+| [15,9,3] | this-work-pZL | 15 | 51.6 | 3.14e-12 | 1.11e-13 | 4.81e-18 [5.22e-18] | f=1.0 all w=exact |
 | [15,9,3] | paper-pZL | 17 | 58.7 | 1.19e-12 | 4.99e-14 | 7.84e-18 [8.52e-18] | f=1.0 all w=exact (transferred) |
-| [15,6,5] | this-work-pZL | 15 | 77.3 | 4.73e-12 | 1.68e-13 | 2.42e-30 [1.74e-26] | f=1.0 all w=exact |
+| [15,6,5] | this-work-pZL | 15 | 77.3 | 4.71e-12 | 1.67e-13 | 2.42e-30 [1.74e-26] | f=1.0 all w=exact |
 | [15,6,5] | paper-pZL | 17 | 88.0 | 1.78e-12 | 7.49e-14 | 6.86e-30 [4.11e-26] | f=1.0 all w=exact (transferred) |
-| [15,6,5] 2 anc | this-work-pZL | 15 | 82.2 | 6.65e-12 | 2.70e-13 | 5.70e-28 [3.23e-27] | f=1.0 all w=exact |
+| [15,6,5] 2 anc | this-work-pZL | 15 | 82.2 | 6.61e-12 | 2.67e-13 | 5.70e-28 [3.23e-27] | f=1.0 all w=exact |
 | [15,6,5] 2 anc | paper-pZL | 17 | 93.5 | 1.89e-12 | 7.96e-14 | 5.61e-31 [4.09e-27] | f=1.0 all w=exact |
-| Hamming [15,11,3] | this-work-pZL | 15 | 42.2 | 2.58e-12 | 9.18e-14 | 3.67e-18 [3.88e-18] | f=1.0 all w=exact |
+| Hamming [15,11,3] | this-work-pZL | 15 | 42.2 | 2.57e-12 | 9.11e-14 | 3.67e-18 [3.88e-18] | f=1.0 all w=exact |
 | Hamming [15,11,3] | paper-pZL | 15 | 42.2 | 2.30e-11 | 9.70e-13 | 3.67e-18 [3.88e-18] | f=1.0 all w=exact |
-| Hamming [31,26,3] | this-work-pZL | 15 | 35.7 | 1.78e-12 | 5.54e-14 | 3.21e-17 [3.50e-17] | f=1.0 all w=exact |
+| Hamming [31,26,3] | this-work-pZL | 15 | 35.7 | 1.78e-12 | 5.51e-14 | 3.21e-17 [3.50e-17] | f=1.0 all w=exact |
 | Hamming [31,26,3] | paper-pZL | 15 | 35.7 | 1.95e-11 | 8.21e-13 | 3.21e-17 [3.50e-17] | f=1.0 all w=exact |
-| ext. Hamming [16,11,4] | this-work-pZL | 15 | 44.8 | 2.68e-12 | 9.43e-14 | 1.24e-22 [1.53e-22] | f=1.0 all w=exact |
+| ext. Hamming [16,11,4] | this-work-pZL | 15 | 44.8 | 2.67e-12 | 9.35e-14 | 1.24e-22 [1.53e-22] | f=1.0 all w=exact |
 | ext. Hamming [16,11,4] | paper-pZL | 17 | 51.0 | 1.03e-12 | 4.34e-14 | 2.04e-22 [2.52e-22] | f=1.0 all w=exact (transferred) |
-| Hamming [63,57,3] | this-work-pZL | 15 | 32.6 | 1.44e-12 | 4.03e-14 | 2.41e-16 [2.62e-16] | f=1.0 all w=exact (transferred) |
-| Hamming [63,57,3] | paper-pZL | 15 | 32.6 | 1.78e-11 | 7.49e-13 | 2.41e-16 [2.62e-16] | f=1.0 all w=exact (transferred) |
+| Hamming [63,57,3] | this-work-pZL | 15 | 32.6 | 1.45e-12 | 4.02e-14 | 2.38e-16 [2.59e-16] | f=1.0 all w=exact |
+| Hamming [63,57,3] | paper-pZL | 15 | 32.6 | 1.78e-11 | 7.49e-13 | 2.38e-16 [2.59e-16] | f=1.0 all w=exact |
 
 ### p_Z = 1e-2, eta = 1e6: composition of the lowest reachable p_L
 
@@ -38,38 +38,41 @@ At each floor: phase flips (cannot be flagged), bit flips from sets of flagged e
 
 | code | flags | phase model | floor p_L | d_Z | p_ZL share | flagged-only share | unflagged share |
 |---|---|---|---|---|---|---|---|
-| [15,6,5] | none | this-work-pZL | 4.73e-10 | 69 | 0.30 | 0.00 | 0.70 |
-| [15,6,5] | f=0.9 all w=exact | this-work-pZL | 5.08e-12 | 93 | 0.25 | 0.00 | 0.75 |
+| [15,6,5] | none | this-work-pZL | 4.71e-10 | 69 | 0.29 | 0.00 | 0.71 |
+| [15,6,5] | f=0.9 all w=exact | this-work-pZL | 5.06e-12 | 93 | 0.25 | 0.00 | 0.75 |
 | [15,6,5] | f=0.9 idle w=exact | this-work-pZL | 1.36e-10 | 77 | 0.21 | 0.00 | 0.79 |
-| [15,6,5] | f=0.99 all w=exact | this-work-pZL | 2.57e-13 | 109 | 0.22 | 0.00 | 0.78 |
-| [15,6,5] | f=0.99 all w=1024 | this-work-pZL | 2.83e-12 | 95 | 0.30 | 0.00 | 0.70 |
-| [15,6,5] | f=0.99 all w=64 | this-work-pZL | 7.46e-13 | 103 | 0.24 | 0.00 | 0.76 |
-| [15,6,5] | f=0.99 idle w=exact | this-work-pZL | 1.28e-10 | 77 | 0.23 | 0.00 | 0.77 |
-| [15,6,5] | f=0.99 idle+gate w=exact | this-work-pZL | 2.26e-13 | 109 | 0.25 | 0.00 | 0.75 |
-| [15,6,5] | f=1.0 all w=exact | this-work-pZL | 3.18e-14 | 119 | 0.26 | 0.74 | 0.00 |
-| [15,6,5] 2 anc | none | this-work-pZL | 2.26e-10 | 77 | 0.26 | 0.00 | 0.74 |
-| [15,6,5] 2 anc | f=0.9 all w=exact | this-work-pZL | 3.34e-12 | 99 | 0.24 | 0.00 | 0.76 |
-| [15,6,5] 2 anc | f=0.9 idle w=exact | this-work-pZL | 5.53e-11 | 85 | 0.22 | 0.00 | 0.78 |
-| [15,6,5] 2 anc | f=0.99 all w=exact | this-work-pZL | 1.89e-13 | 117 | 0.13 | 0.00 | 0.87 |
-| [15,6,5] 2 anc | f=0.99 all w=1024 | this-work-pZL | 7.24e-12 | 95 | 0.24 | 0.41 | 0.35 |
-| [15,6,5] 2 anc | f=0.99 all w=64 | this-work-pZL | 1.66e-13 | 115 | 0.22 | 0.00 | 0.78 |
-| [15,6,5] 2 anc | f=0.99 idle w=exact | this-work-pZL | 6.27e-11 | 85 | 0.19 | 0.00 | 0.81 |
-| [15,6,5] 2 anc | f=0.99 idle+gate w=exact | this-work-pZL | 1.88e-14 | 125 | 0.28 | 0.00 | 0.72 |
+| [15,6,5] | f=0.99 all w=exact | this-work-pZL | 2.56e-13 | 109 | 0.22 | 0.00 | 0.78 |
+| [15,6,5] | f=0.99 all w=1024 | this-work-pZL | 2.82e-12 | 95 | 0.30 | 0.00 | 0.70 |
+| [15,6,5] | f=0.99 all w=64 | this-work-pZL | 7.43e-13 | 103 | 0.24 | 0.00 | 0.76 |
+| [15,6,5] | f=0.99 idle w=exact | this-work-pZL | 1.28e-10 | 77 | 0.22 | 0.00 | 0.78 |
+| [15,6,5] | f=0.99 idle+gate w=exact | this-work-pZL | 2.25e-13 | 109 | 0.25 | 0.00 | 0.75 |
+| [15,6,5] | f=1.0 all w=exact | this-work-pZL | 3.17e-14 | 119 | 0.26 | 0.74 | 0.00 |
+| [15,6,5] 2 anc | none | this-work-pZL | 2.26e-10 | 77 | 0.25 | 0.00 | 0.75 |
+| [15,6,5] 2 anc | f=0.9 all w=exact | this-work-pZL | 3.33e-12 | 99 | 0.23 | 0.00 | 0.77 |
+| [15,6,5] 2 anc | f=0.9 idle w=exact | this-work-pZL | 5.51e-11 | 85 | 0.21 | 0.00 | 0.79 |
+| [15,6,5] 2 anc | f=0.99 all w=exact | this-work-pZL | 1.89e-13 | 115 | 0.19 | 0.00 | 0.81 |
+| [15,6,5] 2 anc | f=0.99 all w=1024 | this-work-pZL | 7.21e-12 | 93 | 0.34 | 0.34 | 0.31 |
+| [15,6,5] 2 anc | f=0.99 all w=64 | this-work-pZL | 1.65e-13 | 115 | 0.21 | 0.00 | 0.79 |
+| [15,6,5] 2 anc | f=0.99 idle w=exact | this-work-pZL | 6.25e-11 | 85 | 0.19 | 0.00 | 0.81 |
+| [15,6,5] 2 anc | f=0.99 idle+gate w=exact | this-work-pZL | 1.88e-14 | 125 | 0.27 | 0.00 | 0.73 |
 | [15,6,5] 2 anc | f=1.0 all w=exact | this-work-pZL | 1.15e-14 | 129 | 0.21 | 0.79 | 0.00 |
 | [15,9,3] | none | this-work-pZL | 1.40e-08 | 51 | 0.25 | 0.00 | 0.75 |
-| [15,9,3] | f=0.9 idle w=exact | this-work-pZL | 5.91e-09 | 57 | 0.17 | 0.00 | 0.82 |
+| [15,9,3] | f=0.9 all w=exact | this-work-pZL | 1.27e-09 | 65 | 0.16 | 0.00 | 0.84 |
+| [15,9,3] | f=0.9 idle w=exact | this-work-pZL | 5.89e-09 | 57 | 0.17 | 0.00 | 0.83 |
 | [15,9,3] | f=0.99 all w=exact | this-work-pZL | 1.88e-10 | 75 | 0.15 | 0.03 | 0.82 |
-| [15,9,3] | f=0.99 all w=64 | this-work-pZL | 4.23e-10 | 71 | 0.15 | 0.50 | 0.35 |
-| [15,9,3] | f=0.99 idle+gate w=exact | this-work-pZL | 2.06e-10 | 73 | 0.21 | 0.17 | 0.63 |
-| [15,9,3] | f=1.0 all w=exact | this-work-pZL | 2.50e-11 | 83 | 0.24 | 0.76 | 0.00 |
+| [15,9,3] | f=0.99 all w=1024 | this-work-pZL | 1.05e-09 | 65 | 0.19 | 0.65 | 0.16 |
+| [15,9,3] | f=0.99 all w=64 | this-work-pZL | 4.22e-10 | 71 | 0.15 | 0.50 | 0.35 |
+| [15,9,3] | f=0.99 idle w=exact | this-work-pZL | 5.24e-09 | 57 | 0.19 | 0.00 | 0.81 |
+| [15,9,3] | f=0.99 idle+gate w=exact | this-work-pZL | 2.05e-10 | 73 | 0.20 | 0.17 | 0.63 |
+| [15,9,3] | f=1.0 all w=exact | this-work-pZL | 2.49e-11 | 83 | 0.23 | 0.77 | 0.00 |
 | Hamming [15,11,3] | none | this-work-pZL | 1.28e-08 | 51 | 0.22 | 0.00 | 0.78 |
 | Hamming [15,11,3] | f=0.9 all w=exact | this-work-pZL | 1.70e-09 | 61 | 0.22 | 0.00 | 0.78 |
-| Hamming [15,11,3] | f=0.9 idle w=exact | this-work-pZL | 6.45e-09 | 55 | 0.20 | 0.00 | 0.80 |
-| Hamming [15,11,3] | f=0.99 all w=exact | this-work-pZL | 2.52e-10 | 71 | 0.21 | 0.02 | 0.77 |
+| Hamming [15,11,3] | f=0.9 idle w=exact | this-work-pZL | 6.43e-09 | 55 | 0.19 | 0.00 | 0.81 |
+| Hamming [15,11,3] | f=0.99 all w=exact | this-work-pZL | 2.51e-10 | 71 | 0.20 | 0.02 | 0.78 |
 | Hamming [15,11,3] | f=0.99 all w=1024 | this-work-pZL | 2.16e-09 | 61 | 0.17 | 0.74 | 0.09 |
-| Hamming [15,11,3] | f=0.99 all w=64 | this-work-pZL | 4.90e-10 | 69 | 0.16 | 0.39 | 0.45 |
-| Hamming [15,11,3] | f=0.99 idle w=exact | this-work-pZL | 5.44e-09 | 55 | 0.23 | 0.00 | 0.77 |
-| Hamming [15,11,3] | f=0.99 idle+gate w=exact | this-work-pZL | 2.35e-10 | 73 | 0.15 | 0.01 | 0.84 |
+| Hamming [15,11,3] | f=0.99 all w=64 | this-work-pZL | 4.88e-10 | 69 | 0.15 | 0.39 | 0.45 |
+| Hamming [15,11,3] | f=0.99 idle w=exact | this-work-pZL | 5.42e-09 | 55 | 0.23 | 0.00 | 0.77 |
+| Hamming [15,11,3] | f=0.99 idle+gate w=exact | this-work-pZL | 2.35e-10 | 73 | 0.15 | 0.01 | 0.85 |
 | Hamming [15,11,3] | f=1.0 all w=exact | this-work-pZL | 1.98e-11 | 83 | 0.24 | 0.76 | 0.00 |
 | [15,6,5] | none | paper-pZL | 5.65e-11 | 47 | 0.11 | 0.00 | 0.89 |
 | [15,6,5] | f=0.9 all w=exact | paper-pZL | 2.31e-13 | 57 | 0.18 | 0.00 | 0.82 |
@@ -90,9 +93,12 @@ At each floor: phase flips (cannot be flagged), bit flips from sets of flagged e
 | [15,6,5] 2 anc | f=0.99 idle+gate w=exact | paper-pZL | 2.09e-16 | 71 | 0.19 | 0.00 | 0.81 |
 | [15,6,5] 2 anc | f=1.0 all w=exact | paper-pZL | 8.62e-17 | 73 | 0.17 | 0.83 | 0.00 |
 | [15,9,3] | none | paper-pZL | 4.73e-09 | 37 | 0.13 | 0.00 | 0.87 |
+| [15,9,3] | f=0.9 all w=exact | paper-pZL | 3.42e-10 | 43 | 0.09 | 0.00 | 0.91 |
 | [15,9,3] | f=0.9 idle w=exact | paper-pZL | 1.82e-09 | 39 | 0.13 | 0.00 | 0.87 |
 | [15,9,3] | f=0.99 all w=exact | paper-pZL | 4.30e-11 | 47 | 0.10 | 0.01 | 0.90 |
+| [15,9,3] | f=0.99 all w=1024 | paper-pZL | 2.91e-10 | 43 | 0.11 | 0.72 | 0.17 |
 | [15,9,3] | f=0.99 all w=64 | paper-pZL | 1.06e-10 | 45 | 0.11 | 0.53 | 0.36 |
+| [15,9,3] | f=0.99 idle w=exact | paper-pZL | 1.62e-09 | 39 | 0.14 | 0.00 | 0.86 |
 | [15,9,3] | f=0.99 idle+gate w=exact | paper-pZL | 4.48e-11 | 47 | 0.09 | 0.08 | 0.82 |
 | [15,9,3] | f=1.0 all w=exact | paper-pZL | 2.25e-12 | 53 | 0.09 | 0.91 | 0.00 |
 | Hamming [15,11,3] | none | paper-pZL | 4.39e-09 | 37 | 0.12 | 0.00 | 0.88 |

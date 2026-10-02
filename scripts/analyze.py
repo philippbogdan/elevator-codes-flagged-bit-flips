@@ -593,7 +593,7 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
     return res, rows
 
 
-def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1)],
+def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1), ("xham16", 1)],
                target=1e-12, pz=1e-3, px=1e-9):
     """Minimum flag efficiency for each (code, d_Z, flag classes, window) to reach the target:
     log p_XL interpolated linearly in log(1 - f) between the bracketing simulated efficiencies (bit-flip

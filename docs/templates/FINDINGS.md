@@ -44,7 +44,11 @@ this work's own.
   {{ ohs("this-work-pZL", "idle|w0|f1.0", "main") }} with this work's but only in the central
   estimate).  The extended Hamming [16,11,4] tolerates the unflagged gate flips: with idle-only flags
   at f = 0.9 it reaches {{ ohs("this-work-pZL", "idle|w0|f0.9", "all_codes") }}
-  ({{ ohs("paper-pZL", "idle|w0|f0.9", "all_codes") }} paper pZL).  §4, §7.
+  ({{ ohs("paper-pZL", "idle|w0|f0.9", "all_codes") }} paper pZL), needing f ≥
+  {{ reqf("this-work-pZL", "xham16|a1", 15, "idle", 0).split(" ")[0] }} with exact timing and
+  {{ reqf("this-work-pZL", "xham16|a1", 15, "idle", 4096).split(" ")[0] }} with 4096-tick windows
+  (paper pZL at d_Z = 17: {{ reqf("paper-pZL", "xham16|a1", 17, "idle", 0).split(" ")[0] }} and
+  {{ reqf("paper-pZL", "xham16|a1", 17, "idle", 4096).split(" ")[0] }}).  §4, §7.
 * **Efficiency f ≈ 0.6–0.8 is enough, and timing hardly matters — if gates are flagged.**  The
   minimum efficiency for [15,9,3] at its phase-flip floor is
   {{ reqf("this-work-pZL", "15_9_3|a1", 15, "all", 0) }} with exactly timed flags and

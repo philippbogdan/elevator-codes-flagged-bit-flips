@@ -140,10 +140,15 @@
 | [15,9,3] | f=1.0 idle w=4 | 17 | 1.18e-12 [1.1e-12, 1.3e-12] | 1.14e-12 [1.1e-12, 1.3e-12] | yes | 0.97 |
 | Hamming [63,57,3] | none | 13 | 3.85e-11 [3.5e-11, 4.2e-11] | 4.01e-11 [3.6e-11, 4.4e-11] | yes | 1.04 |
 | Hamming [63,57,3] | f=0.9 all w=exact | 13 | 2.57e-12 [2.3e-12, 2.9e-12] | 2.59e-12 [2.3e-12, 2.9e-12] | yes | 1.01 |
+| Hamming [63,57,3] | f=0.99 all w=exact | 13 | 2.43e-13 [2.2e-13, 2.8e-13] | 2.44e-13 [2.2e-13, 2.8e-13] | yes | 1.00 |
+| Hamming [63,57,3] | f=0.99 all w=64 | 13 | 2.82e-13 [2.1e-13, 5.4e-13] | 3.19e-13 [2.2e-13, 6.0e-13] | yes | 1.13 |
+| Hamming [63,57,3] | f=0.995 all w=exact | 13 | 1.19e-13 [1.1e-13, 1.3e-13] | 1.20e-13 [1.1e-13, 1.3e-13] | yes | 1.01 |
+| Hamming [63,57,3] | f=1.0 all w=exact | 13 | 1.57e-16 [1.4e-16, 1.7e-16] | 1.55e-16 [1.4e-16, 1.7e-16] | yes | 0.99 |
 | ext. Hamming [16,11,4] | f=0.9 idle w=exact | 17 | 7.67e-13 [7.2e-13, 8.4e-13] | 8.04e-13 [7.5e-13, 8.9e-13] | yes | 1.05 |
 | ext. Hamming [16,11,4] | f=0.9 idle w=64 | 17 | 8.93e-13 [8.2e-13, 1.0e-12] | 8.31e-13 [7.5e-13, 9.5e-13] | yes | 0.93 |
+| ext. Hamming [16,11,4] | f=0.99 idle w=exact | 17 | 5.91e-13 [5.5e-13, 6.5e-13] | 6.17e-13 [5.7e-13, 6.9e-13] | yes | 1.04 |
 
-139 of 139 direct runs at d_Z = 17, 19 are consistent with the transfer from d_Z = 15.
+144 of 144 direct runs at d_Z = 17, 19 are consistent with the transfer from d_Z = 15.
 
 
 ## Transfer in p_X (bias sweep): direct runs vs the p_X = 1e-9 failure fractions
