@@ -82,8 +82,20 @@ def run_rep_shard(spec: dict, shots: int, seed: int) -> dict:
     return dict(shots=r["shots"], fails=r["fails"], rounds=spec["rounds"], k=1, seconds=time.time() - t0)
 
 
+def run_direct_block_shard(spec: dict, shots: int, seed: int) -> dict:
+    """Direct Monte Carlo of the block-level flagged Z memory (validation of the strata estimator)."""
+    from .flagstudy import _build
+    from .flags import direct_mc
+    t0 = time.time()
+    code, sched, bm, fm, dec, ss = _build(spec)
+    r = direct_mc(fm, dec, shots, seed)
+    return dict(shots=r["shots"], fails=r["fails"], rounds=sched.n_rounds, k=code.k, seconds=time.time() - t0)
+
+
 def run_shard(args):
     spec, shots, seed = args
+    if spec["kind"] == "direct_block":
+        return run_direct_block_shard(spec, shots, seed)
     if spec["kind"] == "phys":
         return run_phys_shard(spec, shots, seed)
     if spec["kind"] == "rep":

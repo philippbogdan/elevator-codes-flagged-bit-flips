@@ -106,6 +106,85 @@ def figures_from_fits():
     fig.tight_layout(); fig.savefig(os.path.join(OUT, "fig2_from_paper_fits.png"), dpi=130); plt.close(fig)
 
 
+# ------------------------------------------------------------------ 2. phase-flip model
+PHASE = {}
+
+
+def phase_model():
+    """Fit p_rep(d, p) (isolated repetition code) and the elevator/rep ratio c; held-out checks."""
+    from elevator.phasemodel import RepModel, fit_ratio, load_elev_x, load_rep
+    rows = load_rep(os.path.join(ROOT, "results", "phase_rep"))
+    if len(rows) < 8:
+        return None
+    byp = defaultdict(list)
+    for r in rows:
+        byp[r["p"]].append(r)
+    held, train = [], []
+    for p, rs in byp.items():
+        rs.sort(key=lambda r: r["d"])
+        if len(rs) >= 3:
+            held.append(rs[-1]); train += rs[:-1]
+        else:
+            train += rs
+    m_tr = RepModel(train)
+    lines = ["\n## Phase-flip model\n", "### Isolated repetition code (elevator inner round, PyMatching)\n",
+             "Model: log p_rep = a0 + a1 log p + h (b0 + b1 log p + b2 log^2 p), h = (d_Z + 1)/2, weighted by failures.\n",
+             "Held-out test: the lowest-rate (largest d_Z) point at each p is left out of the fit and predicted.\n",
+             "| p_Z | d_Z | measured per round [95% CI] | failures | predicted (held out) | ratio |", "|---|---|---|---|---|---|"]
+    ho = []
+    for r in sorted(held, key=lambda r: (r["p"], r["d"])):
+        mu, sd = m_tr.log_predict(r["d"], r["p"])
+        pred = float(np.exp(mu[0]))
+        inside = r["lo"] <= pred * math.exp(2 * sd[0]) and r["hi"] >= pred * math.exp(-2 * sd[0])
+        ho.append(dict(p=r["p"], d=r["d"], y=r["y"], lo=r["lo"], hi=r["hi"], pred=pred, ratio=r["y"] / pred, inside=inside))
+        lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {r['fails']} | {pred:.2e} | {r['y']/pred:.2f} |")
+    m = RepModel(rows)
+    PHASE["rep"] = m
+    NUMBERS["phase_rep_fit"] = dict(coef=list(m.coef), rms_log=m.rms, n=len(rows), heldout=ho)
+    # paper comparison for the repetition code
+    lines.append("\nAll points against the paper's repetition-code fit 0.13 (25.02 p)^(0.99 (d+1)/2):\n")
+    lines.append("| p_Z | d_Z | this work | paper fit | ratio |")
+    lines.append("|---|---|---|---|---|")
+    for r in sorted(rows, key=lambda r: (r["p"], r["d"])):
+        fit = 0.13 * (25.02 * r["p"]) ** (0.99 * (r["d"] + 1) / 2)
+        lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} | {fit:.2e} | {r['y']/fit:.2f} |")
+    # elevator / rep ratio
+    elev = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow")])
+            if r["idle"] == "edge,cnot" and not r["compress"]]
+    NBK = {(c, a): (OH.ELEVATOR_NK[c][0] + a) / OH.ELEVATOR_NK[c][1] for c in OH.ELEVATOR_NK for a in (1, 2)}
+    if len(elev) >= 4:
+        coef, cov, resid = fit_ratio(elev, m, NBK)
+        PHASE["c"] = (coef, cov)
+        lines.append("\n### Elevator X memory (noop reading, full sweep, BP+LSD) over (n_b/k) p_rep\n")
+        lines.append(f"log c = {coef[0]:.3f} + {coef[1]:.3f} log p + {coef[2]:.3f} h\n")
+        lines.append("| code | d_Z | p_Z | p_ZL measured [95% CI] | (n_b/k) p_rep | c |")
+        lines.append("|---|---|---|---|---|---|")
+        for r in sorted(elev, key=lambda r: (r["code"], r["p"], r["d"])):
+            pr = float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])]
+            lines.append(f"| {r['code']} | {r['d']} | {r['p']:.1e} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {pr:.2e} | {r['y']/pr:.2f} |")
+        NUMBERS["phase_ratio_fit"] = dict(coef=list(coef), n=len(elev))
+    open(os.path.join(OUT, "phase_model.md"), "w").write("\n".join(lines) + "\n")
+    return m
+
+
+def pzl_model(code, n_anc, d, pz, conservative=False):
+    """This work's phase-flip model: (n_b/k) c(d,p) p_rep(d,p)."""
+    m = PHASE["rep"]
+    n, k = OH.ELEVATOR_NK[code]
+    mu, sd = m.log_predict(d, pz)
+    val = float(np.exp(mu[0] + (2 * sd[0] if conservative else 0.0)))
+    if "c" in PHASE:
+        coef, cov = PHASE["c"]
+        x = np.array([1.0, math.log(pz), (d + 1) / 2])
+        lc = float(x @ coef)
+        if conservative:
+            lc += 2 * math.sqrt(max(float(x @ cov @ x), 0.0))
+        val *= math.exp(lc)
+    else:
+        val *= 2.0          # placeholder until the elevator/rep ratio is measured
+    return (n + n_anc) / k * val
+
+
 # ------------------------------------------------------------------ 3. flag study
 CODES_MAIN = [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]
 CODE_LABEL = {("15_9_3", 1): "[15,9,3]", ("15_6_5", 1): "[15,6,5]", ("15_6_5", 2): "[15,6,5] 2 anc",
@@ -195,5 +274,7 @@ if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
     flag_tables()
+    if phase_model() is not None:
+        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL")
     save_numbers()
     print("wrote", OUT)

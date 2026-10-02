@@ -111,10 +111,29 @@ def pz1e2_tasks():
     return ts
 
 
+def validation_tasks():
+    """Held-out check of the stratified estimator: direct sampling vs strata at p_X where both work."""
+    ts = []
+    seed = 400000
+    settings = [(0.0, "idle", 0), (0.9, "all", 0), (0.99, "all", 64), (0.99, "idle", 0), (1.0, "all", 1024)]
+    for code, n_anc in CODES:
+        for px in [3e-7, 1e-6]:
+            for (f, cls, w) in settings:
+                seed += 1
+                st = spec(code, n_anc, 15, px, f, cls, w, seed=seed, tag="validate", budget=40000)
+                st["kmax"] = 9 if px >= 1e-6 else 7
+                st["rel_tol"] = 0.05
+                ts.append(st)
+                dr = {k: v for k, v in st.items() if k not in ("kmax", "budget", "n1", "rel_tol")}
+                dr.update(kind="direct_block", shots=400000, max_fail=400, shard=2000, seed=seed + 50000)
+                ts.append(dr)
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
     ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
-          "pz1e2": pz1e2_tasks}[which]()
+          "pz1e2": pz1e2_tasks, "validation": validation_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
