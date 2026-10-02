@@ -301,7 +301,7 @@ this work's own.
 
 13d. **The idle-noise reading moves both error types but not the conclusion.**  Under the literal
     reading the [15,9,3] bit flips are ×{{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} higher
-    without flags (d_Z = 17), the repetition code's phase flips ×4–30 (extra idle ticks,
+    without flags (d_Z = 17), the repetition code's phase flips ×{{ "%.0f" % min(N["literal"]["ratio"].values()) }}–{{ "%.0f" % max(N["literal"]["ratio"].values()) }} (extra idle ticks,
     `literal_reading.md`) and the phase-flip floor moves to d_Z =
     {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }} ([15,9,3]) and {{ N["literal"]["floor|[15,6,5]"]["d_literal"] }}
     ([15,6,5]).  The minimum overhead is then
