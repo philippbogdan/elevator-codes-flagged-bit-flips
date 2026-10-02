@@ -349,3 +349,100 @@ class TrellisMLDecoder:
         best = int(np.argmax(probs))
         pred = np.array([(best >> j) & 1 for j in range(len(self.info_rows))], dtype=np.uint8)
         return (pred, probs) if return_probs else pred
+
+
+class ExclusiveMleDecoder:
+    """Most-likely-error decoder for the flag model with at most one event per flagged
+    window (exact up to O(E_W) corrections, E_W = event probability of a window).
+
+    Variables: x_c (unflagged flip of merged column c, prior from the no-flag posterior of
+    locations outside flagged windows) and y_{W,c} (the event behind flag W flipped column
+    c).  Costs: w_c = log((1-q_c)/q_c);  v_{W,c} = log(pi_{W,0} / pi_{W,c}) with
+    pi_{W,c} = P(the window's event flipped column c | flag) and pi_{W,0} = P(no flip | flag).
+    Constraints: H (x + sum_W y_W) = s (mod 2),  sum_c y_{W,c} <= 1."""
+
+    def __init__(self, fm: FlagModel):
+        import scipy.sparse as sp
+        self.fm = fm
+        bm = fm.bm
+        self.H = sp.csc_matrix(bm.col_D.astype(np.int64))
+        self.L = bm.col_L.astype(np.uint8)
+        self.nd, self.nc = self.H.shape
+        self.lg_col_bg = np.log1p(-2 * np.minimum(fm.col_bg, 0.5 - 1e-15))
+        self.zmax = np.asarray(self.H.sum(axis=1)).ravel() // 2 + 2
+
+    def _window_terms(self, wins):
+        """For each flagged window: (columns, pi_c) and the location ids (to remove from bg)."""
+        fm = self.fm
+        out = []
+        for w in wins:
+            k = np.searchsorted(fm.uwin, w)
+            if k >= len(fm.uwin) or fm.uwin[k] != w:
+                continue
+            ids = fm.order[fm.wstart[k]:fm.wend[k]]
+            ef = fm.e[ids] * fm.f[ids]
+            tot = ef.sum()
+            r = fm.r_win
+            denom = r + tot
+            if denom <= 0:
+                continue
+            cols = fm.bm.slot_col[np.maximum(fm.slot[ids], 0)]
+            cols = np.where(fm.slot[ids] >= 0, cols, -1)
+            ok = cols >= 0
+            # P(event at l and X) given exactly one event-or-false-flag explains the flag
+            pl = 0.5 * ef / denom
+            uc, inv = np.unique(cols[ok], return_inverse=True)
+            pc = np.bincount(inv, weights=pl[ok], minlength=len(uc))
+            p0 = 1.0 - pc.sum()
+            out.append((uc, pc, max(p0, 1e-300), ids))
+        return out
+
+    def decode(self, det, wins):
+        from scipy.optimize import milp, LinearConstraint, Bounds
+        import scipy.sparse as sp
+        if not det.any():
+            return np.zeros(self.L.shape[0], np.uint8)
+        fm = self.fm
+        terms = self._window_terms(wins) if wins else []
+        lg = self.lg_col_bg.copy()
+        # remove the flagged windows' locations from the background columns
+        for (uc, pc, p0, ids) in terms:
+            sl = fm.slot[ids]
+            okk = sl >= 0
+            if okk.any():
+                cols = fm.bm.slot_col[sl[okk]]
+                good = cols >= 0
+                np.add.at(lg, cols[good], -np.log1p(-2 * np.minimum(fm.x_bg[ids][okk][good], 0.5 - 1e-15)))
+        q = np.clip(0.5 * (1 - np.exp(lg)), 1e-300, 0.5)
+        w = np.log((1 - q) / q)
+        ycols = []
+        ycost = []
+        ywin = []
+        for wi, (uc, pc, p0, ids) in enumerate(terms):
+            for c, pcv in zip(uc, pc):
+                if pcv <= 0:
+                    continue
+                ycols.append(c)
+                ycost.append(np.log(p0 / pcv))
+                ywin.append(wi)
+        ny = len(ycols)
+        nd, nc = self.nd, self.nc
+        Hy = self.H[:, ycols] if ny else sp.csc_matrix((nd, 0))
+        A_eq = sp.hstack([self.H, Hy, -2 * sp.identity(nd, format="csc")]).tocsr()
+        cons = [LinearConstraint(A_eq, det.astype(float), det.astype(float))]
+        if ny:
+            rows = np.array(ywin)
+            A_ex = sp.csr_matrix((np.ones(ny), (rows, nc + np.arange(ny))), shape=(len(terms), nc + ny + nd))
+            cons.append(LinearConstraint(A_ex, -np.inf, 1.0))
+        c = np.concatenate([w, np.array(ycost, dtype=float), np.zeros(nd)])
+        lb = np.zeros(nc + ny + nd)
+        ub = np.concatenate([np.ones(nc + ny), self.zmax])
+        res = milp(c, constraints=cons, integrality=np.ones(nc + ny + nd), bounds=Bounds(lb, ub),
+                   options=dict(disp=False))
+        if res.x is None:
+            raise RuntimeError("MLE infeasible")
+        x = np.round(res.x[:nc]).astype(np.int64)
+        if ny:
+            y = np.round(res.x[nc:nc + ny]).astype(np.int64)
+            np.add.at(x, np.array(ycols), y)
+        return (self.L @ (x & 1).astype(np.uint8)) & 1

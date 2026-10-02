@@ -37,6 +37,8 @@ class StrataSampler:
 
     def sample(self, a: int, b: int, rng):
         fm = self.fm
+        if (a and self.U <= 0) or (b and self.S <= 0):
+            raise ValueError("stratum with zero weight")
         iu = np.searchsorted(self.cum_u, rng.random(a) * self.U, side="right") if a else np.zeros(0, int)
         isf = np.searchsorted(self.cum_s, rng.random(b) * self.S, side="right") if b else np.zeros(0, int)
         flips_u = fm.slot[iu]
@@ -83,3 +85,43 @@ def combine(U: float, S: float, Fs: dict) -> dict:
         lo += w * l
         hi += w * h
     return dict(P=est, lo=lo, hi=hi)
+
+
+def single_unflagged_exact(fm, decoder) -> tuple[float, int, int]:
+    """Exact F(1,0) (no false flags): decode every merged mechanism alone.
+    Returns (F, n_columns_failing, n_columns)."""
+    bm = fm.bm
+    L = bm.loc
+    u = fm.x * (1.0 - fm.f)
+    ok = L.slot >= 0
+    cols = bm.slot_col[L.slot[ok]]
+    good = cols >= 0
+    mass = np.bincount(cols[good], weights=u[ok][good], minlength=bm.n_col)
+    U = float(u[ok].sum())
+    fail_mass = 0.0
+    nfail = 0
+    for c in range(bm.n_col):
+        if mass[c] <= 0:
+            continue
+        det = bm.col_D[:, c].astype(np.uint8)
+        obs = bm.col_L[:, c].astype(np.uint8)
+        pred = decoder.decode(det, set()) if det.any() else np.zeros_like(obs)
+        if np.any(pred != obs):
+            fail_mass += mass[c]
+            nfail += 1
+    return (fail_mass / U if U > 0 else 0.0), nfail, int((mass > 0).sum())
+
+
+def min_logical_weight_le2(bm) -> bool:
+    """True if the merged DEM has an undetectable logical of weight <= 2."""
+    D = bm.col_D.T
+    Lm = bm.col_L.T
+    if np.any((~D.any(axis=1)) & Lm.any(axis=1)):
+        return True
+    key = {}
+    for c in range(D.shape[0]):
+        k = D[c].tobytes()
+        if k in key and not np.array_equal(Lm[key[k]], Lm[c]):
+            return True
+        key.setdefault(k, c)
+    return False
