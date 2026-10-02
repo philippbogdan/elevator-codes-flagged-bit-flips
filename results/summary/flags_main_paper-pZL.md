@@ -54,3 +54,4 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | 4096 | 0.9 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 3.33e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 4096 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 4.51e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 4096 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 3.36e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle+gate | exact | 0.5 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |

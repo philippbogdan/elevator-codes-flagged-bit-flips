@@ -81,6 +81,7 @@
 | [15,9,3] | 13 | 44.4 | all | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 15 | 51.6 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 15 | 51.6 | all | 4 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 15 | 51.6 | all | 16 | phase flips alone exceed target | phase flips alone exceed target |
@@ -89,6 +90,7 @@
 | [15,9,3] | 15 | 51.6 | all | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 15 | 51.6 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 15 | 51.6 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 15 | 51.6 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 17 | 58.7 | all | 1 | 0.002 | 0.281 |
 | [15,9,3] | 17 | 58.7 | all | 4 | 0.460 | 0.511 |
 | [15,9,3] | 17 | 58.7 | all | 16 | 0.002 | 0.281 |
@@ -97,6 +99,7 @@
 | [15,9,3] | 17 | 58.7 | all | 1024 | 0.438 | 0.499 |
 | [15,9,3] | 17 | 58.7 | all | 4096 | 0.505 | 0.578 |
 | [15,9,3] | 17 | 58.7 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle+gate | exact | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 19 | 65.8 | all | 1 | 0.003 | 0.332 |
 | [15,9,3] | 19 | 65.8 | all | 4 | 0.546 | 0.604 |
 | [15,9,3] | 19 | 65.8 | all | 16 | 0.003 | 0.332 |
@@ -105,6 +108,7 @@
 | [15,9,3] | 19 | 65.8 | all | 1024 | 0.520 | 0.590 |
 | [15,9,3] | 19 | 65.8 | all | 4096 | 0.600 | 0.683 |
 | [15,9,3] | 19 | 65.8 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle+gate | exact | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 21 | 72.9 | all | 1 | 0.003 | 0.386 |
 | [15,9,3] | 21 | 72.9 | all | 4 | 0.636 | 0.702 |
 | [15,9,3] | 21 | 72.9 | all | 16 | 0.003 | 0.386 |
@@ -113,3 +117,4 @@
 | [15,9,3] | 21 | 72.9 | all | 1024 | 0.607 | 0.686 |
 | [15,9,3] | 21 | 72.9 | all | 4096 | 0.700 | 0.794 |
 | [15,9,3] | 21 | 72.9 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle+gate | exact | not reached with f <= 1 | not reached with f <= 1 |
