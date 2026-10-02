@@ -151,11 +151,27 @@ def supp_tasks():
     return ts
 
 
+def falseflag_tasks():
+    """False flags around the operating point suggested by arXiv:2607.01375 (f ~ 0.8-0.95, flags
+    mostly false): f in {0.8, 0.9}, r per qubit per tick in 1e-9..1e-6, windows 4 and 16 ticks."""
+    ts = []
+    seed = 600000
+    for code, n_anc in CODES:
+        for d in [15, 17]:
+            for cls in ["idle", "all"]:
+                for f in [0.8, 0.9]:
+                    for w in [4, 16]:
+                        for r in [1e-9, 1e-8, 1e-7, 1e-6]:
+                            seed += 1
+                            ts.append(spec(code, n_anc, d, 1e-9, f, cls, w, r, seed=seed, tag="falseflag"))
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
     ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
           "pz1e2": pz1e2_tasks, "validation": validation_tasks,
-          "supp": supp_tasks}[which]()
+          "supp": supp_tasks, "falseflag": falseflag_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
