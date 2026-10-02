@@ -37,8 +37,9 @@ this work's own.
   of the bit flips happen inside gates and stay unflagged; [15,9,3] then saturates at
   p_XL = {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} per round (d_Z = 15, f = 1), barely
   below the target: with the paper's phase-flip fit no idle-only setting beats the flag-free 88
-  ({{ ohs("paper-pZL", "idle|w0|f1.0") }} at f = 1), with this work's it takes f ≥
-  {{ reqf("this-work-pZL", "15_9_3|a1", 15, "idle", 0, 1) }} (95 % upper bound) and fails for windows of
+  ({{ ohs("paper-pZL", "idle|w0|f1.0") }} at f = 1); with this work's it needs f ≥
+  {{ reqf("this-work-pZL", "15_9_3|a1", 15, "idle", 0) }} (central estimate; with the 95 % upper bound
+  of p_XL: {{ reqf("this-work-pZL", "15_9_3|a1", 15, "idle", 0, 1) }}) and fails for windows of
   256 ticks or more.  Flags during gates are the open experimental question that decides the gain.  §4.
 * **What remains is the phase-flip floor, which flags cannot lower.**  With flags the [15,9,3]
   memory at d_Z = 15 reaches p_L = p_ZL: its bit-flip part is gone and the overhead equals the
@@ -172,7 +173,7 @@ this work's own.
     ideal decoder for the data blocks; the paper's extrapolated fit puts it at d_Z = 17.  The
     difference is an extrapolation question below sampling reach: the paper's elevator fit decays by
     0.042 per step of d_Z at p_Z = 1e-3, while the repetition code sampled at p_Z = 1e-3 decays by
-    {{ f2(N["phase_rep_fit"]["coef"][1] and __import__ if False else 0) if False else "0.024" }} per step (and the
+    {{ f2([t["step_ratio"] for t in N["phase_rep_fit"]["table"] if t["p"] == 0.001][0]) }} per step (and the
     paper's own repetition-code fit by 0.026).  Evidence: `phase_floor.md`, `phase_model.md`.
 
 ## 4. Flagged bit flips at p_Z = 1e-3, η = 1e6
