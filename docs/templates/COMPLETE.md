@@ -23,8 +23,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   memories [15,9,3] and [15,6,5] (one and two logical ancillas; [16,3,8] and Hamming outer codes
   for the comparisons), Z-type and X-type memory, Table-I noise.  Tested: noiseless determinism,
   circuit distance = outer-code distance (Stim's undetectable-error search), and the block-level
-  reduction of the bit-flip memory equal to Stim's detector error model (`tests/test_core.py`,
-  10 tests).
+  reduction of the bit-flip memory equal to Stim's detector error model; the same for the
+  shortest-path ancilla variant (`tests/test_core.py`, run by `./reproduce.sh all`).
 * **Flags** (`elevator/flags.py`): an event at a location raises a flag with efficiency f per
   location class (idle, gate, preparation, measurement); false flags at rate r per qubit per tick;
   a flag reports its qubit and a timing window of w ticks (w = 0: the exact location, including
