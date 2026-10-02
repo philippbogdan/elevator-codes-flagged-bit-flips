@@ -785,7 +785,9 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
              "p_XL per round per logical qubit at d_Z = 15, p_X = 1e-9 (stratified estimate), and the minimum overhead "
              "at p_Z = 1e-3, eta = 1e6, 1e-12 over [15,9,3], [15,6,5] (1 and 2 ancillas).\n"]
     out = {}
-    for title, settings, kw in groups:
+    gkeys = ["classes", "window", "herald", "falseflag", "falseflag_op"]
+    for gi, (title, settings, kw) in enumerate(groups):
+        g0 = len(lines)
         lines += [f"\n### {title}\n", "| flags on | window | f | false flags | alternative | " +
                   " | ".join(CODE_LABEL[c] for c in CODES_MAIN) + " | minimum overhead |",
                   "|---|---|---|---|---|" + "---|" * len(CODES_MAIN) + "---|"]
@@ -800,8 +802,13 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
                     cs.append(f"{r['pL']:.2e} [{r['lo']:.1e}, {r['hi']:.1e}]" + (" (transferred)" if r.get("transferred") else "") if r else "-")
                 b = best(f, cls, w, rr, mode)
                 lines.append(f"| {cls} | {w or 'exact'} | {f} | {rr:g} | {mode} | " + " | ".join(cs) + f" | {b} |")
-                out[f"{title}|{cls}|w{w}|f{f}|r{rr:g}|{mode}"] = b
+                out[f"{gkeys[gi]}|{cls}|w{w}|f{f}|r{rr:g}|{mode}"] = b
+                r93 = cell(("15_9_3", 1), 15, f, cls, w, rr, mode)
+                if r93:
+                    out[f"{gkeys[gi]}|{cls}|w{w}|f{f}|r{rr:g}|{mode}|pXL_15_9_3"] = [r93["pL"], r93["lo"], r93["hi"]]
+        NUMBERS.setdefault("md", {})[f"assump_{gkeys[gi]}"] = "\n".join(lines[g0 + 1:])
     # noise reading (bit flips only; d_Z = 17 where the literal-reading runs are)
+    g0 = len(lines)
     lines += ["\n### idle-noise reading (bit flips at d_Z = 17; the literal reading also raises the phase flips, see REPORT)\n",
               "| flags on | window | f | " + " | ".join(f"{CODE_LABEL[c]} noop / literal" for c in CODES_MAIN) + " |",
               "|---|---|---|" + "---|" * len(CODES_MAIN)]
@@ -812,6 +819,11 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
             b = cell(code, 17, f, cls, w, idle="edge,cnot,op")
             cs.append((f"{a['pL']:.2e}" if a else "-") + " / " + (f"{b['pL']:.2e}" if b else "-"))
         lines.append(f"| {cls} | {w or 'exact'} | {f} | " + " | ".join(cs) + " |")
+        a = cell(("15_9_3", 1), 17, f, cls, w)
+        b = cell(("15_9_3", 1), 17, f, cls, w, idle="edge,cnot,op")
+        if a and b and a["pL"] > 0:
+            out[f"literal|{cls}|w{w}|f{f}|ratio_15_9_3"] = b["pL"] / a["pL"]
+    NUMBERS["md"]["assump_literal"] = "\n".join(lines[g0 + 1:])
     NUMBERS["assumptions"] = out
     open(os.path.join(OUT, "assumptions.md"), "w").write("\n".join(lines) + "\n")
 
