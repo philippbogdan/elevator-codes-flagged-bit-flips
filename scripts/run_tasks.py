@@ -28,6 +28,13 @@ def main():
     me = int(os.environ.get("GPURUN_TASK", "0"))
     nt = int(os.environ.get("GPURUN_NTASKS", "1"))
     specs = [json.loads(line) for line in open(a.tasks) if line.strip()]
+    # heartbeat (diagnostics for batch systems that release stdout only at the end)
+    import socket
+    import time as _t
+    hb = os.path.join(a.outdir, "_heartbeat")
+    os.makedirs(hb, exist_ok=True)
+    with open(os.path.join(hb, f"{os.environ.get('GPURUN_JOB', 'local')}_{me}.txt"), "a") as fh:
+        fh.write(f"{_t.strftime('%Y-%m-%d %H:%M:%S')} start host={socket.gethostname()} procs={a.procs} tasks={len(specs)}\n")
     for i, spec in enumerate(specs):
         if i % nt != me:
             continue
