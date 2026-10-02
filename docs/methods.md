@@ -128,7 +128,8 @@ p_X if available, else p_X = 1e-9).  Checked: p_X transfer against the held-out 
 n_b (2 d_Z - 1) / k per logical qubit, n_b counting the logical ancillas; the minimum over the
 codes and d_Z whose p_XL + p_ZL meets the target (central estimate; the conservative column uses
 the 95 % upper bound of p_XL).  Two phase-flip models are carried everywhere: the paper's fit
-('paper-pZL') and this work's model ('this-work-pZL').
+('paper-pZL') and this work's model ('this-work-pZL').  A decoder can always ignore the flags, so
+for a code without a run at some flag setting its flag-free rate is used there.
 
 ## 8. Checks of optimality
 

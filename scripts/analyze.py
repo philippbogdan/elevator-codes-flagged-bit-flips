@@ -529,6 +529,10 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
         else:
             byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows
                    if r["classes"] == cls and r["window"] == w and r["f"] == f and r["r"] == rr}
+            # a decoder may always ignore the flags: codes without a run at this setting keep their
+            # flag-free rate (marked in the per-code columns only by its value)
+            for k_, v_ in f0.items():
+                byc.setdefault(k_, v_)
         for use in ("pL", "hi"):
             b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, use, codes)
             res[(cls, w, f, rr, use)] = b
@@ -847,8 +851,13 @@ def headline():
             and r["p_x"] == 1e-9 and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
 
     def byc(cls, w, f, codes):
-        return {(r["code"], r["n_anc"], r["d"]): r for r in rows if (r["code"], r["n_anc"]) in codes and r["f"] == f
-                and (f == 0 or (r["classes"] == cls and r["window"] == w))}
+        out = {(r["code"], r["n_anc"], r["d"]): r for r in rows if (r["code"], r["n_anc"]) in codes and r["f"] == f
+               and (f == 0 or (r["classes"] == cls and r["window"] == w))}
+        if f > 0:          # flags may always be ignored: fall back to the flag-free rate
+            for r in rows:
+                if (r["code"], r["n_anc"]) in codes and r["f"] == 0:
+                    out.setdefault((r["code"], r["n_anc"], r["d"]), r)
+        return out
 
     for tag, fn in (("paper-pZL", pzl_paper), ("this-work-pZL", pzl_model)):
         h = {}
@@ -1394,6 +1403,10 @@ def plot_maps(pzl_fn, tag):
                 else:
                     byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows
                            if r["f"] == f and r["classes"] == cls and r["window"] == w}
+                    if not byc:
+                        continue
+                    for k_, v_ in f0.items():
+                        byc.setdefault(k_, v_)
                 b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, "pL", CODES_MAIN)
                 if b:
                     OHm[i, j] = b[0]

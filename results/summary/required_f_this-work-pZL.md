@@ -258,23 +258,23 @@
 | [15,9,3] | 13 | 44.4 | idle | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | idle | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
-| [15,9,3] | 15 | 51.6 | all | exact | 0.583 (between 0.5 and 0.8) | 0.608 (between 0.5 and 0.8) |
+| [15,9,3] | 15 | 51.6 | all | exact | 0.582 (between 0.5 and 0.8) | 0.607 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 1 | 0.628 (between 0 and 0.9) | 0.667 (between 0 and 0.9) |
 | [15,9,3] | 15 | 51.6 | all | 4 | 0.593 (between 0.5 and 0.8) | 0.651 (between 0.5 and 0.8) |
-| [15,9,3] | 15 | 51.6 | all | 16 | 0.643 (between 0 and 0.9) | 0.683 (between 0 and 0.9) |
+| [15,9,3] | 15 | 51.6 | all | 16 | 0.643 (between 0 and 0.9) | 0.682 (between 0 and 0.9) |
 | [15,9,3] | 15 | 51.6 | all | 64 | 0.603 (between 0.5 and 0.8) | 0.661 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 256 | 0.702 (between 0 and 0.9) | 0.743 (between 0 and 0.9) |
 | [15,9,3] | 15 | 51.6 | all | 1024 | 0.681 (between 0.5 and 0.8) | 0.753 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 4096 | 0.713 (between 0.5 and 0.8) | 0.778 (between 0.5 and 0.8) |
-| [15,9,3] | 15 | 51.6 | idle | exact | 0.963 (between 0.95 and 0.98) | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | exact | 0.962 (between 0.95 and 0.98) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 1 | 0.984 (between 0.9 and 0.99) | not reached with f <= 1 |
-| [15,9,3] | 15 | 51.6 | idle | 4 | 0.955 (between 0.95 and 0.98) | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | 4 | 0.954 (between 0.95 and 0.98) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 16 | 0.974 (between 0.9 and 0.99) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 64 | 1.000 (between 0.995 and 1) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 256 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
-| [15,9,3] | 15 | 51.6 | idle+gate | exact | 0.591 (between 0.5 and 0.8) | 0.614 (between 0.5 and 0.8) |
+| [15,9,3] | 15 | 51.6 | idle+gate | exact | 0.590 (between 0.5 and 0.8) | 0.614 (between 0.5 and 0.8) |
 | [15,9,3] | 17 | 58.7 | all | exact | 0.640 (between 0.5 and 0.8) | 0.662 (between 0.5 and 0.8) |
 | [15,9,3] | 17 | 58.7 | all | 1 | 0.678 (between 0 and 0.9) | 0.715 (between 0 and 0.9) |
 | [15,9,3] | 17 | 58.7 | all | 4 | 0.651 (between 0.5 and 0.8) | 0.706 (between 0.5 and 0.8) |
