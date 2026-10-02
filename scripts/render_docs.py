@@ -97,7 +97,7 @@ def render(text, missing):
     def sub(m):
         expr = m.group(1).strip()
         try:
-            return str(eval(expr, {"__builtins__": {}}, ENV))
+            return str(eval(expr, dict(ENV, __builtins__={})))
         except Exception as exc:  # noqa: BLE001
             missing.append(f"{expr}  ({type(exc).__name__}: {exc})")
             return f"[missing: {expr}]"

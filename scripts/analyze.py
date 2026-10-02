@@ -149,7 +149,7 @@ def phase_model():
         lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {r['fails']} | {pred:.2e} | {r['y']/pred:.2f} |")
     m = RepModel(rows)
     PHASE["rep"] = m
-    NUMBERS["phase_rep_fit"] = dict(coef=list(m.coef), rms_log=m.rms, n=len(rows), heldout=ho)
+    NUMBERS["phase_rep_fit"] = dict(coef=list(m.coef), rms_log=m.rms, n=len(rows), heldout=ho, table=m.table())
     # paper comparison for the repetition code
     lines.append("\nAll points against the paper's repetition-code fit 0.13 (25.02 p)^(0.99 (d+1)/2):\n")
     lines.append("| p_Z | d_Z | this work | paper fit | ratio |")
@@ -329,6 +329,8 @@ def transfer_pxl(row, d_target, p_x=None):
         if n == 0:
             continue
         l, h = wilson(f, n)
+        if key in row.get("hi_cap", {}):
+            h = min(h, max(row["hi_cap"][key], f / n))
         est += w * f / n; lo += w * l; hi += w * h
     tail = 1.0 - sum(pois(a, U) * pois(t - a, S) for t in range(kmax + 1) for a in range(t + 1))
     R, k = sums["rounds"], sums["k"]
@@ -400,13 +402,47 @@ def apply_perfect_exact(r):
     return r
 
 
+_FFB = {}
+
+
+def apply_false_flag_bounds(r):
+    """Rows with false flags (r > 0) of distance-3 codes: cap the upper end of the single-event strata
+    (1,0) and (0,1) by the bounds of scripts/false_flag_bounds.py (results/false_flag_bounds.json)."""
+    if r["r"] <= 0:
+        return r
+    if "t" not in _FFB:
+        fn = os.path.join(ROOT, "results", "false_flag_bounds.json")
+        _FFB["t"] = json.load(open(fn)) if os.path.exists(fn) else {}
+    b = _FFB["t"].get(os.path.relpath(r["file"], ROOT))
+    if not b:
+        return r
+    from elevator.decode import wilson
+    from elevator.strata import pois
+    r = dict(r)
+    r["hi_cap"] = {k: b[k] for k in ("1,0", "0,1", "0,2") if k in b}
+    R, k = r["rounds"], r["k"]
+    dh = 0.0
+    for key, cap in r["hi_cap"].items():
+        if key in r["exact"] or key not in r["strata"]:
+            continue
+        f, n = r["strata"][key]
+        if n == 0:
+            continue
+        a, bb = map(int, key.split(","))
+        w = pois(a, r["U"]) * pois(bb, r["S"])
+        h = wilson(f, n)[1]
+        dh += w * (h - min(h, max(cap, f / n)))
+    r["hi"] = r["hi"] - dh / (R * k)
+    return r
+
+
 def flag_rows(dirs, transfers=True):
     rows = []
     for dd in dirs:
         p = os.path.join(ROOT, "results", dd)
         if os.path.isdir(p):
             rows += load_strata(p)
-    rows = [apply_perfect_exact(r) for r in rows]
+    rows = [apply_false_flag_bounds(apply_perfect_exact(r)) for r in rows]
     for r in rows:
         r.setdefault("transferred", False)
     if transfers:
