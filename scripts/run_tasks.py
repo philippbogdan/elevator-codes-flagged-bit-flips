@@ -38,7 +38,7 @@ def main():
     for i, spec in enumerate(specs):
         if i % nt != me:
             continue
-        odir = spec.get("outdir", a.outdir)          # a task may name its own output directory
+        odir = spec.pop("outdir", a.outdir)          # a task may name its own output directory
         os.makedirs(odir, exist_ok=True)
         out = os.path.join(odir, task_id(spec) + ".json")
         if spec["kind"] == "strata":
