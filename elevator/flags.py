@@ -425,24 +425,6 @@ class ExclusiveMleDecoder:
                 ycols.append(c)
                 ycost.append(np.log(p0 / pcv))
                 ywin.append(wi)
-        ny = len(ycols)
-        nd, nc = self.nd, self.nc
-        Hy = self.H[:, ycols] if ny else sp.csc_matrix((nd, 0))
-        A_eq = sp.hstack([self.H, Hy, -2 * sp.identity(nd, format="csc")]).tocsr()
-        cons = [LinearConstraint(A_eq, det.astype(float), det.astype(float))]
-        if ny:
-            rows = np.array(ywin)
-            A_ex = sp.csr_matrix((np.ones(ny), (rows, nc + np.arange(ny))), shape=(len(terms), nc + ny + nd))
-            cons.append(LinearConstraint(A_ex, -np.inf, 1.0))
-        c = np.concatenate([w, np.array(ycost, dtype=float), np.zeros(nd)])
-        lb = np.zeros(nc + ny + nd)
-        ub = np.concatenate([np.ones(nc + ny), self.zmax])
-        res = milp(c, constraints=cons, integrality=np.ones(nc + ny + nd), bounds=Bounds(lb, ub),
-                   options=dict(disp=False))
-        if res.x is None:
-            raise RuntimeError("MLE infeasible")
-        x = np.round(res.x[:nc]).astype(np.int64)
-        if ny:
-            y = np.round(res.x[nc:nc + ny]).astype(np.int64)
-            np.add.at(x, np.array(ycols), y)
-        return (self.L @ (x & 1).astype(np.uint8)) & 1
+        from .mle import mle_solve
+        x = mle_solve(self.H, w, det, ycols, ycost, ywin)
+        return (self.L @ x) & 1
