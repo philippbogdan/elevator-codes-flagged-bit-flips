@@ -255,7 +255,12 @@ this work's own.
     (overhead 51.6 for [15,9,3],
     77.3 for [15,6,5],
     82.2 with two ancillas), the same with an
-    ideal decoder for the data blocks; the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
+    ideal decoder for the data blocks — one that suffers only what no decoder can remove: each data
+    block then fails at least like an isolated repetition code with the gate noise of the logical
+    operations it takes part in, 1.00× the plain repetition code
+    (1.00–1.00× over 0 sampled points, of this work's
+    data-block factor 1.52; the bound uses 1.00, the lower 95 % end,
+    `op_noise_penalty.json`); the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
     fit gives 1.2e-12 for [15,9,3] and this
     work's model 1.1e-13.  Part of the
     gap is the counting convention (item 4: the paper's X fit counts per logical qubit; in this work's
@@ -415,8 +420,8 @@ this work's own.
 | f=0.99 all w=16 | 5.0e-11 (165) [1.1e-10] | 1.7e-13 (312) [2.0e-11] | 5.6e-15 (366) [1.2e-11] | 269 ([15,6,5]) / no |
 | f=0.99 all w=64 | 1.1e-10 (158) [2.0e-10] | 1.6e-13 (312) [2.0e-11] | 1.0e-14 (354) [1.2e-11] | 269 ([15,6,5]) / no |
 | f=0.99 all w=256 | 2.2e-10 (151) [3.2e-10] | 5.8e-13 (291) [2.0e-11] | 8.3e-13 (309) [1.2e-11] | 280 ([15,6,5]) / no |
-| f=0.99 all w=1024 | 2.9e-10 (151) [4.3e-10] | 4.6e-13 (291) [2.2e-11] | 9.1e-13 (309) [1.3e-11] | 280 ([15,6,5]) / no |
-| f=0.99 all w=4096 | 3.8e-10 (151) [5.0e-10] | 5.8e-13 (291) [6.6e-11] | 2.1e-12 (298) [1.3e-11] | 280 ([15,6,5]) / no |
+| f=0.99 all w=1024 | 2.9e-10 (151) [4.3e-10] | 4.6e-13 (291) [2.0e-11] | 9.1e-13 (309) [1.3e-11] | 280 ([15,6,5]) / no |
+| f=0.99 all w=4096 | 3.8e-10 (151) [5.0e-10] | 8.3e-13 (291) [2.0e-11] | 2.1e-12 (298) [1.3e-11] | 280 ([15,6,5]) / no |
 | f=0.9 all w=4096 | 7.6e-10 (144) [9.2e-10] | 7.6e-12 (269) [6.6e-11] | 4.6e-12 (286) [2.2e-11] | no / no |
 | f=0.99 idle+gate w=exact | 4.5e-11 (165) [6.0e-11] | 2.1e-14 (333) [6.0e-14] | 5.9e-15 (366) [1.3e-14] | 269 ([15,6,5]) / 269 ([15,6,5]) |
 | f=0.9 idle w=exact | 1.8e-09 (137) [2.0e-09] | 1.4e-11 (259) [1.6e-11] | 5.1e-12 (286) [5.9e-12] | no / no |
@@ -442,7 +447,7 @@ this work's own.
 | f=0.99 all w=64 | 3.7e-10 (236) [7.4e-10] | 1.5e-12 (504) [9.5e-11] | 2.4e-13 (592) [6.4e-11] | 524 ([15,6,5] 2 anc) / no |
 | f=0.99 all w=256 | 7.9e-10 (222) [1.2e-09] | 6.8e-12 (451) [9.5e-11] | 8.5e-12 (502) [6.4e-11] | no / no |
 | f=0.99 all w=1024 | 9.2e-10 (222) [1.4e-09] | 7.4e-12 (451) [1.0e-10] | 9.3e-12 (502) [7.0e-11] | no / no |
-| f=0.99 all w=4096 | 1.3e-09 (215) [1.6e-09] | 1.5e-11 (429) [4.3e-10] | 2.3e-11 (468) [7.8e-11] | no / no |
+| f=0.99 all w=4096 | 1.3e-09 (215) [1.6e-09] | 1.3e-11 (440) [1.0e-10] | 2.3e-11 (468) [7.8e-11] | no / no |
 | f=0.9 all w=4096 | 2.4e-09 (201) [2.8e-09] | 6.8e-11 (397) [4.3e-10] | 4.6e-11 (456) [1.9e-10] | no / no |
 | f=0.99 idle+gate w=exact | 1.8e-10 (251) [3.2e-10] | 3.1e-13 (536) [3.9e-12] | 1.1e-13 (615) [8.0e-13] | 472 ([15,6,5]) / 536 ([15,6,5] 2 anc) |
 | f=0.9 idle w=exact | 5.2e-09 (194) [5.6e-09] | 1.1e-10 (387) [1.3e-10] | 4.9e-11 (456) [5.5e-11] | no / no |

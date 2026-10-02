@@ -73,6 +73,7 @@ if [ "$MODE" = "all" ]; then
   "$PY" scripts/perfect_flags_exact.py 4000000
   "$PY" scripts/class_sums.py
   "$PY" scripts/counting_convention.py
+  "$PY" scripts/op_noise_penalty.py                          # logical-operation noise on a data block (~10 min)
   "$PY" scripts/decoder_check_16_3_8.py 20000
   "$PY" scripts/false_flag_bounds.py
 fi

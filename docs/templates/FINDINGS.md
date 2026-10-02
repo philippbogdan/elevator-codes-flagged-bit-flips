@@ -255,7 +255,12 @@ this work's own.
     (overhead {{ f1(pfloor("15_9_3|a1", 1e-3, 1e-12, "oh_model")) }} for [15,9,3],
     {{ f1(pfloor("15_6_5|a1", 1e-3, 1e-12, "oh_model")) }} for [15,6,5],
     {{ f1(pfloor("15_6_5|a2", 1e-3, 1e-12, "oh_model")) }} with two ancillas), the same with an
-    ideal decoder for the data blocks; the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
+    ideal decoder for the data blocks — one that suffers only what no decoder can remove: each data
+    block then fails at least like an isolated repetition code with the gate noise of the logical
+    operations it takes part in, {{ f2(N.get("op_noise_penalty", {}).get("pooled", {}).get("ratio", 1.0)) }}× the plain repetition code
+    ({{ f2(N.get("op_noise_penalty", {}).get("range", [1.0, 1.0])[0]) }}–{{ f2(N.get("op_noise_penalty", {}).get("range", [1.0, 1.0])[1]) }}× over {{ N.get("op_noise_penalty", {}).get("n_points", 0) }} sampled points, of this work's
+    data-block factor {{ f2(N["phase_two_component"]["a"]) }}; the bound uses {{ f2(N.get("op_noise_penalty", {}).get("used", 1.0)) }}, the lower 95 % end,
+    `op_noise_penalty.json`); the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
     fit gives {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["paper"]) }} for [15,9,3] and this
     work's model {{ e1(N["convention"]["phase_compare"]["[15,9,3]|d15"]["this_work"]) }}.  Part of the
     gap is the counting convention (item 4: the paper's X fit counts per logical qubit; in this work's

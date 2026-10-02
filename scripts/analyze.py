@@ -225,16 +225,28 @@ def phase_model():
     return m
 
 
+def ideal_penalty():
+    """Decoder-independent factor on the data blocks' phase flips: an isolated repetition code with the
+    gate noise of the logical operations the block takes part in (scripts/op_noise_penalty.py), at the
+    lower end of its 95 % interval; 1 if not measured."""
+    fn = os.path.join(ROOT, "results", "op_noise_penalty.json")
+    if not os.path.exists(fn):
+        return 1.0
+    j = json.load(open(fn))
+    return max(1.0, min(j["pooled"]["lo"], j["pooled_p1e3"]["lo"]))
+
+
 def pzl_ideal(code, n_anc, d, pz):
-    """Lower bound for the phase flips: data blocks exactly like isolated repetition codes decoded
-    at the ML level (a = 1; matching = ML within statistics for the repetition code), the moving
-    ancilla's term kept (it is the noise of the scheme's own logical operations)."""
+    """Lower bound for the phase flips: data blocks decoded at the ML level, each failing at least like an
+    isolated repetition code with the gate noise of the logical operations it takes part in (factor
+    ideal_penalty(); matching = ML within statistics for the repetition code), the moving ancilla's
+    term kept (it is the noise of the scheme's own logical operations)."""
     m = PHASE["rep"]
     n, k = OH.ELEVATOR_NK[code]
     from elevator.phasemodel import sweep_fraction
     th, thcov, tmodel = PHASE["two"]
     a, g, kap = np.exp(th)
-    return float(n * 1.0 * m.predict(d, pz) + n_anc * g * sweep_fraction(n, d) * m.predict(d, kap * pz)) / k
+    return float(n * ideal_penalty() * m.predict(d, pz) + n_anc * g * sweep_fraction(n, d) * m.predict(d, kap * pz)) / k
 
 
 def phase_floor_table():
@@ -2058,5 +2070,11 @@ if __name__ == "__main__":
         limits_table()
     strata_caps_summary()
     frontier_floor_check()
+    fn_op = os.path.join(ROOT, "results", "op_noise_penalty.json")
+    if os.path.exists(fn_op):
+        j = json.load(open(fn_op))
+        NUMBERS["op_noise_penalty"] = dict(pooled=j["pooled"], pooled_p1e3=j["pooled_p1e3"], used=ideal_penalty(),
+                                           n_points=len(j["points"]),
+                                           range=[min(x["ratio"] for x in j["points"]), max(x["ratio"] for x in j["points"])])
     save_numbers()
     print("wrote", OUT)
