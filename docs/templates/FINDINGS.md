@@ -206,8 +206,10 @@ this work's own.
 8. **The elevator's phase flips are those of its data blocks — isolated repetition codes — plus its
    moving logical ancilla, which behaves like a repetition code at ≈ {{ f1(N["phase_two_component"]["kappa"]) }}×
    the noise.**  Switching off the noise of the logical ancilla and of the logical-operation CNOTs
-   brings the elevator to {{ f1(N["ancilla_diag"]["c_min"]) }}–{{ f1(N["ancilla_diag"]["c_max"]) }}× (n_b/k) × the isolated repetition code; with it on the ratio grows
-   with d_Z (to ~10 at d_Z = 21, p_Z = 1e-2).  Model: p_ZL k = n a p_rep(d, p) + n_anc g s(d)
+   brings the elevator to 1.0–2.6× (n_b/k) × the isolated repetition code for d_Z ≤ 17 (up to
+   {{ f1(N["ancilla_diag"]["c_max"]) }}× at d_Z = 25, p_Z = 1e-2); with it on, the ratio grows with d_Z
+   much faster (×13 at d_Z = 21, ×37 at 25, p_Z = 1e-2).  The two-component model below fits every
+   sampled elevator point (d_Z ≤ 25) within a factor 2 (`phase_model.md`).  Model: p_ZL k = n a p_rep(d, p) + n_anc g s(d)
    p_rep(d, κp), a = {{ f2(N["phase_two_component"]["a"]) }}, g = {{ f2(N["phase_two_component"]["g"]) }},
    κ = {{ f2(N["phase_two_component"]["kappa"]) }}.  This is the paper's lower elevator threshold
    (1/34.4 versus 1/25) made explicit.  Evidence: `phase_model.md`.
@@ -354,7 +356,8 @@ this work's own.
     {{ e1(N["limits"]["p1e-2|[15,9,3]|none|this-work-pZL"]["pL"]) }}.
 
 16. **Flags push the memory past the bit-flip wall.**  Lowest p_L per flag setting (phase flips
-    beyond d_Z ≈ 70 are extrapolations of the phase-flip model, marked), the overhead at which 1e-12
+    beyond d_Z = 25, the largest elevator X memory sampled at p_Z = 1e-2, are extrapolations of the
+    phase-flip model, marked), the overhead at which 1e-12
     is reached, and what the floor is made of (`pz1e2_*.md`, `limits.md`, `fig2_this_work_*.md`):
 
 {{ N["md"]["pz1e2_table"] }}

@@ -117,7 +117,7 @@ than the memory), then the flag efficiency.
 * The phase-flip floor at p_Z = 1e-3 rests on an extrapolation below sampling reach (model checked
   on held-out points); the paper's own extrapolation gives d_Z = 17 instead of 15.  Both are
   carried; every conclusion above holds under either.
-* At p_Z = 1e-2 the floors with flags lie at d_Z = {{ min(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}–{{ max(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}, partly beyond the sampled phase-flip range
-  (d_Z ≤ 69); they are marked as extrapolations.
+* At p_Z = 1e-2 the floors with flags lie at d_Z = {{ min(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}–{{ max(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}, beyond the largest elevator X memory sampled
+  there (d_Z = 25, fitted within a factor 2); they are model extrapolations, marked as such.
 * False flags with coarse windows: the upper bounds are limited by sampling, not by a property of
   the problem; the central estimates show no effect up to 1e-6 per qubit per tick.

@@ -262,7 +262,7 @@
 | [15,9,3] | 15 | 51.6 | all | 1 | 0.627 (between 0 and 0.9) | 0.666 (between 0 and 0.9) |
 | [15,9,3] | 15 | 51.6 | all | 4 | 0.593 (between 0.5 and 0.8) | 0.650 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 16 | 0.642 (between 0 and 0.9) | 0.682 (between 0 and 0.9) |
-| [15,9,3] | 15 | 51.6 | all | 64 | 0.602 (between 0.5 and 0.8) | 0.660 (between 0.5 and 0.8) |
+| [15,9,3] | 15 | 51.6 | all | 64 | 0.603 (between 0.5 and 0.8) | 0.660 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 256 | 0.701 (between 0 and 0.9) | 0.743 (between 0 and 0.9) |
 | [15,9,3] | 15 | 51.6 | all | 1024 | 0.680 (between 0.5 and 0.8) | 0.753 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 4096 | 0.712 (between 0.5 and 0.8) | 0.777 (between 0.5 and 0.8) |
