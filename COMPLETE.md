@@ -158,16 +158,17 @@ without one).
   (paper pZL) / 51.6 (this-work pZL) with flags on all
   locations; idle-only flags: 88.0 /
   51.6 at f = 1; with higher-rate outer codes the lowest
-  overhead reached is 32.6 (paper pZL) /
-  32.6 (this-work pZL).  p_Z = 1e-2 against
+  overhead reached is 30.9 (paper pZL) /
+  30.9 (this-work pZL).  p_Z = 1e-2 against
   the published floors 2e-9 / 2e-11: §3.
 * **The frontier** — `frontier_*.md` (FINDINGS §7): non-dominated in overhead, p_L, flag efficiency,
   flag classes, timing window and false-flag rate over every code (the paper's plus Hamming
-  [15,11,3], [31,26,3], [63,57,3], extended Hamming [16,11,4]), decoder (exact MLE = ML; BP+OSD
+  [15,11,3], [31,26,3], [63,57,3], [127,120,3], extended Hamming [16,11,4]), decoder (exact MLE = ML; BP+OSD
   dominated) and flag setting; this-work pZL, p_L ≤ 1e-12 with the 95 % upper bound:
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
+| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 1.0 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.6e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.0e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |
@@ -195,7 +196,7 @@ without one).
     reveal, the floor is the same for an ideal decoder of the data blocks, and no Elevator-type memory
     can go below 25 qubits per logical qubit here
     (29 n_b/k with the elevator's own phase flips, in either phase-flip model: the
-    frontier's 32.6 is within 12 % of it, the rest being the outer code's rate);
+    frontier's 30.9 is within 7 % of it, the rest being the outer code's rate);
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
     0.76

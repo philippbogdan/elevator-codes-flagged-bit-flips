@@ -9,6 +9,7 @@ Non-dominated in overhead, flag efficiency f, flag classes needed, timing window
 
 | overhead | code | d_Z | p_L | p_XL 95% upper | f | flags on | window (ticks) | false flags tolerated |
 |---|---|---|---|---|---|---|---|---|
+| 30.9 | Hamming [127,120,3] | 15 | 7.12e-13 | 2.4e-14 | 1.0 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 9.09e-13 | 1.7e-13 | 0.995 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 9.04e-13 | 9.1e-14 | 0.99 | all | exact | 0 |
 | 40.6 | Hamming [31,26,3] | 17 (transferred) | 6.10e-13 | 6.3e-13 | 0.95 | all | exact | 0 |
@@ -30,6 +31,7 @@ For every simulated (or transferred) code and d_Z: the lowest p_L of any flag se
 |---|---|---|---|---|---|---|---|---|
 | 28.1 | Hamming [63,57,3] | 13 | 1.78e-11 | 1.78e-11 | 5.63e-11 | 0.9 | all | exact |
 | 30.8 | Hamming [31,26,3] | 13 | 1.95e-11 | 1.95e-11 | 2.91e-11 | 0.0 | none | any (no flags) |
+| 30.9 | Hamming [127,120,3] | 15 | 7.12e-13 | 7.12e-13 | - | 1.0 | all | exact |
 | 32.6 | Hamming [63,57,3] | 15 | 7.49e-13 | 7.49e-13 | 5.40e-11 | 0.99 | all | exact |
 | 35.7 | Hamming [31,26,3] | 15 | 8.21e-13 | 8.21e-13 | 1.35e-11 | 0.98 | all | exact |
 | 36.4 | Hamming [15,11,3] | 13 | 2.30e-11 | 2.30e-11 | 2.53e-11 | 0.0 | none | any (no flags) |

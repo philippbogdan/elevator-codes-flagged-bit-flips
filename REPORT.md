@@ -75,7 +75,7 @@ difference is the phase-flip extrapolation alone, §3 of FINDINGS):
 | idle-only flags, f = 0.99, 4096-tick windows | 88.0 ([15,6,5], d_Z = 17) | 0 % | 77.3 ([15,6,5], d_Z = 15) | 0 % |
 | flags on all locations, f = 0.8, exact | 58.7 ([15,9,3], d_Z = 17) | 33 % | 51.6 ([15,9,3], d_Z = 15) | 33 % |
 | flags on all locations, f = 0.9, 4096-tick windows | 58.7 ([15,9,3], d_Z = 17) | 33 % | 51.6 ([15,9,3], d_Z = 15) | 33 % |
-| any flags, Hamming outer codes included | 32.6 | 63 % | 32.6 | 58 % |
+| any flags, Hamming outer codes included | 30.9 | 65 % | 30.9 | 60 % |
 
 p_Z = 1e-2, η = 1e6 (published: the fits bottom out near 2e-9 for [15,9,3] and 2e-11 for [15,6,5]
 with two ancillas, neither reaches 1e-12).  Without flags this work finds
@@ -99,6 +99,7 @@ the paper-pZL version is in FINDINGS §7):
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
+| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 1.0 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.6e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.0e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |

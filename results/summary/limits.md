@@ -31,6 +31,8 @@ d_floor: smallest d_Z whose phase flips alone meet the target (flags cannot lowe
 | ext. Hamming [16,11,4] | paper-pZL | 17 | 51.0 | 1.03e-12 | 4.34e-14 | 2.04e-22 [2.52e-22] | f=1.0 all w=exact (transferred) |
 | Hamming [63,57,3] | this-work-pZL | 15 | 32.6 | 1.48e-12 | 4.06e-14 | 2.38e-16 [2.59e-16] | f=1.0 all w=exact |
 | Hamming [63,57,3] | paper-pZL | 15 | 32.6 | 1.78e-11 | 7.49e-13 | 2.38e-16 [2.59e-16] | f=1.0 all w=exact |
+| Hamming [127,120,3] | this-work-pZL | 15 | 30.9 | 1.32e-12 | 3.40e-14 | 0.00e+00 [2.39e-14] | f=1.0 all w=exact |
+| Hamming [127,120,3] | paper-pZL | 15 | 30.9 | 1.69e-11 | 7.12e-13 | 0.00e+00 [2.39e-14] | f=1.0 all w=exact |
 
 ### p_Z = 1e-2, eta = 1e6: composition of the lowest reachable p_L
 

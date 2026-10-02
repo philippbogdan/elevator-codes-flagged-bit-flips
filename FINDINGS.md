@@ -30,7 +30,7 @@ this work's own.
   33 % fewer qubits):
   the higher-rate [15,9,3] becomes usable at η = 1e6.  §4.
 * **With flags, higher-rate outer codes take over.**  Over the codes tried (Hamming [15,11,3],
-  [31,26,3], [63,57,3], extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
+  [31,26,3], [63,57,3], [127,120,3], extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
   35.7 (Hamming [31,26,3], d_Z = 15) (paper pZL) and
   32.6 (Hamming [63,57,3], d_Z = 15) (this-work pZL) —
   59 % fewer qubits than the published 88.  §7.
@@ -257,9 +257,9 @@ this work's own.
     82.2 with two ancillas), the same with an
     ideal decoder for the data blocks — one that suffers only what no decoder can remove: each data
     block then fails at least like an isolated repetition code with the gate noise of the logical
-    operations it takes part in, 1.00× the plain repetition code
-    (1.00–1.00× over 0 sampled points, of this work's
-    data-block factor 1.52; the bound uses 1.00, the lower 95 % end,
+    operations it takes part in, 1.25× the plain repetition code
+    (1.11–1.46× over 11 sampled points, of this work's
+    data-block factor 1.52; the bound uses 1.24, the lower 95 % end,
     `op_noise_penalty.json`); the paper's fit puts it at d_Z = 17.  At d_Z = 15 the paper's
     fit gives 1.2e-12 for [15,9,3] and this
     work's model 1.1e-13.  Part of the
@@ -474,12 +474,13 @@ this work's own.
 
 17. **Higher-rate outer codes become usable with flags, and push the overhead towards the bare
     repetition-code floor.**  The frontier at p_Z = 1e-3, η = 1e6 over every code, decoder and flag
-    setting simulated — Hamming [15,11,3], [31,26,3], [63,57,3] and extended Hamming [16,11,4]
+    setting simulated — Hamming [15,11,3], [31,26,3], [63,57,3], [127,120,3] and extended Hamming [16,11,4]
     besides the paper's codes — requiring p_L ≤ 1e-12 with the 95 % upper bound of p_XL
     (`frontier_*.md`; this-work pZL):
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
+| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 1.0 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.6e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.0e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |
@@ -500,6 +501,7 @@ this work's own.
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
+| 30.9 | Hamming [127,120,3] | 15 | 7.1e-13 | 1.0 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 9.1e-13 | 0.995 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 9.0e-13 | 0.99 | all | exact | 0 |
 | 40.6 | Hamming [31,26,3] | 17 (transferred) | 6.1e-13 | 0.95 | all | exact | 0 |
@@ -522,6 +524,7 @@ this work's own.
 |---|---|---|---|---|---|---|---|---|
 | 28.1 | Hamming [63,57,3] | 13 | 1.5e-12 | 1.5e-12 | 4.0e-11 | 0.99 | all | 64 |
 | 30.8 | Hamming [31,26,3] | 13 | 1.8e-12 | 1.8e-12 | 1.1e-11 | 0.9 | all | exact |
+| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 3.4e-14 | - | 1.0 | all | exact |
 | 32.6 | Hamming [63,57,3] | 15 | 4.1e-14 | 4.1e-14 | 5.3e-11 | 1.0 | all | exact |
 | 35.7 | Hamming [31,26,3] | 15 | 5.5e-14 | 5.5e-14 | 1.3e-11 | 0.999 | all | exact |
 | 36.4 | Hamming [15,11,3] | 13 | 2.6e-12 | 2.6e-12 | 4.9e-12 | 0.5 | all | exact |
@@ -566,8 +569,8 @@ this work's own.
       (at d_Z = 13: 1.2e-12 and
       1.6e-11 per logical qubit), i.e. at least
       29 n_b/k qubits: the frontier's
-      32.6 is within
-      12 % of that, the rest being its
+      30.9 is within
+      7 % of that, the rest being its
       outer code's rate, which higher-rate codes buy only with better flags (§7).
     * *The code distance.*  With perfect, exactly timed flags failures need ≥ d flagged events that
       contain an undetectable logical (computed without a decoder, item 7); at p_Z = 1e-2 this
