@@ -1,0 +1,159 @@
+{
+ "KA1_code_capacity_rep3": {
+  "0": {
+   "patterns": 1,
+   "failures": 0,
+   "sets": 1,
+   "sets_with_failure": 0
+  },
+  "1": {
+   "patterns": 6,
+   "failures": 0,
+   "sets": 3,
+   "sets_with_failure": 0
+  },
+  "2": {
+   "patterns": 12,
+   "failures": 0,
+   "sets": 3,
+   "sets_with_failure": 0
+  },
+  "3": {
+   "patterns": 8,
+   "failures": 4,
+   "sets": 1,
+   "sets_with_failure": 1
+  }
+ },
+ "KA1_code_capacity_rep5": {
+  "0": {
+   "patterns": 1,
+   "failures": 0,
+   "sets": 1,
+   "sets_with_failure": 0
+  },
+  "1": {
+   "patterns": 10,
+   "failures": 0,
+   "sets": 5,
+   "sets_with_failure": 0
+  },
+  "2": {
+   "patterns": 40,
+   "failures": 0,
+   "sets": 10,
+   "sets_with_failure": 0
+  },
+  "3": {
+   "patterns": 80,
+   "failures": 0,
+   "sets": 10,
+   "sets_with_failure": 0
+  },
+  "4": {
+   "patterns": 80,
+   "failures": 0,
+   "sets": 5,
+   "sets_with_failure": 0
+  },
+  "5": {
+   "patterns": 32,
+   "failures": 16,
+   "sets": 1,
+   "sets_with_failure": 1
+  }
+ },
+ "KA1_circuit_rep3": {
+  "1": {
+   "k": 1,
+   "samples": 300,
+   "failures": 0
+  },
+  "2": {
+   "k": 2,
+   "samples": 300,
+   "failures": 0
+  },
+  "3": {
+   "k": 3,
+   "samples": 300,
+   "failures": 1
+  }
+ },
+ "KA2_code_capacity_15_9_3": {
+  "0": {
+   "patterns": 1,
+   "failures": 0,
+   "sets": 1,
+   "sets_with_failure": 0
+  },
+  "1": {
+   "patterns": 30,
+   "failures": 0,
+   "sets": 15,
+   "sets_with_failure": 0
+  },
+  "2": {
+   "patterns": 420,
+   "failures": 0,
+   "sets": 105,
+   "sets_with_failure": 0
+  },
+  "3": {
+   "patterns": 3640,
+   "failures": 36,
+   "sets": 455,
+   "sets_with_failure": 9
+  }
+ },
+ "KA2_code_capacity_15_6_5": {
+  "0": {
+   "patterns": 1,
+   "failures": 0,
+   "sets": 1,
+   "sets_with_failure": 0
+  },
+  "1": {
+   "patterns": 30,
+   "failures": 0,
+   "sets": 15,
+   "sets_with_failure": 0
+  },
+  "2": {
+   "patterns": 420,
+   "failures": 0,
+   "sets": 105,
+   "sets_with_failure": 0
+  },
+  "3": {
+   "patterns": 3640,
+   "failures": 0,
+   "sets": 455,
+   "sets_with_failure": 0
+  },
+  "4": {
+   "patterns": 21840,
+   "failures": 0,
+   "sets": 1365,
+   "sets_with_failure": 0
+  }
+ },
+ "KA2_circuit_15_9_3": {
+  "0": {
+   "sets": 1,
+   "failures": 0,
+   "patterns": 1
+  },
+  "1": {
+   "sets": 15,
+   "failures": 0,
+   "patterns": 30
+  },
+  "2": {
+   "sets": 105,
+   "failures": 0,
+   "patterns": 420
+  }
+ },
+ "seconds": 108.46202492713928
+}
