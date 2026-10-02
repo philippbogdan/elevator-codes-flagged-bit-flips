@@ -32,6 +32,7 @@ def repro_tables():
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
     from summarize_repro import load
     out = []
+    lit = []
     for mem, dds in [("Z", ["repro_z", "repro_16_3_8"]), ("X", ["repro_x", "phase_xlow", "phase_ancdiag"])]:
         rows = []
         for dd in dds:
@@ -56,6 +57,8 @@ def repro_tables():
             out.append(f"| {key[0]} | {key[1]} | {key[2]} | {ok}/{len(rs)} | {min(rat):.2f} - {max(rat):.2f} |")
             NUMBERS.setdefault("repro", {})[f"{mem}:{key[0]}:a{key[1]}:{key[2]}"] = dict(
                 within=ok, n=len(rs), ratio_min=min(rat), ratio_max=max(rat))
+            if key[2].startswith("full/all") and key[0] in ("15_9_3", "15_6_5"):
+                lit += rat
         out.append("")
         out.append("| code | anc | reading | d | p | fails/shots | p_L this work [95% CI] | fit | ratio |")
         out.append("|---|---|---|---|---|---|---|---|---|")
@@ -64,6 +67,8 @@ def repro_tables():
                        f"{r['fails']}/{r['shots']} | {r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | "
                        f"{r['fit']:.2e} | {r['ratio']:.2f}{'' if r['within'] else ' (outside)'} |")
     open(os.path.join(OUT, "reproduction.md"), "w").write("\n".join(out) + "\n")
+    if lit:
+        NUMBERS["repro_literal_range"] = [min(lit), max(lit)]
 
 
 def figures_from_fits():
@@ -154,9 +159,13 @@ def phase_model():
     lines.append("\nAll points against the paper's repetition-code fit 0.13 (25.02 p)^(0.99 (d+1)/2):\n")
     lines.append("| p_Z | d_Z | this work | paper fit | ratio |")
     lines.append("|---|---|---|---|---|")
+    vs = []
     for r in sorted(rows, key=lambda r: (r["p"], r["d"])):
         fit = 0.13 * (25.02 * r["p"]) ** (0.99 * (r["d"] + 1) / 2)
         lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} | {fit:.2e} | {r['y']/fit:.2f} |")
+        if r["d"] <= 13 and r["p"] <= 1.3e-2:
+            vs.append(r["y"] / fit)
+    NUMBERS["phase_rep_vs_paper"] = dict(min=min(vs), max=max(vs)) if vs else None
     # elevator / rep ratio
     allx = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow", "phase_ancdiag", "phase_xlarge")])
             if r["idle"] == "edge,cnot" and not r["compress"]]
@@ -175,6 +184,8 @@ def phase_model():
             lines.append(f"| {r['code']} | {r['d']} | {r['p']:.1e} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {pr:.2e} | {r['y']/pr:.2f} |")
         NUMBERS["phase_ratio_fit"] = dict(coef=list(coef), n=len(elev))
         if data_only:
+            cs_ = [r["y"] / (float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])]) for r in data_only]
+            NUMBERS["ancilla_diag"] = dict(c_min=min(cs_), c_max=max(cs_))
             lines.append("\n### Ancilla diagnostic: logical-ancilla and logical-operation noise switched off\n")
             lines.append("| d_Z | p_Z | p_ZL ancilla noise off [95% CI] | (n_b/k) p_rep | c without ancilla noise |")
             lines.append("|---|---|---|---|---|")

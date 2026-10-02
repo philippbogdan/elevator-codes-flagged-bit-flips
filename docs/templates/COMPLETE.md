@@ -61,7 +61,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   counting a failure once, {{ f2(N["convention"]["x_repro_marginal"][0]) }}–{{ f2(N["convention"]["x_repro_marginal"][1]) }}
   counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
   {{ f1(N["convention"]["mX"]["15_9_3"]) }} measured on the same shots, `counting_convention.json`);
-  the repetition code within 0.7–1.5× of the paper's repetition-code fit for d_Z ≤ 13.
+  the repetition code within {{ f1(N["phase_rep_vs_paper"]["min"]) }}–{{ f1(N["phase_rep_vs_paper"]["max"]) }}× of the paper's repetition-code fit for d_Z ≤ 13.
 * **Figures 1 and 2** from the paper's fits: identical (steps
   {{ " → ".join(f1(s["overhead"]) for s in N["fig1_elevator_steps"]) }}; p_Z = 1e-2 floors
   {{ e2(N["fig2_from_fits_floors"]["pz=0.01"]["[15,9] 15_9_3 a1"]["pl"]) }} and

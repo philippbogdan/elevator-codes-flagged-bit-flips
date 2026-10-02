@@ -98,7 +98,7 @@ this work's own.
 
 3. **The paper's circuits evidently carry no idle noise on blocks that wait during a
    logical-operation tick.**  With idle noise on every waiting block (the literal reading of Table
-   I) the simulated rates are 2–9× above the published fits for both memories (Z memory:
+   I) the simulated rates are {{ f1(N["repro_literal_range"][0]) }}–{{ f1(N["repro_literal_range"][1]) }}× above the published fits for both memories (Z memory:
    {{ int(N["repro"]["Z:15_9_3:a1:full/all"]["within"]) }}/16,
    {{ int(N["repro"]["Z:15_6_5:a1:full/all"]["within"]) }}/16 and
    {{ int(N["repro"]["Z:15_6_5:a2:full/all"]["within"]) }}/16 points within 2×; X memory
@@ -108,7 +108,7 @@ this work's own.
    and [15,6,5] with two ancillas at {{ int(N["repro"]["Z:15_6_5:a2:full/noop"]["within"]) }}/16
    ({{ f2(N["repro"]["Z:15_6_5:a2:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_6_5:a2:full/noop"]["ratio_max"]) }}).
    The same inner round makes the isolated repetition code agree with the paper's repetition-code
-   fit within 0.7–1.5× for d_Z ≤ 13 (`phase_model.md`).  Evidence: `reproduction.md`,
+   fit within {{ f1(N["phase_rep_vs_paper"]["min"]) }}–{{ f1(N["phase_rep_vs_paper"]["max"]) }}× for d_Z ≤ 13 (`phase_model.md`).  Evidence: `reproduction.md`,
    `results/variants/z_variants_v1.json`.
 
 4. **The X-memory gap is a counting convention; the [15,9,3] and [16,3,8] bit-flip excesses are
@@ -206,7 +206,7 @@ this work's own.
 8. **The elevator's phase flips are those of its data blocks — isolated repetition codes — plus its
    moving logical ancilla, which behaves like a repetition code at ≈ {{ f1(N["phase_two_component"]["kappa"]) }}×
    the noise.**  Switching off the noise of the logical ancilla and of the logical-operation CNOTs
-   brings the elevator to 1.0–1.8× (n_b/k) × the isolated repetition code; with it on the ratio grows
+   brings the elevator to {{ f1(N["ancilla_diag"]["c_min"]) }}–{{ f1(N["ancilla_diag"]["c_max"]) }}× (n_b/k) × the isolated repetition code; with it on the ratio grows
    with d_Z (to ~10 at d_Z = 21, p_Z = 1e-2).  Model: p_ZL k = n a p_rep(d, p) + n_anc g s(d)
    p_rep(d, κp), a = {{ f2(N["phase_two_component"]["a"]) }}, g = {{ f2(N["phase_two_component"]["g"]) }},
    κ = {{ f2(N["phase_two_component"]["kappa"]) }}.  This is the paper's lower elevator threshold

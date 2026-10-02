@@ -16,11 +16,11 @@ thin XZZX 145; at p_Z = 1e-2, η = 1e6 the fits bottom out near 2e-9 ([15,9,3]) 
 | Z memory [15,9,3] | full sweep: {{ int(N["repro"]["Z:15_9_3:a1:full/noop"]["within"]) }}/16 within 2× ({{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_min"]) }}–{{ f2(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×); shortest-path ancilla: {{ N["schedule_comparison"]["15_9_3|a1|local"]["within2"] }}/{{ N["schedule_comparison"]["15_9_3|a1|local"]["n"] }} ({{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["max"]) }}×) | met with the shortest-path ancilla; the main study keeps the (pessimistic) full sweep — explained below |
 | X memory [15,9,3] (d_Z = 9, 11, 13; p_Z 5e-3 … 1e-2) | {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}× counting any of the k logical qubits; {{ f2(N["convention"]["x_repro_marginal"][0]) }}–{{ f2(N["convention"]["x_repro_marginal"][1]) }}× counting each logical qubit's errors (measured multiplicity {{ f1(N["convention"]["mX"]["15_9_3"]) }}) | met in the per-qubit count, which the paper's X fit evidently uses |
 | Z memory [16,3,8] (needed only below η ≈ 7e4) | full sweep: {{ int(N["repro"]["Z:16_3_8:a1:full/noop"]["within"]) }}/{{ int(N["repro"]["Z:16_3_8:a1:full/noop"]["n"]) }} within 2× ({{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_max"]) }}×); shortest-path ancilla: {{ f2(N["schedule_comparison"]["16_3_8|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["16_3_8|a1|local"]["max"]) }}× ({{ N["schedule_comparison"]["16_3_8|a1|local"]["n"] }} points) | met with the shortest-path ancilla (`schedule_comparison.md`); the main study keeps the full sweep — explained below |
-| repetition code (paper's fit, App. B) | 0.7–1.5× for d_Z ≤ 13 over p_Z = 1e-3 … 1.3e-2 (the fit was sampled to d_Z = 11) | met |
+| repetition code (paper's fit, App. B) | {{ f1(N["phase_rep_vs_paper"]["min"]) }}–{{ f1(N["phase_rep_vs_paper"]["max"]) }}× for d_Z ≤ 13 over p_Z = 1e-3 … 1.3e-2 (the fit was sampled to d_Z = 11) | met |
 
 Disagreements explained by evidence, not tuned away (FINDINGS §1):
 * The placement of idle noise is unstated.  The literal reading (idle noise on every waiting
-  block) is 2–9× above every published fit; without idle noise on blocks waiting during
+  block) is {{ f1(N["repro_literal_range"][0]) }}–{{ f1(N["repro_literal_range"][1]) }}× above every published fit; without idle noise on blocks waiting during
   logical-operation ticks ("noop") [15,6,5] and the repetition code agree.  Every result is
   computed with the noop reading; the literal reading is kept as a sensitivity case.
 * The X memory: a counting convention.  A failure flips {{ f1(N["convention"]["mX"]["15_9_3"]) }} of the
@@ -33,7 +33,7 @@ Disagreements explained by evidence, not tuned away (FINDINGS §1):
 * [15,9,3] and [16,3,8] bit flips above their fits with the full-sweep ancilla: not the decoder
   (exact ML), not the check order or the number of outer rounds, but the unstated ancilla path —
   with the shortest path both agree within 2× at every point tested, while [15,6,5] (reproduced
-  by the full sweep) then drops to ≈ 0.4×.  No single path matches all three fits; the paper's
+  by the full sweep) then drops to {{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["max"]) }}×.  No single path matches all three fits; the paper's
   circuits are not public.  The flag study keeps the full sweep throughout: its [15,9,3] baseline
   is the pessimistic one, so flag gains measured against it are not inflated; [16,3,8] enters
   only Fig. 1 below η ≈ 7e4.
@@ -117,7 +117,7 @@ than the memory), then the flag efficiency.
 * The phase-flip floor at p_Z = 1e-3 rests on an extrapolation below sampling reach (model checked
   on held-out points); the paper's own extrapolation gives d_Z = 17 instead of 15.  Both are
   carried; every conclusion above holds under either.
-* At p_Z = 1e-2 the floors with flags lie at d_Z ≈ 50–130, beyond the sampled phase-flip range
+* At p_Z = 1e-2 the floors with flags lie at d_Z = {{ min(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}–{{ max(v["d"] for k, v in N["limits"].items() if k.startswith("p1e-2|") and "none" not in k) }}, partly beyond the sampled phase-flip range
   (d_Z ≤ 69); they are marked as extrapolations.
 * False flags with coarse windows: the upper bounds are limited by sampling, not by a property of
   the problem; the central estimates show no effect up to 1e-6 per qubit per tick.
