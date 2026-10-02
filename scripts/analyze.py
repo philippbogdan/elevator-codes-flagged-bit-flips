@@ -445,6 +445,15 @@ def flag_rows(dirs, transfers=True):
         if os.path.isdir(p):
             rows += load_strata(p)
     rows = [apply_false_flag_bounds(apply_perfect_exact(r)) for r in rows]
+    # several runs of the same setting (e.g. false-flag runs repeated with analytic caps): keep the
+    # one with the tightest upper bound
+    best = {}
+    for r in rows:
+        key = (r["code"], r["n_anc"], r["d"], r["p_x"], r["f"], r["classes"], r["window"], r["r"],
+               r.get("mode", "erasure"), r["idle"], r.get("n_outer", 5))
+        if key not in best or r["hi"] < best[key]["hi"]:
+            best[key] = r
+    rows = list(best.values())
     for r in rows:
         r.setdefault("transferred", False)
     if transfers:
