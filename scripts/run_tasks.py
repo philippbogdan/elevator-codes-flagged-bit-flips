@@ -19,7 +19,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("tasks")
     ap.add_argument("outdir")
-    ap.add_argument("--procs", type=int, default=os.cpu_count())
+    # default: the cores allocated by gpurun (exported as OMP_NUM_THREADS), not the machine's
+    ap.add_argument("--procs", type=int, default=int(os.environ.get("OMP_NUM_THREADS", os.cpu_count())))
     ap.add_argument("--shard", type=int, default=None)
     a = ap.parse_args()
     os.makedirs(a.outdir, exist_ok=True)
