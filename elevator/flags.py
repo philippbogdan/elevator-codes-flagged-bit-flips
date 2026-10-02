@@ -34,12 +34,14 @@ class FlagConfig:
     eff: tuple = (0.0, 0.0, 0.0, 0.0)     # idle, gate, prep, meas
     false_rate: float = 0.0               # per qubit per tick
     window: int = 0                       # ticks; 0 = exact location
+    mode: str = "erasure"                 # 'erasure': event -> X with prob 1/2 (arXiv:2607.01375)
+                                          # 'herald' : a flag certifies an X (optimistic variant)
 
     @staticmethod
-    def make(f: float, classes=("idle",), false_rate: float = 0.0, window: int = 0):
+    def make(f: float, classes=("idle",), false_rate: float = 0.0, window: int = 0, mode: str = "erasure"):
         names = ["idle", "gate", "prep", "meas"]
         eff = tuple(f if n in classes else 0.0 for n in names)
-        return FlagConfig(eff=eff, false_rate=false_rate, window=window)
+        return FlagConfig(eff=eff, false_rate=false_rate, window=window, mode=mode)
 
 
 class FlagModel:
@@ -50,7 +52,9 @@ class FlagModel:
         self.cfg = cfg
         L = bm.loc
         self.x = L.xprob                       # Pauli X probability
-        self.e = 2.0 * L.xprob                 # event probability
+        # probability that an event produces X: 1/2 for erasures, 1 for heralded Paulis
+        self.px_event = 0.5 if cfg.mode == "erasure" else 1.0
+        self.e = L.xprob / self.px_event       # event probability
         self.f = np.asarray(cfg.eff, dtype=float)[L.cls]
         self.n_qubits = bm.P * bm.W
         self.n_ticks = bm.n_ticks
@@ -97,7 +101,7 @@ class FlagModel:
         """Events at location indices idx -> (flipped slots, flagged window ids)."""
         n = len(idx)
         flagged = rng.random(n) < self.f[idx] if force_flag is None else force_flag
-        xs = rng.random(n) < 0.5 if force_x is None else force_x
+        xs = rng.random(n) < self.px_event if force_x is None else force_x
         sl = self.slot[idx]
         flips = sl[(xs) & (sl >= 0)]
         wins = set(self.win[idx[flagged]].tolist())
@@ -149,6 +153,7 @@ class FlagModel:
             others_no = tot_no - log_no                   # log P(no flag from others)
             p_others = -np.expm1(others_no)
             post_e = self.e[ids] * (self.f[ids] + (1 - self.f[ids]) * p_others) / p_flag
+            assert self.px_event == 0.5, "BP+OSD posteriors implemented for the erasure mode only"
             post_x = np.minimum(0.5 * post_e, 0.5 - 1e-12)
             sl = self.slot[ids]
             ok = sl >= 0
@@ -389,7 +394,7 @@ class ExclusiveMleDecoder:
             cols = np.where(fm.slot[ids] >= 0, cols, -1)
             ok = cols >= 0
             # P(event at l and X) given exactly one event-or-false-flag explains the flag
-            pl = 0.5 * ef / denom
+            pl = fm.px_event * ef / denom
             uc, inv = np.unique(cols[ok], return_inverse=True)
             pc = np.bincount(inv, weights=pl[ok], minlength=len(uc))
             p0 = 1.0 - pc.sum()

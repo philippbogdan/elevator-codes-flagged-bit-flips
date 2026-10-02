@@ -33,7 +33,8 @@ def _build(spec):
     bm = BlockModel(sched, spec["p_x"], idle_ctx=tuple(spec.get("idle_ctx", ("edge", "cnot", "op"))))
     fl = spec["flag"]
     cfg = FlagConfig.make(fl["f"], classes=tuple(fl.get("classes", ["idle"])),
-                          false_rate=fl.get("false_rate", 0.0), window=fl.get("window", 0))
+                          false_rate=fl.get("false_rate", 0.0), window=fl.get("window", 0),
+                          mode=fl.get("mode", "erasure"))
     fm = FlagModel(bm, cfg)
     dname = spec.get("decoder", "mle_excl")
     if dname == "mle_excl":

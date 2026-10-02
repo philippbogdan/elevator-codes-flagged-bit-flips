@@ -167,11 +167,31 @@ def falseflag_tasks():
     return ts
 
 
+def herald_tasks():
+    """Assumption check: a flag certifies an X (heralded Pauli) instead of an erasure."""
+    ts = []
+    seed = 700000
+    for code, n_anc in CODES:
+        for d in [15, 17]:
+            for cls in ["idle", "all"]:
+                for f in F_SWEEP:
+                    seed += 1
+                    t = spec(code, n_anc, d, 1e-9, f, cls, 0, seed=seed, tag="herald")
+                    t["flag"]["mode"] = "herald"
+                    ts.append(t)
+                for w in [64, 1024]:
+                    seed += 1
+                    t = spec(code, n_anc, d, 1e-9, 0.99, cls, w, seed=seed, tag="herald")
+                    t["flag"]["mode"] = "herald"
+                    ts.append(t)
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
     ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
           "pz1e2": pz1e2_tasks, "validation": validation_tasks,
-          "supp": supp_tasks, "falseflag": falseflag_tasks}[which]()
+          "supp": supp_tasks, "falseflag": falseflag_tasks, "herald": herald_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
