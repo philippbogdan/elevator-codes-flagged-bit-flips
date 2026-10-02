@@ -70,3 +70,31 @@ def test_figure1_from_fits():
     assert abs(c.overhead - 88.0) < 1e-9 and c.d == 17
     c = min_overhead(1e-12, candidates(1e-3, 2e6), "elevator")
     assert abs(c.overhead - 16 * 33 / 9) < 1e-9
+
+
+@pytest.mark.parametrize("nm,d", [("15_9_3", 3), ("15_6_5", 5), ("16_3_8", 8)])
+def test_local_path_circuits(nm, d):
+    """The shortest-path ancilla gives deterministic circuits of full circuit distance."""
+    code = load_code(nm)
+    for mem in ("X", "Z"):
+        c0, _ = build_circuit(code, 3, mem, p_x=0.0, p_z=0.0, mode="local", n_outer=2, idle_ctx=("edge", "cnot"))
+        assert not c0.compile_detector_sampler().sample(10, append_observables=True).any()
+    c, _ = build_circuit(code, 3, "Z", p_x=1e-3, mode="local", n_outer=2, idle_ctx=("edge", "cnot"))
+    errs = c.search_for_undetectable_logical_errors(
+        dont_explore_detection_event_sets_with_size_above=4, dont_explore_edges_with_degree_above=4,
+        dont_explore_edges_increasing_symptom_degree=False, canonicalize_circuit_errors=True)
+    assert len(errs) == d
+
+
+def test_perfect_flags_exact_below_distance():
+    """Exactly timed perfect flags: fewer than d flagged events never contain a logical."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+    from perfect_flags_exact import ALL, f0b
+    from elevator.flags import FlagConfig, FlagModel
+    from elevator.schedule import ElevatorSchedule
+    code = load_code("15_9_3")
+    bm = BlockModel(ElevatorSchedule(code, 5, n_anc=1, n_outer=2), 1e-9, idle_ctx=("edge", "cnot"))
+    fm = FlagModel(bm, FlagConfig.make(1.0, classes=ALL, window=0))
+    rng = np.random.default_rng(0)
+    assert f0b(fm, 2, 20000, rng)[0] == 0.0
+    assert f0b(fm, 3, 20000, rng)[0] > 0.0
