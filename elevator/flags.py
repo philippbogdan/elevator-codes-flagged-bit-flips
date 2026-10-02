@@ -75,7 +75,7 @@ class FlagModel:
         self.x_bg = self.x * (1.0 - self.f) / (1.0 - ef)
         # cumulative weights for sampling
         self.cum_e = np.cumsum(self.e)
-        self.E = float(self.cum_e[-1])
+        self.E = float(self.cum_e[-1])     # total from the cumulative sum (sampling-safe)
         self.slot = L.slot
         sp_bg = bm.slot_probs(self.x_bg)
         self.lg_slot_bg = np.log1p(-2 * np.minimum(sp_bg, 0.5 - 1e-15))
@@ -197,3 +197,155 @@ def direct_mc(fm: FlagModel, decoder, shots: int, seed: int) -> dict:
         if np.any(pred != obs):
             fails += 1
     return dict(shots=shots, fails=fails, mean_flags=nflags / shots)
+
+
+class MleFlagDecoder:
+    """Exact most-likely-error decoder (integer program, HiGHS via scipy) on the merged
+    block-level DEM with per-shot flag posteriors: min sum_j w_j x_j  s.t.  H x = s (mod 2),
+    w_j = log((1 - p_j) / p_j).  Used to check the optimality of BP+OSD."""
+
+    def __init__(self, fm: FlagModel):
+        import scipy.sparse as sp
+        self.fm = fm
+        self.H = sp.csr_matrix(fm.bm.col_D.astype(np.int64))
+        self.L = fm.bm.col_L.astype(np.uint8)
+        self.colw = np.asarray(fm.bm.col_D.sum(axis=0)).ravel()
+
+    def decode(self, det, wins):
+        from scipy.optimize import milp, LinearConstraint, Bounds
+        import scipy.sparse as sp
+        if not det.any():
+            return np.zeros(self.L.shape[0], np.uint8)
+        p = self.fm.column_probs(wins) if wins else self.fm.col_bg
+        p = np.clip(p, 1e-300, 0.5)
+        w = np.log((1 - p) / p)
+        nd, nc = self.H.shape
+        # variables: x (nc binary), z (nd integer >= 0):  H x - 2 z = det
+        A = sp.hstack([self.H, -2 * sp.identity(nd, format="csr")]).tocsr()
+        c = np.concatenate([w, np.zeros(nd)])
+        zmax = np.asarray(self.H.sum(axis=1)).ravel() // 2 + 1
+        lb = np.zeros(nc + nd)
+        ub = np.concatenate([np.ones(nc), zmax])
+        integrality = np.ones(nc + nd)
+        res = milp(c, constraints=LinearConstraint(A, det.astype(float), det.astype(float)),
+                   integrality=integrality, bounds=Bounds(lb, ub), options=dict(disp=False))
+        if res.x is None:
+            raise RuntimeError("MLE infeasible")
+        x = np.round(res.x[:nc]).astype(np.uint8)
+        return (self.L @ x) & 1
+
+
+def _slot_probs_given(fm: FlagModel, wins) -> np.ndarray:
+    """Slot flip probabilities given flagged windows (same posteriors as column_probs)."""
+    if not wins:
+        return 0.5 * (1 - np.exp(fm.lg_slot_bg))
+    lg_slot = fm.lg_slot_bg.copy()
+    r = fm.r_win
+    for w in wins:
+        k = np.searchsorted(fm.uwin, w)
+        if k >= len(fm.uwin) or fm.uwin[k] != w:
+            continue
+        ids = fm.order[fm.wstart[k]:fm.wend[k]]
+        ef = fm.e[ids] * fm.f[ids]
+        log_no = np.log1p(-ef)
+        tot_no = log_no.sum() + np.log1p(-r)
+        p_flag = -np.expm1(tot_no)
+        if p_flag <= 0:
+            continue
+        p_others = -np.expm1(tot_no - log_no)
+        post_x = np.minimum(0.5 * fm.e[ids] * (fm.f[ids] + (1 - fm.f[ids]) * p_others) / p_flag, 0.5 - 1e-12)
+        sl = fm.slot[ids]
+        ok = sl >= 0
+        old = np.log1p(-2 * np.minimum(fm.x_bg[ids][ok], 0.5 - 1e-15))
+        np.add.at(lg_slot, sl[ok], np.log1p(-2 * post_x[ok]) - old)
+    return 0.5 * (1 - np.exp(lg_slot))
+
+
+class TrellisMLDecoder:
+    """Exact maximum-likelihood (coset) decoder for the block-level Z memory: forward
+    algorithm over the 2^P error frames of the rows, with independent slot flips.
+    Exact for the flag model whenever every flagged window covers a single slot."""
+
+    def __init__(self, fm: FlagModel):
+        bm = fm.bm
+        self.fm = fm
+        self.bm = bm
+        self.P = bm.P
+        self.N = 1 << self.P
+        idx = np.arange(self.N, dtype=np.int64)
+        self.idx = idx
+        self._cx = {}
+        s = bm.s
+        code = s.code
+        # measurement ids of checks (in detector order) and final rows
+        self.check_mids = [m[0] for m in bm.meas_info if m[1] == "check"]
+        self.check_of_mid = {m[0]: m[2][0] for m in bm.meas_info if m[1] == "check"}
+        content = s.final_content
+        self.final_rows = [r for r in range(self.P) if content[r][0] == "D"]
+        row_of_block = {content[r][1]: r for r in self.final_rows}
+        self.check_rows = [[row_of_block[int(b)] for b in np.nonzero(code.H[c])[0]] for c in range(code.m)]
+        self.info_rows = [row_of_block[b] for b in code.info_set]
+        self.m = code.m
+
+    def _perm(self, c, t):
+        key = (c, t)
+        if key not in self._cx:
+            i = self.idx
+            self._cx[key] = i ^ (((i >> c) & 1) << t)
+        return self._cx[key]
+
+    def decode(self, det, wins, return_probs=False):
+        bm, P, N = self.bm, self.P, self.N
+        sp = _slot_probs_given(self.fm, wins)
+        v = np.zeros(N)
+        v[0] = 1.0
+        # raw check outcomes from detectors (cumulative per check)
+        last = {}
+        raw = {}
+        for di, mid in enumerate(self.check_mids):
+            c = self.check_of_mid[mid]
+            raw[mid] = int(det[di]) ^ last.get(c, 0)
+            last[c] = raw[mid]
+        nd_checks = len(self.check_mids)
+        for op in bm.ops:
+            kind = op[0]
+            if kind == "SLOT":
+                r, sl = op[1], op[2]
+                q = sp[sl]
+                if q > 0:
+                    v3 = v.reshape(N >> (r + 1), 2, 1 << r)
+                    a0 = v3[:, 0, :].copy()
+                    a1 = v3[:, 1, :]
+                    v3[:, 0, :] = (1 - q) * a0 + q * a1
+                    v3[:, 1, :] = (1 - q) * a1 + q * a0
+            elif kind == "CX":
+                v = v[self._perm(op[1], op[2])]
+            elif kind == "R":
+                r = op[1]
+                v3 = v.reshape(N >> (r + 1), 2, 1 << r)
+                v3[:, 0, :] += v3[:, 1, :]
+                v3[:, 1, :] = 0.0
+            elif kind == "M":
+                r, mid = op[1], op[2]
+                if mid in raw:
+                    v3 = v.reshape(N >> (r + 1), 2, 1 << r)
+                    v3[:, 1 - raw[mid], :] = 0.0
+                    s_ = v.sum()
+                    if s_ > 0:
+                        v /= s_
+        # final: parity constraints on data rows, then group by info-set bits
+        i = self.idx
+        ok = np.ones(N, bool)
+        for c in range(self.m):
+            par = np.zeros(N, dtype=np.int64)
+            for r in self.check_rows[c]:
+                par ^= (i >> r) & 1
+            want = int(det[nd_checks + c]) ^ last.get(c, 0)
+            ok &= (par == want)
+        cls = np.zeros(N, dtype=np.int64)
+        for j, r in enumerate(self.info_rows):
+            cls |= ((i >> r) & 1) << j
+        probs = np.bincount(cls[ok], weights=v[ok], minlength=1 << len(self.info_rows))
+        best = int(np.argmax(probs))
+        pred = np.array([(best >> j) & 1 for j in range(len(self.info_rows))], dtype=np.uint8)
+        return (pred, probs) if return_probs else pred
