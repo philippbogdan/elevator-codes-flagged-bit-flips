@@ -20,6 +20,10 @@ Modes for the ancilla path (the paper does not specify it):
   'span' : a check ends as soon as its last support block has been passed; the
            ancilla is reset in place and continues in the same direction,
            bouncing at the ends of the column.
+  'local': the ancilla takes, among the checks left in the current outer round, the one
+           with the shortest path from where it stands, heads for the nearer end of
+           that check's support and sweeps it; reset in place (sensitivity case: the
+           shortest path an ancilla moving by SWAPs can take).
 Each check lasts max(R_min, n_ops + 1) rounds (R_min = d_Z in the paper).
 """
 from __future__ import annotations
@@ -100,6 +104,8 @@ class ElevatorSchedule:
             resets, measures = [], []
             for a in ancs:
                 if a.needs_reset and a.queue:
+                    if self.mode == "local":
+                        self._pick_local(a, content)
                     a.current = a.queue.pop(0)
                     a.done = set()
                     a.passes = 0
@@ -126,6 +132,8 @@ class ElevatorSchedule:
                 a.needs_reset = True
                 if self.mode == "full":
                     a.direction = -a.direction
+                elif self.mode == "local":
+                    pass
                 else:
                     nxt = a.row + a.direction
                     if nxt < 0 or nxt >= P:
@@ -157,6 +165,13 @@ class ElevatorSchedule:
         for a in ancs:
             if not a.active or a.path_complete:
                 continue
+            if self.mode == "local":
+                c, _ = a.current
+                left = [r for r in range(P) if content[r][0] == "D" and content[r][1] in self.supports[c] - a.done]
+                if left and all(r < a.row for r in left):
+                    a.direction = -1
+                elif left and all(r > a.row for r in left):
+                    a.direction = +1
             nxt = a.row + a.direction
             if nxt < 0 or nxt >= P:
                 a.direction = -a.direction
@@ -185,9 +200,29 @@ class ElevatorSchedule:
                 a.path_complete = self._path_complete(a)
         return ops
 
+    def _pick_local(self, a: Ancilla, content) -> None:
+        """'local' mode: move the cheapest check of the current outer round to the front of the
+        queue (path: to the nearer end of its support rows, then across them) and aim at it."""
+        t0 = a.queue[0][1]
+        best, best_cost = 0, None
+        for i, (c, t) in enumerate(a.queue):
+            if t != t0:
+                break
+            rows = [r for r in range(self.P) if content[r][0] == "D" and content[r][1] in self.supports[c]]
+            lo, hi = min(rows), max(rows)
+            cost = min(abs(a.row - lo), abs(a.row - hi)) + (hi - lo)
+            if best_cost is None or cost < best_cost:
+                best, best_cost = i, cost
+        a.queue.insert(0, a.queue.pop(best))
+        c, _ = a.queue[0]
+        rows = [r for r in range(self.P) if content[r][0] == "D" and content[r][1] in self.supports[c]]
+        lo, hi = min(rows), max(rows)
+        a.direction = -1 if abs(a.row - hi) < abs(a.row - lo) and hi <= a.row else (+1 if lo > a.row else
+                                                                                     (-1 if hi < a.row else a.direction))
+
     def _path_complete(self, a: Ancilla) -> bool:
         c, _ = a.current
-        if self.mode == "span":
+        if self.mode in ("span", "local"):
             return self.supports[c] <= a.done
         if self.mode == "full":
             return a.passes >= self.code.n and self.supports[c] <= a.done
