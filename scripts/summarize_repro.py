@@ -3,7 +3,8 @@ import glob, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from elevator.decode import wilson
 
-FITX = {("15_9_3", 1): (37.18, 1.94, 2.33), ("15_6_5", 1): (115.14, 2.76, 3.73), ("15_6_5", 2): (88.47, 2.86, 3.89)}
+FITX = {("15_9_3", 1): (37.18, 1.94, 2.33), ("15_6_5", 1): (115.14, 2.76, 3.73), ("15_6_5", 2): (88.47, 2.86, 3.89),
+        ("16_3_8", 1): (61.99, 3.57, 5.74)}
 
 
 def fit_z(code, n_anc, d, p):
@@ -27,7 +28,11 @@ def load(dirpath):
     rows = []
     for fn in glob.glob(os.path.join(dirpath, "*.json")):
         st = json.load(open(fn))
-        sp = st["spec"]
+        sp = dict(st["spec"])
+        if sp.get("kind") == "direct_block":      # block-level sampler (equivalent to the physical circuit)
+            sp.setdefault("memory", "Z")
+            sp.setdefault("p_z", 0.0)
+            sp["variant"] = "full/noop" if sp.get("idle_ctx") == ["edge", "cnot"] else "full/all"
         R, k = st["rounds"], st["k"]
         if not st["shots"]:
             continue

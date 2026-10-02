@@ -32,8 +32,11 @@ def repro_tables():
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
     from summarize_repro import load
     out = []
-    for mem, dd in [("Z", "repro_z"), ("X", "repro_x")]:
-        rows = load(os.path.join(ROOT, "results", dd))
+    for mem, dds in [("Z", ["repro_z", "repro_16_3_8"]), ("X", ["repro_x"])]:
+        rows = []
+        for dd in dds:
+            if os.path.isdir(os.path.join(ROOT, "results", dd)):
+                rows += load(os.path.join(ROOT, "results", dd))
         rows.sort(key=lambda r: (r["code"], r["n_anc"], r["variant"], r["d"], r["p"]))
         by_var = defaultdict(list)
         for r in rows:
