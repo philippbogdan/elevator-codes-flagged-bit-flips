@@ -8,6 +8,18 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | flags on | window (ticks) | f | false flags /qubit/tick | best overhead (central) | code, d_Z | p_XL | best (conservative) | [15,9,3] | [15,6,5] | [15,6,5] 2 anc |
 |---|---|---|---|---|---|---|---|---|---|---|
 | none | exact | 0.0 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| all | exact | 0.5 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| all | exact | 0.8 | 0 | 58.7 | [15,9,3], 17 | 4.69e-13 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.9 | 0 | 58.7 | [15,9,3], 17 | 2.18e-13 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.95 | 0 | 58.7 | [15,9,3], 17 | 9.97e-14 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.98 | 0 | 58.7 | [15,9,3], 17 | 2.55e-14 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.99 | 0 | 58.7 | [15,9,3], 17 | 2.75e-14 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.99 | 1e-08 | 93.5 | [15,6,5] 2 anc, 17 | 4.15e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | exact | 0.99 | 1e-07 | 93.5 | [15,6,5] 2 anc, 17 | 2.08e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | exact | 0.99 | 1e-06 | 93.5 | [15,6,5] 2 anc, 17 | 4.15e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | exact | 0.995 | 0 | 58.7 | [15,9,3], 17 | 4.67e-15 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 0.999 | 0 | 58.7 | [15,9,3], 17 | 2.14e-15 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
+| all | exact | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 | 58.7 (d=17) | n.r. | n.r. |
 | all | 1 | 0.9 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.07e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | all | 1 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.90e-22 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | all | 1 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 | 58.7 (d=17) | n.r. | 93.5 (d=17) |
@@ -19,8 +31,11 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | all | 16 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 0.00e+00 | 58.7 | 58.7 (d=17) | n.r. | 93.5 (d=17) |
 | all | 64 | 0.9 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.08e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | all | 64 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 4.16e-20 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
-| all | 64 | 0.99 | 1e-07 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
-| all | 64 | 0.99 | 1e-06 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| all | 64 | 0.99 | 1e-10 | 93.5 | [15,6,5] 2 anc, 17 | 3.13e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | 64 | 0.99 | 1e-09 | 93.5 | [15,6,5] 2 anc, 17 | 1.05e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | 64 | 0.99 | 1e-08 | 93.5 | [15,6,5] 2 anc, 17 | 2.08e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | 64 | 0.99 | 1e-07 | 93.5 | [15,6,5] 2 anc, 17 | 1.07e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
+| all | 64 | 0.99 | 1e-06 | 93.5 | [15,6,5] 2 anc, 17 | 1.22e-20 | not reached | n.r. | n.r. | 93.5 (d=17) |
 | all | 64 | 1.0 | 0 | 58.7 | [15,9,3], 17 | 3.98e-14 | 58.7 | 58.7 (d=17) | n.r. | 93.5 (d=17) |
 | all | 256 | 0.9 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 2.05e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | all | 256 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.05e-20 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
@@ -40,16 +55,24 @@ Central estimate (conservative: bit-flip rate at its 95% upper bound) and the ch
 | idle | exact | 0.995 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | exact | 0.999 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | exact | 1.0 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| idle | 1 | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 1 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.44e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 1 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 3.24e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle | 4 | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 4 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 6.00e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 4 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 9.21e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle | 16 | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 16 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 8.40e-18 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 16 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 2.55e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle | 64 | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 64 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 1.80e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle | 64 | 0.99 | 1e-10 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| idle | 64 | 0.99 | 1e-09 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
+| idle | 64 | 0.99 | 1e-08 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 64 | 0.99 | 1e-07 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 64 | 0.99 | 1e-06 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 64 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 2.78e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
+| idle | 256 | 0.9 | 0 | not reached | - | - | not reached | n.r. | n.r. | n.r. |
 | idle | 256 | 0.99 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 2.02e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 256 | 1.0 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 4.40e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |
 | idle | 1024 | 0.9 | 0 | 93.5 | [15,6,5] 2 anc, 17 | 4.00e-17 | 93.5 | n.r. | n.r. | 93.5 (d=17) |

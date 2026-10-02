@@ -73,6 +73,7 @@
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 4096 | 0.900 | 0.900 |
+| [15,9,3] | 13 | 44.4 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 4 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 16 | phase flips alone exceed target | phase flips alone exceed target |
@@ -81,16 +82,32 @@
 | [15,9,3] | 13 | 44.4 | all | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 1 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 4 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 16 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 64 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 256 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 1024 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,9,3] | 13 | 44.4 | idle | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
-| [15,9,3] | 15 | 51.6 | all | 1 | 0.002 | 0.227 |
-| [15,9,3] | 15 | 51.6 | all | 4 | 0.370 | 0.414 |
-| [15,9,3] | 15 | 51.6 | all | 16 | 0.002 | 0.227 |
+| [15,9,3] | 15 | 51.6 | all | exact | 0.546 | 0.566 |
+| [15,9,3] | 15 | 51.6 | all | 1 | 0.002 | 0.228 |
+| [15,9,3] | 15 | 51.6 | all | 4 | 0.371 | 0.415 |
+| [15,9,3] | 15 | 51.6 | all | 16 | 0.002 | 0.228 |
 | [15,9,3] | 15 | 51.6 | all | 64 | 0.255 | 0.307 |
-| [15,9,3] | 15 | 51.6 | all | 256 | 0.325 | 0.376 |
-| [15,9,3] | 15 | 51.6 | all | 1024 | 0.352 | 0.404 |
-| [15,9,3] | 15 | 51.6 | all | 4096 | 0.406 | 0.467 |
-| [15,9,3] | 15 | 51.6 | idle | exact | 0.937 | 0.979 |
-| [15,9,3] | 15 | 51.6 | idle+gate | exact | 0.552 | 0.572 |
+| [15,9,3] | 15 | 51.6 | all | 256 | 0.326 | 0.377 |
+| [15,9,3] | 15 | 51.6 | all | 1024 | 0.353 | 0.405 |
+| [15,9,3] | 15 | 51.6 | all | 4096 | 0.407 | 0.468 |
+| [15,9,3] | 15 | 51.6 | idle | exact | 0.937 | 0.995 |
+| [15,9,3] | 15 | 51.6 | idle | 1 | 0.916 | 0.997 |
+| [15,9,3] | 15 | 51.6 | idle | 4 | 0.936 | 0.997 |
+| [15,9,3] | 15 | 51.6 | idle | 16 | 0.928 | 0.977 |
+| [15,9,3] | 15 | 51.6 | idle | 64 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | 256 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle+gate | exact | 0.553 | 0.572 |
+| [15,9,3] | 17 | 58.7 | all | exact | 0.607 | 0.628 |
 | [15,9,3] | 17 | 58.7 | all | 1 | 0.002 | 0.272 |
 | [15,9,3] | 17 | 58.7 | all | 4 | 0.445 | 0.495 |
 | [15,9,3] | 17 | 58.7 | all | 16 | 0.002 | 0.272 |
@@ -99,7 +116,15 @@
 | [15,9,3] | 17 | 58.7 | all | 1024 | 0.424 | 0.483 |
 | [15,9,3] | 17 | 58.7 | all | 4096 | 0.489 | 0.559 |
 | [15,9,3] | 17 | 58.7 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 1 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 4 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 16 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 64 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 256 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 17 | 58.7 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 17 | 58.7 | idle+gate | exact | 0.612 | 0.632 |
+| [15,9,3] | 19 | 65.8 | all | exact | 0.689 | 0.711 |
 | [15,9,3] | 19 | 65.8 | all | 1 | 0.003 | 0.332 |
 | [15,9,3] | 19 | 65.8 | all | 4 | 0.545 | 0.603 |
 | [15,9,3] | 19 | 65.8 | all | 16 | 0.003 | 0.332 |
@@ -108,7 +133,15 @@
 | [15,9,3] | 19 | 65.8 | all | 1024 | 0.520 | 0.589 |
 | [15,9,3] | 19 | 65.8 | all | 4096 | 0.599 | 0.682 |
 | [15,9,3] | 19 | 65.8 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 1 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 4 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 16 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 64 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 256 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 19 | 65.8 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 19 | 65.8 | idle+gate | exact | 0.692 | 0.713 |
+| [15,9,3] | 21 | 72.9 | all | exact | 0.764 | 0.786 |
 | [15,9,3] | 21 | 72.9 | all | 1 | 0.003 | 0.386 |
 | [15,9,3] | 21 | 72.9 | all | 4 | 0.636 | 0.702 |
 | [15,9,3] | 21 | 72.9 | all | 16 | 0.003 | 0.386 |
@@ -117,4 +150,11 @@
 | [15,9,3] | 21 | 72.9 | all | 1024 | 0.607 | 0.686 |
 | [15,9,3] | 21 | 72.9 | all | 4096 | 0.700 | 0.794 |
 | [15,9,3] | 21 | 72.9 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 1 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 4 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 16 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 64 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 256 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
+| [15,9,3] | 21 | 72.9 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 21 | 72.9 | idle+gate | exact | 0.764 | 0.786 |
