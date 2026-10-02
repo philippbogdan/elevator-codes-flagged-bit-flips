@@ -9,7 +9,7 @@ Non-dominated in overhead, flag efficiency f, flag classes needed, timing window
 
 | overhead | code | d_Z | p_L | p_XL 95% upper | f | flags on | window (ticks) | false flags tolerated |
 |---|---|---|---|---|---|---|---|---|
-| 30.9 | Hamming [127,120,3] | 15 | 3.40e-14 | 2.4e-14 | 1.0 | all | exact | 0 |
+| 30.9 | Hamming [127,120,3] | 15 | 6.86e-13 | 7.3e-13 | 0.995 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.64e-13 | 8.0e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.04e-13 | 4.9e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.13e-13 | 8.1e-13 | 0.99 | all | 256 | 0 |

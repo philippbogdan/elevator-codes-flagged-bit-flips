@@ -360,7 +360,7 @@
 | [15,9,3] | 25 | 87.1 | idle | 1024 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 25 | 87.1 | idle | 4096 | not reached with f <= 1 | not reached with f <= 1 |
 | [15,9,3] | 25 | 87.1 | idle+gate | exact | 0.859 (between 0.8 and 0.9) | 0.871 (between 0.8 and 0.9) |
-| Hamming [127,120,3] | 15 | 30.9 | all | exact | 1.000 | 1.000 |
+| Hamming [127,120,3] | 15 | 30.9 | all | exact | 0.995 (between 0.995 and 1) | 0.998 (between 0.995 and 1) |
 | Hamming [127,120,3] | 15 | 30.9 | all | 64 | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [15,11,3] | 13 | 36.4 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [15,11,3] | 13 | 36.4 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
