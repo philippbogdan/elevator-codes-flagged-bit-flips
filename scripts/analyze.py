@@ -327,14 +327,17 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
     # table: overhead vs f (exact timing)
     lines.append("### Minimum qubit overhead at p_Z = 1e-3, eta = 1e6, target 1e-12 per round per logical qubit\n")
     lines.append("Central estimate (conservative: bit-flip rate at its 95% upper bound) and the chosen code/d_Z.\n")
-    lines.append("| flags on | window (ticks) | f | false flags /qubit/tick | overhead (central) | code, d_Z | p_XL | overhead (conservative) |")
-    lines.append("|---|---|---|---|---|---|---|---|")
+    hdr_codes = " | ".join(CODE_LABEL[c] for c in codes)
+    lines.append(f"| flags on | window (ticks) | f | false flags /qubit/tick | best overhead (central) | code, d_Z | p_XL | best (conservative) | {hdr_codes} |")
+    lines.append("|---|---|---|---|---|---|---|---|" + "---|" * len(codes))
     for key in [("none", 0, 0.0, 0.0)] + settings:
         b = res[key + ("pL",)]
         bh = res[key + ("hi",)]
         cell = (f"{b[0]:.1f} | {CODE_LABEL[(b[1], b[2])]}, {b[3]} | {b[4]:.2e}" if b else "not reached | - | -")
         cellh = f"{bh[0]:.1f}" if bh else "not reached"
-        lines.append(f"| {key[0]} | {'exact' if key[1] == 0 else key[1]} | {key[2]} | {key[3]:g} | {cell} | {cellh} |")
+        pc = res[key + ("per_code",)]
+        cells = " | ".join((f"{pc[c][0]:.1f} (d={pc[c][3]})" if pc.get(c) else "n.r.") for c in codes)
+        lines.append(f"| {key[0]} | {'exact' if key[1] == 0 else key[1]} | {key[2]} | {key[3]:g} | {cell} | {cellh} | {cells} |")
     open(os.path.join(OUT, f"flags_{label}_{tag}.md"), "w").write("\n".join(lines) + "\n")
     NUMBERS.setdefault("flags", {})[f"{label}:{tag}"] = {
         f"{k[0]}|w{k[1]}|f{k[2]}|r{k[3]}|{k[4]}": (None if v is None else (v if k[4] != "per_code" else
