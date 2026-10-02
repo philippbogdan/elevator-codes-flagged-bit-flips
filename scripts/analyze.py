@@ -1295,7 +1295,8 @@ def schedule_comparison():
         lines.append(f"| {r['code']} | {r['n_anc']} | {r['d']} | {r['p']:.0e} | {r['mode']} | {r['rounds_per_outer']:.0f} | "
                      f"{r['fails']}/{r['shots']} | {r['pL']:.2e} [{r['lo']:.1e}, {r['hi']:.1e}] | {r['fit']:.2e} | {r['ratio']:.2f} |")
         summ[f"{r['code']}|a{r['n_anc']}|{r['mode']}"].append(r["ratio"])
-    NUMBERS["schedule_comparison"] = {k: dict(min=min(v), max=max(v), n=len(v)) for k, v in summ.items()}
+    NUMBERS["schedule_comparison"] = {k: dict(min=min(v), max=max(v), n=len(v),
+                                              within2=sum(1 for x in v if 0.5 <= x <= 2.0)) for k, v in summ.items()}
     open(os.path.join(OUT, "schedule_comparison.md"), "w").write("\n".join(lines) + "\n")
 
 

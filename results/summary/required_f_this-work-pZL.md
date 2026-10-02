@@ -267,7 +267,7 @@
 | [15,9,3] | 15 | 51.6 | all | 1024 | 0.681 (between 0.5 and 0.8) | 0.753 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | all | 4096 | 0.713 (between 0.5 and 0.8) | 0.778 (between 0.5 and 0.8) |
 | [15,9,3] | 15 | 51.6 | idle | exact | 0.962 (between 0.95 and 0.98) | not reached with f <= 1 |
-| [15,9,3] | 15 | 51.6 | idle | 1 | 0.983 (between 0.9 and 0.99) | not reached with f <= 1 |
+| [15,9,3] | 15 | 51.6 | idle | 1 | 0.984 (between 0.9 and 0.99) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 4 | 0.954 (between 0.95 and 0.98) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 16 | 0.974 (between 0.9 and 0.99) | not reached with f <= 1 |
 | [15,9,3] | 15 | 51.6 | idle | 64 | 1.000 (between 0.995 and 1) | not reached with f <= 1 |
@@ -368,7 +368,7 @@
 | Hamming [15,11,3] | 13 | 36.4 | all | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [15,11,3] | 13 | 36.4 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [15,11,3] | 13 | 36.4 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
-| Hamming [15,11,3] | 15 | 42.2 | all | exact | 0.637 (between 0.5 and 0.8) | 0.674 (between 0.5 and 0.8) |
+| Hamming [15,11,3] | 15 | 42.2 | all | exact | 0.638 (between 0.5 and 0.8) | 0.674 (between 0.5 and 0.8) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 1 | 0.692 (between 0 and 0.99) | 0.791 (between 0 and 0.99) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 16 | 0.695 (between 0 and 0.99) | 0.792 (between 0 and 0.99) |
 | Hamming [15,11,3] | 15 | 42.2 | all | 64 | 0.747 (between 0 and 0.99) | 0.804 (between 0 and 0.99) |
@@ -425,7 +425,7 @@
 | Hamming [31,26,3] | 13 | 30.8 | all | 4096 | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [31,26,3] | 13 | 30.8 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [31,26,3] | 15 | 35.7 | all | exact | 0.893 (between 0.8 and 0.9) | 0.903 (between 0.9 and 0.95) |
-| Hamming [31,26,3] | 15 | 35.7 | all | 1 | 0.912 (between 0 and 0.99) | 0.945 (between 0 and 0.99) |
+| Hamming [31,26,3] | 15 | 35.7 | all | 1 | 0.913 (between 0 and 0.99) | 0.945 (between 0 and 0.99) |
 | Hamming [31,26,3] | 15 | 35.7 | all | 16 | 0.909 (between 0 and 0.99) | 0.943 (between 0 and 0.99) |
 | Hamming [31,26,3] | 15 | 35.7 | all | 64 | 0.934 (between 0 and 0.99) | 0.960 (between 0 and 0.99) |
 | Hamming [31,26,3] | 15 | 35.7 | all | 256 | 0.978 (between 0 and 0.99) | 0.987 (between 0 and 0.99) |

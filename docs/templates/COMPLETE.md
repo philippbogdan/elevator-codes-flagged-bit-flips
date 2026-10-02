@@ -12,7 +12,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 | requirement | status | evidence |
 |---|---|---|
 | 1. Simulation and decoder (both codes, X and Z memory, flag efficiency, false flags, timing; flags used as erasures; every assumption stated and its effect measured) | holds | §1 below; `docs/methods.md`, `results/summary/assumptions.md` |
-| 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds: the published overheads (88, the [15,9,3] threshold, the p_Z = 1e-2 floor of [15,6,5]) and the [15,6,5] and X-memory fits (the latter in the per-qubit count it uses); [15,9,3] (≤ {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}×) and [16,3,8] bit-flip fits not matched, explained by evidence (unstated ancilla path and idle-noise placement span them) | §2 |
+| 2. Published results reproduced with flags off (fits at the sampled points; Figures 1 and 2) | holds: the published overheads (88, the [15,9,3] threshold, the p_Z = 1e-2 floor of [15,6,5]); every fit within 2× at the points tested with the circuit variant that reproduces it — [15,6,5] with the full-sweep ancilla, [15,9,3] and [16,3,8] with the shortest-path ancilla, the X memory in the per-qubit count its fit uses; the disagreements explained by evidence (ancilla path and counting convention unstated in the paper) | §2 |
 | 3. Overhead measured: p_Z = 1e-3, η = 1e6 over f ∈ [0, 1] × timing exact … 4096 CNOT layers; bias 4e4 … 1e7; p_Z = 1e-2 floors | holds | §3 |
 | 4. FINDINGS.md, REPORT.md, one command (`./reproduce.sh`) | holds | §4 |
 | Fidelity, known answers, statistics, overhead, frontier, limits (GOAL.md "Measurable") | hold | §5 |
@@ -75,9 +75,12 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["d"] }}; published 2.08e-11 at 49) and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]; published 1.94e-9).
 * **Disagreements, explained by evidence** (FINDINGS §1 item 4): the X memory by the counting
-  convention (measured); the [15,9,3] and [16,3,8] bit-flip excesses are not the decoder (exact
-  ML), the check order or the number of rounds, and lie inside the range spanned by readings of the
-  unstated ancilla path and idle-noise placement (`schedule_comparison.md`, `z_variants_v1.json`).
+  convention (measured on the same shots); the [15,9,3] and [16,3,8] bit-flip excesses by the
+  ancilla path — with the shortest path they agree within 2× at
+  {{ N["schedule_comparison"]["15_9_3|a1|local"]["within2"] }}/{{ N["schedule_comparison"]["15_9_3|a1|local"]["n"] }}
+  and {{ N["schedule_comparison"]["16_3_8|a1|local"]["within2"] }}/{{ N["schedule_comparison"]["16_3_8|a1|local"]["n"] }}
+  points, while the full sweep is the one that reproduces [15,6,5] (`schedule_comparison.md`);
+  not the decoder (exact ML), the check order or the number of rounds.
   They do not reach the conclusions: the flag gain is measured against this work's own flag-free
   simulation, which reproduces the published operating point, and holds in either counting
   convention (FINDINGS 13e).

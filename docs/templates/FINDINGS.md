@@ -104,8 +104,8 @@ this work's own.
    fit within 0.7–1.5× for d_Z ≤ 13 (`phase_model.md`).  Evidence: `reproduction.md`,
    `results/variants/z_variants_v1.json`.
 
-4. **The X-memory gap is a counting convention; the [15,9,3] bit-flip excess is bracketed by the
-   unstated circuit details.**
+4. **The X-memory gap is a counting convention; the [15,9,3] and [16,3,8] bit-flip excesses are
+   the unstated ancilla path.**
    * *X memory.*  Counting a failure when any of the k logical observables is wrong and dividing by
      k (this work's convention throughout) puts the X memory at
      {{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd-minsum"]["ratio_min"]) }}–{{ f2(N["repro"]["X:15_9_3:a1:full/noop bplsd"]["ratio_max"]) }}×
@@ -128,18 +128,23 @@ this work's own.
      2×, the excess growing towards p_X = 1e-6).  Not the decoder: exact maximum likelihood leaves
      {{ f1(N["checks"]["sensitivity_summary"]["mle_min"]) }}–{{ f1(N["checks"]["sensitivity_summary"]["mle_max"]) }}×
      (`sensitivity_15_9_3.json`); not the check order (≤ {{ pct(N["checks"]["sensitivity_summary"]["order_dev"]) }})
-     or the number of outer rounds (≤ {{ pct(N["checks"]["sensitivity_summary"]["rounds_dev"]) }}).  The
-     ancilla path matters at d_Z < n + 1: a shortest-path ancilla instead of a full sweep brings
-     [15,9,3] to {{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["max"]) }}×
-     but [15,6,5] to {{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["max"]) }}×
-     (`schedule_comparison.md`), and the idle-noise placement brackets it (idle noise only during
-     CNOT layers: {{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][0]) }}–{{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][1]) }}×;
-     literal: {{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][0]) }}–{{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][1]) }}×).
-     No single reading of the text matches all three published Z-memory fits (the paper's
-     [16,3,8] fit, needed only below η ≈ 7e4, is
-     {{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_max"]) }}× below
-     this work's full-sweep rates, {{ f1(N["schedule_comparison"]["16_3_8|a1|local"]["min"]) }}–{{ f1(N["schedule_comparison"]["16_3_8|a1|local"]["max"]) }}×
-     with the shortest path).  Consequence: this work's [15,9,3] baseline is pessimistic, by up to
+     or the number of outer rounds (≤ {{ pct(N["checks"]["sensitivity_summary"]["rounds_dev"]) }}).  It
+     is the ancilla path, which the paper does not state: with the shortest path an ancilla moving
+     by SWAPs can take, instead of a full sweep per check, [15,9,3] agrees within 2× at
+     {{ N["schedule_comparison"]["15_9_3|a1|local"]["within2"] }}/{{ N["schedule_comparison"]["15_9_3|a1|local"]["n"] }}
+     points tested ({{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_9_3|a1|local"]["max"]) }}×)
+     and so does [16,3,8] ({{ N["schedule_comparison"]["16_3_8|a1|local"]["within2"] }}/{{ N["schedule_comparison"]["16_3_8|a1|local"]["n"] }},
+     {{ f2(N["schedule_comparison"]["16_3_8|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["16_3_8|a1|local"]["max"]) }}×, against
+     {{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_min"]) }}–{{ f1(N["repro"]["Z:16_3_8:a1:full/noop"]["ratio_max"]) }}× with the full
+     sweep), while [15,6,5], which the full sweep reproduces, drops to
+     {{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["min"]) }}–{{ f2(N["schedule_comparison"]["15_6_5|a1|local"]["max"]) }}×
+     (`schedule_comparison.md`; the shortest path also gives m·d_Z rounds per outer round, as the
+     paper states).  The paper's circuits thus differ in their ancilla paths in a way the text does
+     not fix; no single path matches all three Z-memory fits (the idle-noise placement brackets
+     them too: idle noise only during CNOT layers puts [15,9,3] at
+     {{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][0]) }}–{{ f2(N["checks"]["z_variants"]["15_9_3|full/cnot-idle-only"][1]) }}×,
+     the literal reading at {{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][0]) }}–{{ f1(N["checks"]["z_variants"]["15_9_3|full/all-idle"][1]) }}×).
+     The flag study keeps the full sweep, whose [15,9,3] bit flips are the higher ones.  Consequence: this work's [15,9,3] baseline is pessimistic, by up to
      {{ f1(N["repro"]["Z:15_9_3:a1:full/noop"]["ratio_max"]) }}× at p_X ~ 1e-6 (within
      {{ f2(N["headline"]["sim_15_9_3_d15"]["none|w0|f0.0"]["pXL"] / (15 ** 2.33 * (37.18e-9) ** 1.94)) }}× of the
      fit at p_X = 1e-9), so flag gains measured against it are not inflated, and every flagged
