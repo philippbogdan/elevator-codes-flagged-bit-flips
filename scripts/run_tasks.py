@@ -30,6 +30,14 @@ def main():
         if i % nt != me:
             continue
         out = os.path.join(a.outdir, task_id(spec) + ".json")
+        if spec["kind"] == "strata":
+            from elevator.flagstudy import run_strata
+            if os.path.exists(out) and json.load(open(out)).get("spec") == spec:
+                continue
+            res = run_strata(spec, a.procs, out)
+            print(json.dumps({k: res[k] for k in ("P", "lo", "hi", "pL_P", "seconds", "decodes")}),
+                  json.dumps(spec), flush=True)
+            continue
         if os.path.exists(out):
             st = json.load(open(out))
             mf = spec.get("max_fail")
