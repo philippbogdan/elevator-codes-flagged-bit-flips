@@ -292,3 +292,20 @@ class BlockModel:
 def _bits(v: int, n: int) -> np.ndarray:
     b = np.frombuffer(v.to_bytes((n + 7) // 8, "little"), dtype=np.uint8)
     return np.unpackbits(b, bitorder="little")[:n]
+
+
+def class_sums(bm: "BlockModel") -> dict:
+    """Sum of Pauli-X probabilities per location class: (effective: slot >= 0, all)."""
+    L = bm.loc
+    out = {}
+    for c, name in enumerate(CLASS_NAMES):
+        m = L.cls == c
+        out[name] = (float(L.xprob[m & (L.slot >= 0)].sum()), float(L.xprob[m].sum()))
+    return out
+
+
+def intensities(sums: dict, eff: dict) -> tuple[float, float]:
+    """(U, S): unflagged-X and flagged-event intensities for class efficiencies eff."""
+    U = sum((1 - eff.get(c, 0.0)) * v[0] for c, v in sums.items())
+    S = sum(2 * eff.get(c, 0.0) * v[1] for c, v in sums.items())
+    return U, S
