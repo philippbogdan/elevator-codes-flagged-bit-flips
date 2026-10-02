@@ -44,7 +44,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 
   | assumption | alternatives measured | effect |
   |---|---|---|
-  | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | paper's codes: {{ ohc("this-work-pZL", "idle|w0|f0.99") }} / {{ ohc("this-work-pZL", "idle+gate|w0|f0.99") }} / {{ ohc("this-work-pZL", "all|w0|f0.99") }} (paper pZL: {{ ohs("paper-pZL", "idle|w0|f0.99") }} / {{ ohs("paper-pZL", "idle+gate|w0|f0.99") }} / {{ ohs("paper-pZL", "all|w0|f0.99") }}); with idle-only flags the distance-4 [16,11,4] reaches {{ ohs("this-work-pZL", "idle|w0|f0.99", "all_codes") }} ({{ ohs("paper-pZL", "idle|w0|f0.99", "all_codes") }}) |
+  | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | paper's codes — idle only: {{ ohc("this-work-pZL", "idle|w0|f0.99") }}; idle + gate: {{ ohc("this-work-pZL", "idle+gate|w0|f0.99") }}; all: {{ ohc("this-work-pZL", "all|w0|f0.99") }} (paper pZL: {{ ohs("paper-pZL", "idle|w0|f0.99") }}; {{ ohs("paper-pZL", "idle+gate|w0|f0.99") }}; {{ ohs("paper-pZL", "all|w0|f0.99") }}); with idle-only flags the distance-4 [16,11,4] reaches {{ ohs("this-work-pZL", "idle|w0|f0.99", "all_codes") }} ({{ ohs("paper-pZL", "idle|w0|f0.99", "all_codes") }}) |
   | timing precision | windows exact, 1 … 4096 ticks | flags on all locations: the minimum overhead of the paper's codes is unchanged up to 4096 ticks (longer than the whole memory); idle-only flags: [15,9,3] fails from 256 ticks, [16,11,4] holds to 4096 ticks at f ≥ {{ reqf("this-work-pZL", "xham16|a1", 15, "idle", 4096).split(" ")[0] }} |
   | false flags | r = 1e-10 … 1e-6 per qubit per tick | [15,9,3], f = 0.99 on all locations: tolerated (95 % upper bound within the target) up to r = {{ g(N["assumptions"]["tolerance"]["all|w0|f0.99"]["max_r_conservative"]) }} with exact timing and {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_conservative"]) }} with 64-tick windows (central estimate: {{ g(N["assumptions"]["tolerance"]["all|w64|f0.99"]["max_r_central"]) }}); p_XL = {{ pxl3("falseflag|all|w0|f0.99|r0|erasure") }} at r = 0, {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at 1e-6 (exact timing) |
   | erasure vs heralded X | flag certifies the X | [15,9,3]: idle-only flags at f = 1 {{ pxl3("herald|idle|w0|f1.0|r0|erasure") }} (erasure) vs {{ pxl3("herald|idle|w0|f1.0|r0|herald") }} (heralded); all locations at f = 0.9 {{ pxl3("herald|all|w0|f0.9|r0|erasure") }} vs {{ pxl3("herald|all|w0|f0.9|r0|herald") }}; minimum overhead with idle-only flags at f = 1, p_XL at its 95 % upper bound: {{ asm("herald|idle|w0|f1.0|r0|erasure|cons") }} (erasure) vs {{ asm("herald|idle|w0|f1.0|r0|herald|cons") }} (heralded) |
@@ -185,7 +185,7 @@ without one).
     {{ f2(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["flagged_only"] / N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["pL"]) }}
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
-    model at exact and coarse timing;
+    model at exact and coarse timing ([15,9,3]) and for [15,6,5] in the p_Z = 1e-2 regime;
   * *timing precision* — none needed within exact … 4096 ticks when gates are flagged;
   * *false flags* — none up to {{ g(N["assumptions"]["tolerance"]["all|w0|f0.99"]["max_r_conservative"]) }} per qubit per tick, the largest rate tested, with exact timing (95 % bound
     with the dominant strata bounded analytically); with 64-tick windows

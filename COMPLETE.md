@@ -44,7 +44,7 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
 
   | assumption | alternatives measured | effect |
   |---|---|---|
-  | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | paper's codes: 51.6 ([15,9,3], d_Z = 15); 95 % bound: 77.3 ([15,6,5], d_Z = 15) / 51.6 ([15,9,3], d_Z = 15) / 51.6 ([15,9,3], d_Z = 15) (paper pZL: 88.0 ([15,6,5], d_Z = 17) / 58.7 ([15,9,3], d_Z = 17) / 58.7 ([15,9,3], d_Z = 17)); with idle-only flags the distance-4 [16,11,4] reaches 44.8 (ext. Hamming [16,11,4], d_Z = 15) (51.0 (ext. Hamming [16,11,4], d_Z = 17)) |
+  | which locations raise flags (only idle is established) | idle / idle + gate / all, f = 0.99 | paper's codes — idle only: 51.6 ([15,9,3], d_Z = 15); 95 % bound: 77.3 ([15,6,5], d_Z = 15); idle + gate: 51.6 ([15,9,3], d_Z = 15); all: 51.6 ([15,9,3], d_Z = 15) (paper pZL: 88.0 ([15,6,5], d_Z = 17); 58.7 ([15,9,3], d_Z = 17); 58.7 ([15,9,3], d_Z = 17)); with idle-only flags the distance-4 [16,11,4] reaches 44.8 (ext. Hamming [16,11,4], d_Z = 15) (51.0 (ext. Hamming [16,11,4], d_Z = 17)) |
   | timing precision | windows exact, 1 … 4096 ticks | flags on all locations: the minimum overhead of the paper's codes is unchanged up to 4096 ticks (longer than the whole memory); idle-only flags: [15,9,3] fails from 256 ticks, [16,11,4] holds to 4096 ticks at f ≥ 0.899 |
   | false flags | r = 1e-10 … 1e-6 per qubit per tick | [15,9,3], f = 0.99 on all locations: tolerated (95 % upper bound within the target) up to r = 1e-06 with exact timing and 1e-06 with 64-tick windows (central estimate: 1e-06); p_XL = 2.0e-14 [1.1e-14, 3.8e-14] at r = 0, 2.6e-14 [2.1e-14, 1.5e-13] at 1e-6 (exact timing) |
   | erasure vs heralded X | flag certifies the X | [15,9,3]: idle-only flags at f = 1 8.4e-13 [7.8e-13, 9.0e-13] (erasure) vs 4.9e-13 [4.6e-13, 5.5e-13] (heralded); all locations at f = 0.9 1.6e-13 [1.5e-13, 1.8e-13] vs 3.8e-14 [3.1e-14, 8.5e-14]; minimum overhead with idle-only flags at f = 1, p_XL at its 95 % upper bound: 77.3 ([15,6,5], d=15) (erasure) vs 51.6 ([15,9,3], d=15) (heralded) |
@@ -202,7 +202,7 @@ without one).
     0.76
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
-    model at exact and coarse timing;
+    model at exact and coarse timing ([15,9,3]) and for [15,6,5] in the p_Z = 1e-2 regime;
   * *timing precision* — none needed within exact … 4096 ticks when gates are flagged;
   * *false flags* — none up to 1e-06 per qubit per tick, the largest rate tested, with exact timing (95 % bound
     with the dominant strata bounded analytically); with 64-tick windows
