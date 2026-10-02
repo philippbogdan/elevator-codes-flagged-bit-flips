@@ -5,7 +5,10 @@ What this work establishes, each claim with its evidence.  Every number below is
 `results/summary/`; `./reproduce.sh analysis` regenerates both from the raw results in `results/`
 (`./reproduce.sh all` recomputes those too).  Methods: `docs/methods.md`.
 
-Conventions.  Logical error rates are per inner repetition-code round and per logical qubit.
+Conventions.  Logical error rates are per inner repetition-code round and per logical qubit: a
+shot fails if any of the k logical observables is wrong, and the rate is 1 − (1 − P_fail)^(1/(R k))
+over its R rounds (the convention of the paper's Z-memory fits; item 4 and 13e for counting each
+logical qubit separately).
 Overhead = physical qubits (ancillas included) per logical qubit = n_b (2 d_Z − 1) / k.  The main
 operating point is the paper's: p_Z = 1e-3, bias η = 1e6 (p_X = 1e-9), target 1e-12 per round.
 Bit-flip rates at p_X ≤ 1e-8 lie far below direct sampling; they come from the stratified

@@ -123,6 +123,15 @@ p_X if available, else p_X = 1e-9).  Checked: p_X transfer against the held-out 
   target; an 'ideal decoder' bound (data blocks at the ML repetition-code rate, a = 1) is
   reported next to it.  Flags cannot lower it.
 
+## 6b. Counting logical errors
+
+A shot fails if any of the k logical observables is wrong; rates per round per logical qubit are
+1 - (1 - P_fail)^(1/(R k)).  The alternative — each logical qubit's errors counted separately — is
+larger by the mean number of logical qubits a failure hits, measured on the same shots
+(`scripts/counting_convention.py`): ~2.6 (X memory, [15,9,3]), ~2.2 (Z memory).  The paper's
+X-memory fit matches the per-qubit count, its Z-memory fits the any-of-k count; the overhead
+conclusions are given in both (FINDINGS 13e).
+
 ## 7. Overheads
 
 n_b (2 d_Z - 1) / k per logical qubit, n_b counting the logical ancillas; the minimum over the
