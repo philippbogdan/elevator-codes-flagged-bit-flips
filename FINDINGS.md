@@ -275,12 +275,13 @@ this work's own.
 ## 4. Flagged bit flips at p_Z = 1e-3, η = 1e6
 
 11. **Gate flags decide the gain.**  At d_Z = 15 the [15,9,3] bit-flip rate (stratified estimate,
-    95 % interval) is 3.06e-12 without flags,
-    8.69e-13 with idle-only flags at f = 0.99 and
-    8.39e-13 at f = 1, but
-    1.23e-14 with idle and gate flags at f = 0.99
-    and 2.03e-14 with preparation and measurement flags
-    added; with every location flagged at f = 1 and exact timing the rate is
+    95 % interval) is 3.06e-12 [2.9e-12, 3.2e-12] without flags,
+    8.69e-13 [8.0e-13, 9.6e-13] with idle-only flags at f = 0.99 and
+    8.39e-13 [7.8e-13, 9.0e-13] at f = 1, but
+    1.23e-14 [4.9e-15, 3.1e-14] with idle and gate flags at f = 0.99
+    and 2.03e-14 [1.1e-14, 3.8e-14] with preparation and measurement flags
+    added (the same within the intervals: preparation and measurement carry
+    0.3 % of the bit flips that matter); with every location flagged at f = 1 and exact timing the rate is
     4.81e-18 (only sets of ≥ 3 flagged events that
     contain an undetectable logical fail).  Evidence: `flags_main_*.md`, `assumptions.md`.
 

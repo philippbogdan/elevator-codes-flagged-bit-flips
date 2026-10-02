@@ -275,12 +275,13 @@ this work's own.
 ## 4. Flagged bit flips at p_Z = 1e-3, η = 1e6
 
 11. **Gate flags decide the gain.**  At d_Z = 15 the [15,9,3] bit-flip rate (stratified estimate,
-    95 % interval) is {{ e2(H["sim_15_9_3_d15"]["none|w0|f0.0"]["pXL"]) }} without flags,
-    {{ e2(H["sim_15_9_3_d15"]["idle|w0|f0.99"]["pXL"]) }} with idle-only flags at f = 0.99 and
-    {{ e2(H["sim_15_9_3_d15"]["idle|w0|f1.0"]["pXL"]) }} at f = 1, but
-    {{ e2(H["sim_15_9_3_d15"]["idle+gate|w0|f0.99"]["pXL"]) }} with idle and gate flags at f = 0.99
-    and {{ e2(H["sim_15_9_3_d15"]["all|w0|f0.99"]["pXL"]) }} with preparation and measurement flags
-    added; with every location flagged at f = 1 and exact timing the rate is
+    95 % interval) is {{ ci(H["sim_15_9_3_d15"]["none|w0|f0.0"]) }} without flags,
+    {{ ci(H["sim_15_9_3_d15"]["idle|w0|f0.99"]) }} with idle-only flags at f = 0.99 and
+    {{ ci(H["sim_15_9_3_d15"]["idle|w0|f1.0"]) }} at f = 1, but
+    {{ ci(H["sim_15_9_3_d15"]["idle+gate|w0|f0.99"]) }} with idle and gate flags at f = 0.99
+    and {{ ci(H["sim_15_9_3_d15"]["all|w0|f0.99"]) }} with preparation and measurement flags
+    added (the same within the intervals: preparation and measurement carry
+    {{ f"{100 * (N['checks']['class_share']['15_9_3:a1:d15']['prep'] + N['checks']['class_share']['15_9_3:a1:d15']['meas']):.1f} %" }} of the bit flips that matter); with every location flagged at f = 1 and exact timing the rate is
     {{ e2(H["sim_15_9_3_d15"]["all|w0|f1.0"]["pXL"]) }} (only sets of ≥ 3 flagged events that
     contain an undetectable logical fail).  Evidence: `flags_main_*.md`, `assumptions.md`.
 
