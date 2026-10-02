@@ -178,6 +178,20 @@ def phase_model():
         from elevator.phasemodel import fit_two_component
         if len(elev) >= 5:
             NBK2 = {(c, a): OH.ELEVATOR_NK[c] for c in OH.ELEVATOR_NK for a in (1, 2)}
+            # held-out test: fit on p_Z >= 3e-3, predict the p_Z <= 2e-3 points (the low-p regime)
+            train = [r for r in elev if r["p"] >= 3e-3]
+            held = [r for r in elev if r["p"] < 3e-3]
+            if len(train) >= 5 and held:
+                th0, cov0, tm0 = fit_two_component(train, m, NBK2, [r for r in data_only if r["p"] >= 3e-3])
+                lines.append("\nHeld-out test of the two-component model (fit on p_Z >= 3e-3, predict p_Z < 3e-3):\n")
+                lines.append("| code | d_Z | p_Z | measured [95% CI] | predicted | ratio |")
+                lines.append("|---|---|---|---|---|---|")
+                hos = []
+                for r in sorted(held, key=lambda r: (r["p"], r["d"])):
+                    pred = tm0(th0, r)
+                    hos.append(dict(d=r["d"], p=r["p"], y=r["y"], lo=r["lo"], hi=r["hi"], pred=pred, ratio=r["y"] / pred))
+                    lines.append(f"| {r['code']} | {r['d']} | {r['p']:.1e} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {pred:.2e} | {r['y']/pred:.2f} |")
+                NUMBERS["phase_two_component_heldout"] = hos
             th, thcov, tmodel = fit_two_component(elev, m, NBK2, data_only)
             PHASE["two"] = (th, thcov, tmodel)
             lines.append(f"\nTwo-component model: p_ZL k = n a p_rep(d,p) + n_anc g s(d) p_rep(d, kappa p), s(d) = min(1, (n+1)/d), "
