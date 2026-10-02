@@ -23,10 +23,12 @@ def main():
     # default: the cores allocated by gpurun (exported as OMP_NUM_THREADS), not the machine's
     ap.add_argument("--procs", type=int, default=int(os.environ.get("OMP_NUM_THREADS", os.cpu_count())))
     ap.add_argument("--shard", type=int, default=None)
+    # which lines to run: i mod nparts == part (defaults: gpurun's GPURUN_TASK / GPURUN_NTASKS)
+    ap.add_argument("--part", type=int, default=int(os.environ.get("GPURUN_TASK", "0")))
+    ap.add_argument("--nparts", type=int, default=int(os.environ.get("GPURUN_NTASKS", "1")))
     a = ap.parse_args()
     os.makedirs(a.outdir, exist_ok=True)
-    me = int(os.environ.get("GPURUN_TASK", "0"))
-    nt = int(os.environ.get("GPURUN_NTASKS", "1"))
+    me, nt = a.part, a.nparts
     specs = [json.loads(line) for line in open(a.tasks) if line.strip()]
     # heartbeat (diagnostics for batch systems that release stdout only at the end)
     import socket
