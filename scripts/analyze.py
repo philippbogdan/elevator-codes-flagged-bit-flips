@@ -1180,6 +1180,33 @@ def literal_reading():
             dl = None
         out[f"floor|{CODE_LABEL[code]}"] = dict(d_noop=dn, d_literal=dl, overhead_literal=overhead(code[0], code[1], dl) if dl else None)
         lines.append(f"| {CODE_LABEL[code]} | {dn} | {dl} | {overhead(code[0], code[1], dl):.1f} |" if dl else f"| {CODE_LABEL[code]} | {dn} | - | - |")
+    # overhead under the literal reading at d_Z = 17 (the literal flag runs; no transfer, since the
+    # literal reading has its own fault sums): bit flips from flag_literal, phase flips as above
+    lrows = [r for r in flag_rows(("flag_literal",), transfers=False) if r["idle"] == "edge,cnot,op" and r["p_x"] == 1e-9]
+    lines += ["\nOverhead at p_Z = 1e-3, eta = 1e6, 1e-12 under the literal reading (d_Z = 17 runs):\n",
+              "| flags | [15,9,3] p_XL | [15,6,5] p_XL | minimum overhead |", "|---|---|---|---|"]
+    for (cls, w, f) in [("none", 0, 0.0), ("idle", 0, 0.99), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 1024, 0.99)]:
+        cand = {}
+        for r in lrows:
+            if r["f"] == f and (f == 0 or (r["classes"] == cls and r["window"] == w)) and r["d"] == 17:
+                cand[(r["code"], r["n_anc"])] = r
+        if f > 0:                       # flags can be ignored: flag-free rate as fallback
+            for r in lrows:
+                if r["f"] == 0 and r["d"] == 17:
+                    cand.setdefault((r["code"], r["n_anc"]), r)
+        best = None
+        for code, r in cand.items():
+            tot = r["pL"] + pzl_lit(code[0], code[1], 17, 1e-3)
+            if tot <= 1e-12:
+                oh = overhead(code[0], code[1], 17)
+                if best is None or oh < best[0]:
+                    best = (oh, CODE_LABEL[code])
+        key = f"{cls}|w{w}|f{f}"
+        out[f"overhead17|{key}"] = dict(overhead=best[0], code=best[1]) if best else None
+        p93 = cand.get(("15_9_3", 1))
+        p65 = cand.get(("15_6_5", 1))
+        lines.append(f"| {key} | {p93['pL']:.2e} | " if p93 else f"| {key} | - | ")
+        lines[-1] += (f"{p65['pL']:.2e} | " if p65 else "- | ") + (f"{best[0]:.1f} ({best[1]}) |" if best else "not reached at d_Z = 17 |")
     NUMBERS["literal"] = out
     open(os.path.join(OUT, "literal_reading.md"), "w").write("\n".join(lines) + "\n")
 

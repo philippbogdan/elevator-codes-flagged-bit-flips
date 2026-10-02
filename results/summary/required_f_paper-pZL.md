@@ -460,8 +460,8 @@
 | Hamming [31,26,3] | 25 | 60.3 | idle | exact | not reached with f <= 1 | not reached with f <= 1 |
 | Hamming [63,57,3] | 13 | 28.1 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | Hamming [63,57,3] | 15 | 32.6 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 17 | 37.1 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 19 | 41.5 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 21 | 46.0 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 23 | 50.5 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
-| Hamming [63,57,3] | 25 | 55.0 | all | exact | not reached with f <= 1 | not reached with f <= 1 |
+| Hamming [63,57,3] | 17 | 37.1 | all | exact | 0.977 (between 0.9 and 0.99) | 0.980 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 19 | 41.5 | all | exact | 0.981 (between 0.9 and 0.99) | 0.983 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 21 | 46.0 | all | exact | 0.984 (between 0.9 and 0.99) | 0.986 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 23 | 50.5 | all | exact | 0.987 (between 0.9 and 0.99) | 0.989 (between 0.9 and 0.99) |
+| Hamming [63,57,3] | 25 | 55.0 | all | exact | 0.989 (between 0.9 and 0.99) | not reached with f <= 1 |

@@ -10,11 +10,13 @@ Same configuration, two estimators: direct Monte Carlo (all events sampled) and 
 | [15,6,5] | 3e-07 | 1.0 | all | 1024 | 0.000e+00 [0.00e+00, 9.60e-06] | 0.000e+00 [5.69e-23, 1.76e-05] | yes |
 | [15,6,5] | 1e-06 | 0.0 | - | exact | 8.203e-04 [6.78e-04, 9.93e-04] | 9.453e-04 [8.13e-04, 1.12e-03] | yes |
 | [15,6,5] | 1e-06 | 0.9 | all | exact | 5.000e-06 [1.37e-06, 1.82e-05] | 8.122e-06 [3.09e-06, 8.56e-05] | yes |
-| [15,6,5] | 1e-06 | 0.99 | all | 64 | 3.378e-06 [5.96e-07, 1.91e-05] | 5.418e-07 [1.27e-07, 2.78e-04] | yes |
+| [15,6,5] | 1e-06 | 0.99 | idle | exact | 1.288e-04 [9.22e-05, 1.80e-04] | 1.622e-04 [1.05e-04, 3.75e-04] | yes |
+| [15,6,5] | 1e-06 | 0.99 | all | 64 | 5.000e-06 [1.37e-06, 1.82e-05] | 5.418e-07 [1.27e-07, 2.78e-04] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.0 | - | exact | 2.500e-06 [4.41e-07, 1.42e-05] | 5.188e-06 [4.58e-06, 6.93e-06] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.9 | all | exact | 0.000e+00 [0.00e+00, 9.60e-06] | 3.497e-08 [1.21e-08, 9.04e-07] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.99 | idle | exact | 0.000e+00 [0.00e+00, 9.60e-06] | 1.002e-06 [5.29e-07, 4.20e-06] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.99 | all | 64 | 0.000e+00 [0.00e+00, 9.60e-06] | 9.035e-09 [1.61e-09, 7.63e-06] | yes |
+| [15,6,5] 2 anc | 3e-07 | 1.0 | all | 1024 | 0.000e+00 [0.00e+00, 9.60e-06] | 1.242e-09 [2.19e-10, 5.71e-06] | yes |
 | [15,9,3] | 3e-07 | 0.9 | all | exact | 5.750e-05 [3.83e-05, 8.63e-05] | 6.841e-05 [6.06e-05, 7.92e-05] | yes |
 | [15,9,3] | 3e-07 | 0.99 | idle | exact | 3.375e-04 [2.85e-04, 3.99e-04] | 3.322e-04 [3.08e-04, 3.61e-04] | yes |
 | [15,9,3] | 3e-07 | 0.99 | all | 64 | 1.750e-05 [8.48e-06, 3.61e-05] | 1.306e-05 [7.43e-06, 2.67e-05] | yes |
@@ -25,7 +27,7 @@ Same configuration, two estimators: direct Monte Carlo (all events sampled) and 
 | [15,9,3] | 1e-06 | 0.99 | all | 64 | 2.632e-04 [2.16e-04, 3.20e-04] | 2.532e-04 [1.49e-04, 4.49e-04] | yes |
 | [15,9,3] | 1e-06 | 1.0 | all | 1024 | 6.579e-04 [5.41e-04, 8.00e-04] | 7.224e-04 [5.38e-04, 9.77e-04] | yes |
 
-19 of 19 configurations agree within the 95% intervals.
+21 of 21 configurations agree within the 95% intervals.
 
 
 ### The p_X = 1e-9 estimates predicting held-out direct samples
@@ -39,7 +41,8 @@ Stratum failure fractions measured at p_X = 1e-9 (the numbers behind the overhea
 | [15,6,5] | 3e-07 | 1.0 | all | 1024 | 0.000e+00 [0.00e+00, 9.60e-06] | 0.000e+00 [0.00e+00, 1.40e-04] | yes |
 | [15,6,5] | 1e-06 | 0.0 | none | exact | 8.203e-04 [6.78e-04, 9.93e-04] | 1.275e-03 [8.10e-04, 2.06e-03] | yes |
 | [15,6,5] | 1e-06 | 0.9 | all | exact | 5.000e-06 [1.37e-06, 1.82e-05] | 6.326e-06 [2.34e-06, 1.32e-03] | yes |
-| [15,6,5] | 1e-06 | 0.99 | all | 64 | 3.378e-06 [5.96e-07, 1.91e-05] | 6.772e-08 [1.88e-08, 3.35e-03] | yes |
+| [15,6,5] | 1e-06 | 0.99 | idle | exact | 1.288e-04 [9.22e-05, 1.80e-04] | 1.227e-04 [5.58e-05, 9.16e-04] | yes |
+| [15,6,5] | 1e-06 | 0.99 | all | 64 | 5.000e-06 [1.37e-06, 1.82e-05] | 6.772e-08 [1.88e-08, 3.35e-03] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.0 | none | exact | 2.500e-06 [4.41e-07, 1.42e-05] | 9.876e-06 [5.53e-06, 2.06e-05] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.9 | all | exact | 0.000e+00 [0.00e+00, 9.60e-06] | 6.350e-08 [1.41e-08, 6.55e-06] | yes |
 | [15,6,5] 2 anc | 3e-07 | 0.99 | idle | exact | 0.000e+00 [0.00e+00, 9.60e-06] | 7.466e-07 [3.64e-07, 1.56e-05] | yes |
@@ -55,5 +58,5 @@ Stratum failure fractions measured at p_X = 1e-9 (the numbers behind the overhea
 | [15,9,3] | 1e-06 | 0.99 | all | 64 | 2.632e-04 [2.16e-04, 3.20e-04] | 8.041e-05 [4.00e-05, 3.69e-03] | yes |
 | [15,9,3] | 1e-06 | 1.0 | all | 1024 | 6.579e-04 [5.41e-04, 8.00e-04] | 7.326e-04 [3.18e-04, 4.89e-03] | yes |
 
-20 of 20 held-out direct-sampling points are inside the predicted interval.
+21 of 21 held-out direct-sampling points are inside the predicted interval.
 

@@ -270,9 +270,9 @@ this work's own.
     {{ pxl3("falseflag|all|w0|f0.99|r1e-06|erasure") }} at r = 1e-6 (95 % intervals; the single- and
     two-event strata are bounded analytically, `false_flag_bounds.json`: a failure needs falsely
     flagged locations that complete the real events to a logical, and with exact timing the decoder
-    never prefers two flags over one).  With 64-tick windows the central estimates are unchanged up
-    to 1e-6 ({{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }}) but the upper bounds are limited by
-    sampling.  Full sweep, including f = 0.8–0.9 with 4–16-tick windows (the regime a photon-counting
+    never prefers two flags over one).  With 64-tick windows: {{ pxl3("falseflag|all|w64|f0.99|r1e-06|erasure") }}
+    at r = 1e-6{{ " — still below the target with its upper bound" if N["assumptions"].get("falseflag|all|w64|f0.99|r1e-06|erasure|pXL_15_9_3", [0, 0, 1])[2] < 1e-12 - N["convention"]["phase_compare"]["[15,9,3]|d15"]["this_work"] else " (upper bound limited by sampling)" }}.
+    Full sweep, including f = 0.8–0.9 with 4–16-tick windows (the regime a photon-counting
     threshold would select): `assumptions.md`.
 
 13c. **Heralded flags (a flag certifies the X) versus erasures (the event's X occurs with
@@ -285,8 +285,11 @@ this work's own.
     reading the [15,9,3] bit flips are ×{{ f1(asm("literal|none|w0|f0.0|ratio_15_9_3")) }} higher
     without flags (d_Z = 17), the repetition code's phase flips ×4–30 (extra idle ticks,
     `literal_reading.md`) and the phase-flip floor moves to d_Z =
-    {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }}: flag-free {{ f1(N["literal"]["floor|[15,6,5]"]["overhead_literal"]) }},
-    flagged {{ f1(N["literal"]["floor|[15,9,3]"]["overhead_literal"]) }} — the same one-third saving.
+    {{ N["literal"]["floor|[15,9,3]"]["d_literal"] }}.  At d_Z = 17 the minimum overhead is then
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|none|w0|f0.0")) }} without flags and
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|all|w0|f0.99")) }} with flags on all
+    locations at f = 0.99 (idle-only, f = 0.99:
+    {{ (lambda e: f1(e["overhead"]) + " (" + e["code"] + ")" if e else "not reached")(N["literal"].get("overhead17|idle|w0|f0.99")) }}).
 
 13e. **The counting convention does not change the conclusion.**  Counting each logical qubit's
     errors separately multiplies the phase-flip rates by {{ f1(N["convention"]["mX"]["15_9_3"]) }}
