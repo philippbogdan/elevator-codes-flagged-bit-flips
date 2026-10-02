@@ -33,7 +33,7 @@ this work's own.
   [31,26,3], [63,57,3]{{ ", [127,120,3]" if "Hamming [127,120,3]" in N["headline"].get("codes_with_data", []) else "" }}, extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
   {{ ohs("paper-pZL", "all|w0|f0.99", "all_codes") }} (paper pZL) and
   {{ ohs("this-work-pZL", "all|w0|f0.99", "all_codes") }} (this-work pZL) —
-  {{ pct(1 - ohv("paper-pZL", "all|w0|f0.99", "all_codes") / 88) }} fewer qubits than the published 88.  §7.
+  {{ pct(1 - ohv("paper-pZL", "all|w0|f0.99", "all_codes") / 88) }} fewer qubits than the published 88 with the same phase-flip fit.{{ (" Hamming [127,120,3] goes to " + f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) + ", needing flag efficiency " + N["required_f"]["this-work-pZL"]["ham127|a1|d15|all|w0"][0] + " (95 % bound: " + N["required_f"]["this-work-pZL"]["ham127|a1|d15|all|w0"][1] + ") with exactly timed flags on all locations, its d_Z = 15 floor holding for any decoder; each step to a higher rate needs better flags, and the overhead approaches " + str(N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"]) + " = 2·15 − 1 only as k/n → 1.") if "ham127|a1|d15|all|w0" in N["required_f"]["this-work-pZL"] else "" }}  §7.
 * **Idle-only flags — the case arXiv:2607.01375 establishes — help only with a distance-4 code.**
   {{ pct(N["checks"]["class_share"]["15_9_3:a1:d15"]["gate"]) }} of the bit flips that matter happen
   inside CNOTs (the rest while idle; preparation and measurement

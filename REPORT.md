@@ -99,7 +99,7 @@ the paper-pZL version is in FINDINGS §7):
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
-| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 1.0 | all | exact | 0 |
+| 30.9 | Hamming [127,120,3] | 15 | 6.9e-13 | 0.995 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.6e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.0e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |

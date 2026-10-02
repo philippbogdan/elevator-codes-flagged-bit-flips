@@ -33,7 +33,7 @@ this work's own.
   [31,26,3], [63,57,3], [127,120,3], extended Hamming [16,11,4]), flags on all locations at f = 0.99 reach
   35.7 (Hamming [31,26,3], d_Z = 15) (paper pZL) and
   32.6 (Hamming [63,57,3], d_Z = 15) (this-work pZL) —
-  59 % fewer qubits than the published 88.  §7.
+  59 % fewer qubits than the published 88 with the same phase-flip fit. Hamming [127,120,3] goes to 30.9, needing flag efficiency 0.992 (between 0.99 and 0.995) (95 % bound: 0.993 (between 0.99 and 0.995)) with exactly timed flags on all locations, its d_Z = 15 floor holding for any decoder; each step to a higher rate needs better flags, and the overhead approaches 29 = 2·15 − 1 only as k/n → 1.  §7.
 * **Idle-only flags — the case arXiv:2607.01375 establishes — help only with a distance-4 code.**
   40 % of the bit flips that matter happen
   inside CNOTs (the rest while idle; preparation and measurement
@@ -481,7 +481,7 @@ this work's own.
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
-| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 1.0 | all | exact | 0 |
+| 30.9 | Hamming [127,120,3] | 15 | 6.9e-13 | 0.995 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 4.6e-13 | 0.99 | all | 64 | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 5.0e-13 | 0.95 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 6.1e-13 | 0.99 | all | 256 | 0 |
@@ -502,7 +502,7 @@ this work's own.
 
 | overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |
 |---|---|---|---|---|---|---|---|
-| 30.9 | Hamming [127,120,3] | 15 | 7.1e-13 | 1.0 | all | exact | 0 |
+| 30.9 | Hamming [127,120,3] | 15 | 8.4e-13 | 0.999 | all | exact | 0 |
 | 32.6 | Hamming [63,57,3] | 15 | 9.1e-13 | 0.995 | all | exact | 0 |
 | 35.7 | Hamming [31,26,3] | 15 | 9.0e-13 | 0.99 | all | exact | 0 |
 | 40.6 | Hamming [31,26,3] | 17 (transferred) | 6.1e-13 | 0.95 | all | exact | 0 |
@@ -525,7 +525,7 @@ this work's own.
 |---|---|---|---|---|---|---|---|---|
 | 28.1 | Hamming [63,57,3] | 13 | 1.5e-12 | 1.5e-12 | 4.0e-11 | 0.99 | all | 64 |
 | 30.8 | Hamming [31,26,3] | 13 | 1.8e-12 | 1.8e-12 | 1.1e-11 | 0.9 | all | exact |
-| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 3.4e-14 | - | 1.0 | all | exact |
+| 30.9 | Hamming [127,120,3] | 15 | 3.4e-14 | 3.4e-14 | 2.3e-10 | 1.0 | all | exact |
 | 32.6 | Hamming [63,57,3] | 15 | 4.1e-14 | 4.1e-14 | 5.3e-11 | 1.0 | all | exact |
 | 35.7 | Hamming [31,26,3] | 15 | 5.5e-14 | 5.5e-14 | 1.3e-11 | 0.999 | all | exact |
 | 36.4 | Hamming [15,11,3] | 13 | 2.6e-12 | 2.6e-12 | 4.9e-12 | 0.5 | all | exact |

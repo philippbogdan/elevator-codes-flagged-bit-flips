@@ -715,10 +715,13 @@ def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + 
                         val = 1 + 1e-4 - math.exp(xb)
                     break
             if val is None:
-                res.append("not reached with f <= 1")
+                res.append(f"not reached with f <= {fs[-1]:g}" + ("" if fs[-1] >= 1 else " (highest simulated)"))
             else:
                 j = fs.index(f)
-                res.append(f"{val:.3f}" if j == 0 else f"{val:.3f} (between {fs[j - 1]:g} and {f:g})")
+                if j > 0:
+                    res.append(f"{val:.3f} (between {fs[j - 1]:g} and {f:g})")
+                else:
+                    res.append(f"{val:.3f}" if f == 0 else f"<= {val:.3f} (lowest simulated)")
         out[f"{code}|a{n_anc}|d{d}|{cls}|w{w}"] = res
         lines.append(f"| {CODE_LABEL[(code, n_anc)]} | {d} | {overhead(code, n_anc, d):.1f} | {cls} | {w or 'exact'} | {res[0]} | {res[1]} |")
     NUMBERS.setdefault("required_f", {})[tag] = out
