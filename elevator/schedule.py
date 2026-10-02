@@ -51,11 +51,14 @@ class Ancilla:
 class ElevatorSchedule:
     def __init__(self, code: OuterCode, d: int, n_anc: int = 1, mode: str = "full",
                  n_outer: int = 5, r_min: int | None = None, check_order=None,
-                 anc_rows=None):
+                 anc_rows=None, compress: bool = False):
         self.code = code
         self.d = d
         self.n_anc = n_anc
         self.mode = mode
+        self.compress = compress
+        if compress:
+            assert n_anc == 1 and mode == "full", "compressed schedule: one ancilla, full sweep"
         self.n_outer = n_outer
         self.r_min = d if r_min is None else r_min
         self.P = code.n + n_anc
@@ -130,41 +133,57 @@ class ElevatorSchedule:
             round_idx += 1
             if not any(a.queue or a.active for a in ancs):
                 break
-            # ---- logical operation layer
-            ops = []
-            busy = set()
-            for a in ancs:
-                if not a.active or a.path_complete:
-                    continue
-                nxt = a.row + a.direction
-                if nxt < 0 or nxt >= P:
-                    a.direction = -a.direction
-                    nxt = a.row + a.direction
-                if content[nxt][0] == "A" or nxt in busy or a.row in busy:
-                    continue   # blocked by the other ancilla: wait this layer
-                b = content[nxt][1]
-                c, _ = a.current
-                if b in self.supports[c] and b not in a.done:
-                    kind = "CS"
-                    a.done.add(b)
-                else:
-                    kind = "S"
-                ops.append((kind, a.row, nxt))
-                busy.update([a.row, nxt])
-            for kind, ar, dr in ops:
-                content[ar], content[dr] = content[dr], content[ar]
-            for a in ancs:
-                for kind, ar, dr in ops:
-                    if ar == a.row:
-                        a.row = dr
-                        a.passes += 1
-                        a.ops_this_check += 1
-                        break
-                if a.active:
-                    a.path_complete = self._path_complete(a)
-            self.segments.append(("ops", ops))
+            # ---- logical operation layer(s)
+            n_sub = 1
+            if self.compress:
+                a = ancs[0]
+                if a.active and not a.path_complete:
+                    gaps = max(1, self.r_min - 1)
+                    g = a.rounds_since_prep - 1          # index of this gap (0-based)
+                    n = self.code.n
+                    base, extra = divmod(n, gaps)
+                    n_sub = base + (1 if g < extra else 0)
+                    n_sub = max(n_sub, 1)
+            for _sub in range(n_sub):
+                self.segments.append(("ops", self._op_layer(content, ancs)))
         self.final_content = list(content)
         self.n_rounds = round_idx
+
+    def _op_layer(self, content, ancs) -> list:
+        """One layer of logical operations (at most one per ancilla); updates content."""
+        P = self.P
+        ops = []
+        busy = set()
+        for a in ancs:
+            if not a.active or a.path_complete:
+                continue
+            nxt = a.row + a.direction
+            if nxt < 0 or nxt >= P:
+                a.direction = -a.direction
+                nxt = a.row + a.direction
+            if content[nxt][0] == "A" or nxt in busy or a.row in busy:
+                continue   # blocked by the other ancilla: wait this layer
+            b = content[nxt][1]
+            c, _ = a.current
+            if b in self.supports[c] and b not in a.done:
+                kind = "CS"
+                a.done.add(b)
+            else:
+                kind = "S"
+            ops.append((kind, a.row, nxt))
+            busy.update([a.row, nxt])
+        for kind, ar, dr in ops:
+            content[ar], content[dr] = content[dr], content[ar]
+        for a in ancs:
+            for kind, ar, dr in ops:
+                if ar == a.row:
+                    a.row = dr
+                    a.passes += 1
+                    a.ops_this_check += 1
+                    break
+            if a.active:
+                a.path_complete = self._path_complete(a)
+        return ops
 
     def _path_complete(self, a: Ancilla) -> bool:
         c, _ = a.current

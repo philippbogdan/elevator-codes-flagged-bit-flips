@@ -70,7 +70,7 @@ class Frames:
 
 class CircuitBuilder:
     def __init__(self, sched: ElevatorSchedule, memory: str, p_x: float = 0.0, p_z: float = 0.0,
-                 noise_classes=None):
+                 idle_ctx=("edge", "cnot", "op")):
         assert memory in ("X", "Z")
         self.s = sched
         self.memory = memory
@@ -82,6 +82,10 @@ class CircuitBuilder:
         self.c = _TextCircuit()
         self.nmeas = 0
         self.tick = 0
+        # which idle locations carry noise: 'edge' = data during inner-ancilla prep/measure
+        # ticks, 'cnot' = boundary data qubits during the inner CNOT ticks, 'op' = data of
+        # rows not taking part in a logical-operation tick.  Paper: all (Table I).
+        self.idle_ctx = set(idle_ctx)
 
     # ---- indexing
     def dq(self, r, j):
@@ -97,8 +101,8 @@ class CircuitBuilder:
         return [self.aq(r, j) for j in range(self.d - 1)]
 
     # ---- noise helpers
-    def idle(self, qs):
-        if not qs:
+    def idle(self, qs, ctx="edge"):
+        if not qs or ctx not in self.idle_ctx:
             return
         px, pz = self.p_x, self.p_z
         if px > 0 or pz > 0:
@@ -192,12 +196,12 @@ class CircuitBuilder:
                 # t1
                 pairs = [(self.aq(r, j), self.dq(r, j)) for r in range(P) for j in range(d - 1)]
                 self.cnot(pairs)
-                self.idle([self.dq(r, d - 1) for r in range(P)])
+                self.idle([self.dq(r, d - 1) for r in range(P)], "cnot")
                 self.end_tick()
                 # t2
                 pairs = [(self.aq(r, j), self.dq(r, j + 1)) for r in range(P) for j in range(d - 1)]
                 self.cnot(pairs)
-                self.idle([self.dq(r, 0) for r in range(P)])
+                self.idle([self.dq(r, 0) for r in range(P)], "cnot")
                 self.end_tick()
                 # t3: inner ancilla X measurement (+ logical ancilla Z readout)
                 midx = self.meas("MX", all_anc, ("Z_ERROR", self.p_z))
@@ -257,7 +261,7 @@ class CircuitBuilder:
                             else:
                                 zl[tr] = Frames.xor(zl[tr], zl[cr])
                     self.cnot(pairs)
-                    self.idle([q for r in range(P) if r not in active for q in self.row_data(r)])
+                    self.idle([q for r in range(P) if r not in active for q in self.row_data(r)], "op")
                     self.end_tick()
         # ---- final data readout
         content = s.final_content
@@ -312,9 +316,11 @@ class CircuitBuilder:
 
 def build_circuit(code: OuterCode, d: int, memory: str, p_x: float = 0.0, p_z: float = 0.0,
                   n_anc: int = 1, mode: str = "full", n_outer: int | None = None,
-                  r_min: int | None = None) -> tuple[stim.Circuit, ElevatorSchedule]:
+                  r_min: int | None = None, idle_ctx=("edge", "cnot", "op"),
+                  check_order=None, compress: bool = False) -> tuple[stim.Circuit, ElevatorSchedule]:
     if n_outer is None:
         n_outer = 5 if memory == "Z" else 1
-    sched = ElevatorSchedule(code, d, n_anc=n_anc, mode=mode, n_outer=n_outer, r_min=r_min)
-    b = CircuitBuilder(sched, memory, p_x=p_x, p_z=p_z)
+    sched = ElevatorSchedule(code, d, n_anc=n_anc, mode=mode, n_outer=n_outer, r_min=r_min,
+                             check_order=check_order, compress=compress)
+    b = CircuitBuilder(sched, memory, p_x=p_x, p_z=p_z, idle_ctx=idle_ctx)
     return b.build(), sched
