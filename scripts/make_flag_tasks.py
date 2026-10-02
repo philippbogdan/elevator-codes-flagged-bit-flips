@@ -97,9 +97,24 @@ def bias_tasks():
     return ts
 
 
+def pz1e2_tasks():
+    """p_Z = 1e-2, eta = 1e6 (p_X = 1e-8): bit-flip side at larger d_Z."""
+    ts = []
+    seed = 300000
+    settings = [(0.0, "idle", 0), (0.9, "all", 0), (0.99, "all", 0), (1.0, "all", 0), (0.9, "idle", 0),
+                (0.99, "idle", 0), (0.99, "idlegate", 0), (0.99, "all", 64), (0.99, "all", 1024)]
+    for code, n_anc in CODES + [("ham15", 1)]:
+        for d in [17, 25, 33]:
+            for (f, cls, w) in settings:
+                seed += 1
+                ts.append(spec(code, n_anc, d, 1e-8, f, cls, w, seed=seed, tag="pz1e2"))
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
-    ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks}[which]()
+    ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
+          "pz1e2": pz1e2_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:
