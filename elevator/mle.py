@@ -42,3 +42,4 @@ def mle_solve(H: sp.csc_matrix, w: np.ndarray, det: np.ndarray, ycols=(), ycost=
 def costs_from_probs(p: np.ndarray) -> np.ndarray:
     p = np.clip(np.asarray(p, dtype=float), 1e-300, 0.5)
     return np.log((1 - p) / p)
+
