@@ -3,13 +3,27 @@
 
 | code | d_Z | overhead | flags on | window | f required (central) | f required (95% upper bound on p_XL) |
 |---|---|---|---|---|---|---|
+| [15,6,5] | 13 | 66.7 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] | 13 | 66.7 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] | 13 | 66.7 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] | 15 | 77.3 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] | 15 | 77.3 | idle | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] | 15 | 77.3 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] | 17 | 88.0 | all | exact | 0.000 | 0.000 |
 | [15,6,5] | 17 | 88.0 | idle | exact | 0.000 | 0.000 |
+| [15,6,5] | 17 | 88.0 | idle+gate | exact | 0.000 | 0.000 |
+| [15,6,5] | 19 | 98.7 | all | exact | 0.000 | 0.000 |
 | [15,6,5] | 19 | 98.7 | idle | exact | 0.000 | 0.000 |
+| [15,6,5] | 19 | 98.7 | idle+gate | exact | 0.000 | 0.000 |
+| [15,6,5] | 21 | 109.3 | all | exact | 0.000 | 0.000 |
 | [15,6,5] | 21 | 109.3 | idle | exact | 0.000 | 0.000 |
+| [15,6,5] | 21 | 109.3 | idle+gate | exact | 0.000 | 0.000 |
+| [15,6,5] | 23 | 120.0 | all | exact | 0.000 | 0.000 |
 | [15,6,5] | 23 | 120.0 | idle | exact | 0.000 | 0.000 |
+| [15,6,5] | 23 | 120.0 | idle+gate | exact | 0.000 | 0.000 |
+| [15,6,5] | 25 | 130.7 | all | exact | 0.000 | 0.000 |
 | [15,6,5] | 25 | 130.7 | idle | exact | 0.000 | 0.000 |
+| [15,6,5] | 25 | 130.7 | idle+gate | exact | 0.000 | 0.000 |
 | [15,6,5] 2 anc | 13 | 70.8 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 13 | 70.8 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 13 | 70.8 | all | 4 | phase flips alone exceed target | phase flips alone exceed target |
@@ -25,6 +39,7 @@
 | [15,6,5] 2 anc | 13 | 70.8 | idle | 256 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 13 | 70.8 | idle | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 13 | 70.8 | idle | 4096 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] 2 anc | 13 | 70.8 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 15 | 82.2 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 15 | 82.2 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 15 | 82.2 | all | 4 | phase flips alone exceed target | phase flips alone exceed target |
@@ -40,6 +55,7 @@
 | [15,6,5] 2 anc | 15 | 82.2 | idle | 256 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 15 | 82.2 | idle | 1024 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 15 | 82.2 | idle | 4096 | phase flips alone exceed target | phase flips alone exceed target |
+| [15,6,5] 2 anc | 15 | 82.2 | idle+gate | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,6,5] 2 anc | 17 | 93.5 | all | exact | 1.000 | 1.000 |
 | [15,6,5] 2 anc | 17 | 93.5 | all | 1 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 17 | 93.5 | all | 4 | 0.900 | 0.900 |
@@ -51,10 +67,11 @@
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 1 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 4 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 16 | 0.990 | 0.990 |
-| [15,6,5] 2 anc | 17 | 93.5 | idle | 64 | 0.990 | 0.990 |
+| [15,6,5] 2 anc | 17 | 93.5 | idle | 64 | 0.980 | 0.980 |
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 17 | 93.5 | idle | 4096 | 0.900 | 0.900 |
+| [15,6,5] 2 anc | 17 | 93.5 | idle+gate | exact | 0.995 | 0.995 |
 | [15,6,5] 2 anc | 19 | 104.8 | all | exact | 1.000 | 1.000 |
 | [15,6,5] 2 anc | 19 | 104.8 | all | 1 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 19 | 104.8 | all | 4 | 0.900 | 0.900 |
@@ -66,10 +83,11 @@
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 1 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 4 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 16 | 0.990 | 0.990 |
-| [15,6,5] 2 anc | 19 | 104.8 | idle | 64 | 0.990 | 0.990 |
+| [15,6,5] 2 anc | 19 | 104.8 | idle | 64 | 0.980 | 0.980 |
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 19 | 104.8 | idle | 4096 | 0.900 | 0.900 |
+| [15,6,5] 2 anc | 19 | 104.8 | idle+gate | exact | 0.995 | 0.995 |
 | [15,6,5] 2 anc | 21 | 116.2 | all | exact | 1.000 | 1.000 |
 | [15,6,5] 2 anc | 21 | 116.2 | all | 1 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 21 | 116.2 | all | 4 | 0.900 | 0.900 |
@@ -81,10 +99,11 @@
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 1 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 4 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 16 | 0.990 | 0.990 |
-| [15,6,5] 2 anc | 21 | 116.2 | idle | 64 | 0.990 | 0.990 |
+| [15,6,5] 2 anc | 21 | 116.2 | idle | 64 | 0.980 | 0.980 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 21 | 116.2 | idle | 4096 | 0.900 | 0.900 |
+| [15,6,5] 2 anc | 21 | 116.2 | idle+gate | exact | 0.995 | 0.995 |
 | [15,6,5] 2 anc | 23 | 127.5 | all | exact | 1.000 | 1.000 |
 | [15,6,5] 2 anc | 23 | 127.5 | all | 1 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 23 | 127.5 | all | 4 | 0.900 | 0.900 |
@@ -96,10 +115,11 @@
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 1 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 4 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 16 | 0.990 | 0.990 |
-| [15,6,5] 2 anc | 23 | 127.5 | idle | 64 | 0.990 | 0.990 |
+| [15,6,5] 2 anc | 23 | 127.5 | idle | 64 | 0.980 | 0.980 |
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 23 | 127.5 | idle | 4096 | 0.900 | 0.900 |
+| [15,6,5] 2 anc | 23 | 127.5 | idle+gate | exact | 0.995 | 0.995 |
 | [15,6,5] 2 anc | 25 | 138.8 | all | exact | 1.000 | 1.000 |
 | [15,6,5] 2 anc | 25 | 138.8 | all | 1 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 25 | 138.8 | all | 4 | 0.900 | 0.900 |
@@ -111,10 +131,11 @@
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 1 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 4 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 16 | 0.990 | 0.990 |
-| [15,6,5] 2 anc | 25 | 138.8 | idle | 64 | 0.990 | 0.990 |
+| [15,6,5] 2 anc | 25 | 138.8 | idle | 64 | 0.980 | 0.980 |
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 256 | 0.990 | 0.990 |
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 1024 | 0.900 | 0.900 |
 | [15,6,5] 2 anc | 25 | 138.8 | idle | 4096 | 0.900 | 0.900 |
+| [15,6,5] 2 anc | 25 | 138.8 | idle+gate | exact | 0.995 | 0.995 |
 | [15,9,3] | 13 | 44.4 | all | exact | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 1 | phase flips alone exceed target | phase flips alone exceed target |
 | [15,9,3] | 13 | 44.4 | all | 4 | phase flips alone exceed target | phase flips alone exceed target |

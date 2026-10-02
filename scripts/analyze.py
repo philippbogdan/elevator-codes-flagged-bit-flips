@@ -773,6 +773,73 @@ def assumptions_table(pzl_fn=None, tag="this-work-pZL"):
     open(os.path.join(OUT, "assumptions.md"), "w").write("\n".join(lines) + "\n")
 
 
+HEAD_SETTINGS = [("idle", 0, 0.9), ("idle", 0, 0.99), ("idle", 0, 1.0), ("idle+gate", 0, 0.99), ("all", 0, 0.5),
+                 ("all", 0, 0.8), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 0, 1.0), ("all", 1, 0.99), ("all", 64, 0.99),
+                 ("all", 1024, 0.99), ("all", 4096, 0.99), ("all", 4096, 1.0), ("all", 4096, 0.9), ("idle", 64, 0.99),
+                 ("idle", 4096, 0.99)]
+ALT_CODES = [("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)]
+
+
+def headline():
+    """Key numbers quoted in FINDINGS / REPORT / COMPLETE (rendered from numbers.json)."""
+    H = {}
+    cs = OH.candidates(1e-3, 1e6)
+    pub = OH.min_overhead(1e-12, cs, "elevator")
+    H["published"] = dict(overhead=pub.overhead, code=pub.label, d=pub.d,
+                          rot=OH.min_overhead(1e-12, OH.candidates(1e-3, 1e7), "rot").overhead,
+                          xzzx=OH.min_overhead(1e-12, OH.candidates(1e-3, 1e7), "xzzx").overhead)
+    rows = [r for r in flag_rows(("flag_main", "flag_supp", "flag_alt", "flag_ham63")) if r["idle"] == "edge,cnot"
+            and r["p_x"] == 1e-9 and r["r"] == 0 and r.get("mode", "erasure") == "erasure"]
+
+    def byc(cls, w, f, codes):
+        return {(r["code"], r["n_anc"], r["d"]): r for r in rows if (r["code"], r["n_anc"]) in codes and r["f"] == f
+                and (f == 0 or (r["classes"] == cls and r["window"] == w))}
+
+    for tag, fn in (("paper-pZL", pzl_paper), ("this-work-pZL", pzl_model)):
+        h = {}
+        for (cls, w, f) in [("none", 0, 0.0)] + HEAD_SETTINGS:
+            key = f"{cls}|w{w}|f{f}"
+            ent = {}
+            for lab, codes in (("main", CODES_MAIN), ("all_codes", CODES_MAIN + ALT_CODES)):
+                b = best_overhead(byc(cls, w, f, codes), 1e-3, 1e-12, fn, "pL", codes)
+                bh = best_overhead(byc(cls, w, f, codes), 1e-3, 1e-12, fn, "hi", codes)
+                ent[lab] = (dict(overhead=b[0], code=CODE_LABEL[(b[1], b[2])], d=b[3], pXL=b[4], pL=b[5]) if b else None)
+                ent[lab + "_cons"] = (dict(overhead=bh[0], code=CODE_LABEL[(bh[1], bh[2])], d=bh[3]) if bh else None)
+            for code in CODES_MAIN + ALT_CODES:
+                b = best_overhead(byc(cls, w, f, [code]), 1e-3, 1e-12, fn, "pL", [code])
+                ent[CODE_LABEL[code]] = (dict(overhead=b[0], d=b[3], pXL=b[4]) if b else None)
+            h[key] = ent
+        H[tag] = h
+        ff = h["none|w0|f0.0"]["main"]
+        H[tag + ":flagfree"] = ff
+        best_flag = min((v["main"]["overhead"] for k, v in h.items() if v["main"] and k != "none|w0|f0.0"), default=None)
+        H[tag + ":best_flagged_main"] = best_flag
+        H[tag + ":best_flagged_all_codes"] = min((v["all_codes"]["overhead"] for k, v in h.items() if v["all_codes"]), default=None)
+    # simulated d_Z = 15 bit-flip rates of [15,9,3] for the quoted settings (with 95% CI)
+    sim = {}
+    for (cls, w, f) in [("none", 0, 0.0)] + HEAD_SETTINGS:
+        c = [r for r in rows if (r["code"], r["n_anc"]) == ("15_9_3", 1) and r["d"] == 15 and not r.get("transferred")
+             and r["f"] == f and (f == 0 or (r["classes"] == cls and r["window"] == w))]
+        if c:
+            r = c[0]
+            sim[f"{cls}|w{w}|f{f}"] = dict(pXL=r["pL"], lo=r["lo"], hi=r["hi"])
+    H["sim_15_9_3_d15"] = sim
+    NUMBERS["headline"] = H
+    lines = ["\n## Headline numbers (p_Z = 1e-3, eta = 1e6, 1e-12 per round per logical qubit)\n",
+             f"Published (paper's fits): {H['published']['overhead']:.1f} ({H['published']['code']}, d_Z = {H['published']['d']}).\n",
+             "| flags | window | f | min overhead, main codes (paper pZL) | (this work pZL) | incl. Hamming codes (paper pZL) | (this work pZL) |",
+             "|---|---|---|---|---|---|---|"]
+    for (cls, w, f) in [("none", 0, 0.0)] + HEAD_SETTINGS:
+        key = f"{cls}|w{w}|f{f}"
+        cells = []
+        for lab in ("main", "all_codes"):
+            for tag in ("paper-pZL", "this-work-pZL"):
+                e = H[tag][key][lab]
+                cells.append(f"{e['overhead']:.1f} ({e['code']}, {e['d']})" if e else "not reached / not simulated")
+        lines.append(f"| {cls} | {w or 'exact'} | {f} | " + " | ".join(cells) + " |")
+    open(os.path.join(OUT, "headline.md"), "w").write("\n".join(lines) + "\n")
+
+
 # ------------------------------------------------------------------ 5. bias sweep
 ETAS = {2.5e-8: 4e4, 1e-8: 1e5, 4e-9: 2.5e5, 2e-9: 5e5, 1e-9: 1e6, 5e-10: 2e6, 2e-10: 5e6, 1e-10: 1e7}
 
@@ -1173,5 +1240,7 @@ if __name__ == "__main__":
     fig2_this_work(pzl_paper, "paper-pZL")
     required_f(pzl_paper, "paper-pZL")
     frontier(pzl_paper, "paper-pZL")
+    if "two" in PHASE:
+        headline()
     save_numbers()
     print("wrote", OUT)
