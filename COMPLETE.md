@@ -59,8 +59,8 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   14/16 ([15,6,5], two ancillas) and
   6/16 ([15,9,3], ratios
   1.43–3.76);
-  X memory ratios 0.34–0.47
-  counting a failure once, 0.89–1.30
+  X memory ratios 0.37–0.47
+  counting a failure once, 0.95–1.30
   counting each logical qubit's errors (the convention of the paper's X fit; multiplicity
   2.6 measured on the same shots, `counting_convention.json`);
   the repetition code within 0.7–1.4× of the paper's repetition-code fit for d_Z ≤ 13.
@@ -110,14 +110,14 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   (FINDINGS §6, `pz1e2_floors.md`, `fig2_this_work_*.md`, `limits.md`): without
   flags 2.1e-11 ([15,6,5], two ancillas) and
   4.7e-9 ([15,9,3]) (paper pZL); with flags on all
-  locations at f = 0.99 1.3e-14 at
-  354.2 qubits and
+  locations at f = 0.99 5.3e-15 at
+  365.5 qubits and
   4.4e-11 at
   165.3; with perfect flags
   8.6e-17 and
   2.2e-12.  1e-12 is reached with
   [15,6,5] 2 anc from f = 0.8 on all locations
-  ([15,6,5] from f = 0.95 with p_XL at its 95 % upper bound; [15,6,5] at 269.3
+  ([15,6,5] 2 anc from f = 0.9 with p_XL at its 95 % upper bound; [15,6,5] at 269.3
   qubits per logical qubit at f = 0.99, paper pZL; 269.3 with p_XL at
   its 95 % upper bound, which the analytic stratum bounds make tight); this work's phase-flip model
   places every floor higher and at larger d_Z (both in the tables).
@@ -143,7 +143,7 @@ without one).
 * **Statistics** — every rate carries a 95 % interval (Wilson per stratum; failures counted in the
   tables).  Where a stratum shows no failure its upper end is the smaller of the Wilson bound and an
   analytic bound from the code distance and the decoder's costs (FINDINGS 7b:
-  1126 sampled strata checked against it, 0 violations), or of the
+  1139 sampled strata checked against it, 0 violations), or of the
   false-flag pair bounds; overheads are given from the central rate and, where it differs, from the
   95 % upper bound.  Every number below sampling reach (p_X ≤ 1e-8 bit flips; phase flips below ~1e-9) is
   labelled, gives its model (Poisson strata with sampled failure fractions; transfers in d_Z and
@@ -151,7 +151,7 @@ without one).
   points: direct samples under flags 30/30
   and 30/30 (from the
   p_X = 1e-9 fractions); d_Z transfers 146/146
-  and 126/126; p_X transfers (bias)
+  and 129/129; p_X transfers (bias)
   24/24; held-out
   repetition-code points within 0.94–1.48×.
 * **Overhead against the published floors** — 88 → 58.7
@@ -188,15 +188,17 @@ without one).
   timing window, then the efficiency — until each axis reached a limit of the problem (next item).
 * **Every remaining limit belongs to the problem** (`limits.md`, FINDINGS §8):
   * *overhead* — every frontier code sits at its phase-flip floor: one step lower in d_Z its phase
-    flips alone exceed 1e-12 ([15,9,3]: 3.16e-12
+    flips alone exceed 1e-12 ([15,9,3]: 3.19e-12
     at d_Z = 13), at the floor its bit flips are far below its phase flips
     (4.81e-18 vs
     1.10e-13); phase flips are errors flags cannot
     reveal, the floor is the same for an ideal decoder of the data blocks, and no Elevator-type memory
-    can go below 25 qubits per logical qubit here;
+    can go below 25 qubits per logical qubit here
+    (29 n_b/k with the elevator's own phase flips, in either phase-flip model: the
+    frontier's 32.6 is within 12 % of it, the rest being the outer code's rate);
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
-    0.80
+    0.74
     of the [15,9,3] floor) plus phase flips;
   * *flag efficiency required* — unflagged bit flips under a decoder shown ML-optimal for its flag
     model at exact and coarse timing;

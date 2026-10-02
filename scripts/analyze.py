@@ -243,7 +243,7 @@ def phase_floor_table():
              "| code | p_Z | target | d_Z (this work's model) | overhead | d_Z (ideal decoder bound) | overhead |",
              "|---|---|---|---|---|---|---|"]
     out = {}
-    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2), ("ham15", 1), ("ham31", 1), ("ham63", 1)]:
+    for code in [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2), ("ham15", 1), ("ham31", 1), ("ham63", 1), ("ham127", 1)]:
         for pz, tgt in [(1e-3, 1e-12), (1e-3, 1e-15), (1e-2, 1e-9), (1e-2, 1e-12)]:
             dm = next((d for d in range(3, 202, 2) if pzl_model(code[0], code[1], d, pz) <= tgt), None)
             di = next((d for d in range(3, 202, 2) if pzl_ideal(code[0], code[1], d, pz) <= tgt), None)
@@ -396,7 +396,7 @@ _CAPS = {}
 CODES_MAIN = [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]
 CODE_LABEL = {("15_9_3", 1): "[15,9,3]", ("15_6_5", 1): "[15,6,5]", ("15_6_5", 2): "[15,6,5] 2 anc",
               ("ham15", 1): "Hamming [15,11,3]", ("ham31", 1): "Hamming [31,26,3]", ("xham16", 1): "ext. Hamming [16,11,4]",
-              ("ham63", 1): "Hamming [63,57,3]", ("16_3_8", 1): "[16,3,8]"}
+              ("ham63", 1): "Hamming [63,57,3]", ("ham127", 1): "Hamming [127,120,3]", ("16_3_8", 1): "[16,3,8]"}
 
 
 def pzl_paper(code, n_anc, d, pz):
@@ -656,7 +656,7 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
     return res, rows
 
 
-def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1), ("xham16", 1)],
+def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1), ("ham127", 1), ("xham16", 1)],
                target=1e-12, pz=1e-3, px=1e-9):
     """Minimum flag efficiency for each (code, d_Z, flag classes, window) to reach the target:
     log p_XL interpolated linearly in log(1 - f) between the bracketing simulated efficiencies (bit-flip
@@ -962,7 +962,7 @@ HEAD_SETTINGS = [("idle", 0, 0.9), ("idle", 0, 0.99), ("idle", 0, 1.0), ("idle+g
                  ("all", 0, 0.8), ("all", 0, 0.9), ("all", 0, 0.99), ("all", 0, 1.0), ("all", 1, 0.99), ("all", 64, 0.99),
                  ("all", 1024, 0.99), ("all", 4096, 0.99), ("all", 4096, 1.0), ("all", 4096, 0.9), ("idle", 64, 0.99),
                  ("idle", 4096, 0.99)]
-ALT_CODES = [("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)]
+ALT_CODES = [("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1), ("ham127", 1)]
 
 
 def headline():
@@ -1210,6 +1210,18 @@ def limits_table():
     for pz, tgt in ((1e-3, 1e-12), (1e-2, 1e-9), (1e-2, 1e-12)):
         d_rep = next((d for d in range(3, 400, 2) if float(m.predict(d, pz)) <= tgt), None)
         L[f"absolute_floor|{pz:g}|{tgt:g}"] = dict(d_rep=d_rep, overhead=(2 * d_rep - 1) if d_rep else None)
+    # elevator floor: any outer code, k/n -> 1 (the moving ancilla's share per logical qubit -> 0) with each
+    # phase-flip model: this work's data-block term a p_rep(d, p), the paper's fit scaled by 9/16 (n_b/k -> 1)
+    if "two" in PHASE:
+        a_ = float(np.exp(PHASE["two"][0])[0])
+        for pz, tgt in ((1e-3, 1e-12),):
+            dm = next((d for d in range(3, 400, 2) if a_ * float(m.predict(d, pz)) <= tgt), None)
+            dp = next((d for d in range(3, 400, 2) if (9 / 16) * 0.12 * (34.4 * pz) ** (0.94 * (d + 1) / 2) <= tgt), None)
+            L[f"elevator_floor|{pz:g}|{tgt:g}"] = {
+                "this-work-pZL": dict(d=dm, overhead=(2 * dm - 1) if dm else None,
+                                      rate_below=a_ * float(m.predict(dm - 2, pz)) if dm else None),
+                "paper-pZL": dict(d=dp, overhead=(2 * dp - 1) if dp else None,
+                                  rate_below=(9 / 16) * 0.12 * (34.4 * pz) ** (0.94 * (dp - 1) / 2) if dp else None)}
     lines += ["### Absolute phase-flip floor of the construction\n",
               "Any Elevator-type memory spends at least one repetition-code block of distance d_Z per logical qubit; "
               "its phase flips alone reach the target only from d_rep (this work's repetition-code model), so the "
@@ -2011,7 +2023,7 @@ if __name__ == "__main__":
             required_f(pzl_model, "this-work-pZL")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt", "flag_ham63"), label="alt",
-                    codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1)])
+                    codes=[("ham15", 1), ("ham31", 1), ("xham16", 1), ("ham63", 1), ("ham127", 1)])
         plot_bias(bias_sweep(pzl_model, "this-work-pZL"), "this-work-pZL")
         plot_overheads(pzl_model, "this-work-pZL")
         plot_maps(pzl_model, "this-work-pZL")

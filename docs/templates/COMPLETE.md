@@ -177,7 +177,9 @@ without one).
     ({{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pXL"]) }} vs
     {{ e2(N["limits"]["p1e-3|[15,9,3]|this-work-pZL"]["pZL"]) }}); phase flips are errors flags cannot
     reveal, the floor is the same for an ideal decoder of the data blocks, and no Elevator-type memory
-    can go below {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit here;
+    can go below {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit here
+    ({{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] }} n_b/k with the elevator's own phase flips, in either phase-flip model: the
+    frontier's {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} is within {{ pct(N["headline"]["this-work-pZL:best_flagged_all_codes"] / N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] - 1) }} of it, the rest being the outer code's rate);
   * *p_L at p_Z = 1e-2 with perfect flags* — the code's distance (≥ d flagged events containing an
     undetectable logical, computed without a decoder; flagged-only events make up a share
     {{ f2(N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["flagged_only"] / N["limits"]["p1e-2|[15,9,3]|f=1.0 all w=exact|this-work-pZL"]["pL"]) }}

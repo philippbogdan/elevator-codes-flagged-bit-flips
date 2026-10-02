@@ -156,10 +156,16 @@ class OuterCode:
         if self.k <= 16:
             w = self.codewords().sum(axis=1)
             return int(w[w > 0].min())
-        lw = self.low_weight_codewords(6)
-        if not lw:
-            raise ValueError("distance > 6 with k > 16: not supported")
-        return min(lw)
+        # smallest set of dependent columns of H, searched by increasing size (stops at the first)
+        cols = [int("".join(map(str, self.H[:, j][::-1])), 2) for j in range(self.n)]
+        for w in range(1, 7):
+            for S in itertools.combinations(range(self.n), w):
+                acc = 0
+                for j in S:
+                    acc ^= cols[j]
+                if acc == 0:
+                    return w
+        raise ValueError("distance > 6 with k > 16: not supported")
 
     def weight_distribution(self) -> dict[int, int]:
         if self.k > 16:
@@ -192,13 +198,13 @@ def extended_hamming_H(r: int) -> np.ndarray:
 
 
 def load_code(name: str) -> OuterCode:
-    """name in {'15_9_3', '15_6_5', '16_3_8', 'ham7', 'ham15', 'ham31', 'xham16'}
+    """name in {'15_9_3', '15_6_5', '16_3_8', 'ham7', 'ham15', 'ham31', 'ham63', 'ham127', 'xham16'}
     (also accepts '[15,9,3]' style).  Hamming codes are alternatives tried for the frontier."""
     key = name.strip("[]").replace(",", "_")
     if key == "16_3_8":
         return OuterCode("16_3_8", _parse(H_16_3_8))
     if key.startswith("ham"):
-        r = {"ham7": 3, "ham15": 4, "ham31": 5, "ham63": 6}[key]
+        r = {"ham7": 3, "ham15": 4, "ham31": 5, "ham63": 6, "ham127": 7}[key]
         return OuterCode(key, hamming_H(r))
     if key.startswith("xham"):
         r = {"xham8": 3, "xham16": 4, "xham32": 5}[key]

@@ -455,6 +455,14 @@ this work's own.
       {{ N["limits"]["absolute_floor|0.001|1e-12"]["overhead"] }} qubits per logical qubit at this
       operating point (one repetition-code block of distance
       {{ N["limits"]["absolute_floor|0.001|1e-12"]["d_rep"] }} per logical qubit, k/n → 1, no ancilla).
+      With the elevator's own data-block phase flips (this work's model) or the paper's fit, even an
+      outer code of rate k/n → 1 needs d_Z = {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["d"] }}
+      (at d_Z = {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["d"] - 2 }}: {{ e1(N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["rate_below"]) }} and
+      {{ e1(N["limits"]["elevator_floor|0.001|1e-12"]["paper-pZL"]["rate_below"]) }} per logical qubit), i.e. at least
+      {{ N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] }} n_b/k qubits: the frontier's
+      {{ f1(N["headline"]["this-work-pZL:best_flagged_all_codes"]) }} is within
+      {{ pct(N["headline"]["this-work-pZL:best_flagged_all_codes"] / N["limits"]["elevator_floor|0.001|1e-12"]["this-work-pZL"]["overhead"] - 1) }} of that, the rest being its
+      outer code's rate, which higher-rate codes buy only with better flags (§7).
     * *The code distance.*  With perfect, exactly timed flags failures need ≥ d flagged events that
       contain an undetectable logical (computed without a decoder, item 7); at p_Z = 1e-2 this
       sets the [15,9,3] and Hamming floors (flagged-only share
