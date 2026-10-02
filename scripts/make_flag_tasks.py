@@ -130,10 +130,32 @@ def validation_tasks():
     return ts
 
 
+def supp_tasks():
+    """Fill the efficiency x timing map (classes 'all' and 'idle') at d_Z = 15, 17 and the
+    false-flag sweep at d_Z = 15."""
+    ts = []
+    seed = 500000
+    for code, n_anc in CODES:
+        for d in [15, 17]:
+            for cls in ["all", "idle"]:
+                for f in [0.5, 0.8, 0.95, 0.98, 0.995]:
+                    for w in [4, 64, 1024, 4096]:
+                        seed += 1
+                        ts.append(spec(code, n_anc, d, 1e-9, f, cls, w, seed=seed, tag="supp"))
+        for w in [0, 64]:
+            for r in [1e-10, 1e-9, 1e-8, 1e-7, 1e-6]:
+                seed += 1
+                ts.append(spec(code, n_anc, 15, 1e-9, 0.99, "all", w, r, seed=seed, tag="supp"))
+                seed += 1
+                ts.append(spec(code, n_anc, 15, 1e-9, 0.99, "idle", w, r, seed=seed, tag="supp"))
+    return ts
+
+
 if __name__ == "__main__":
     which = sys.argv[1]
     ts = {"main": main_tasks, "literal": literal_tasks, "bias": bias_tasks, "alt": alt_tasks,
-          "pz1e2": pz1e2_tasks, "validation": validation_tasks}[which]()
+          "pz1e2": pz1e2_tasks, "validation": validation_tasks,
+          "supp": supp_tasks}[which]()
     os.makedirs(os.path.join(ROOT, "tasks"), exist_ok=True)
     path = os.path.join(ROOT, "tasks", f"flag_{which}.jsonl")
     with open(path, "w") as fh:

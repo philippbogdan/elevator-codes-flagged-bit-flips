@@ -438,7 +438,7 @@ CLASS_RANK = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
 
 def frontier(pzl_fn, tag):
     """Non-dominated (overhead, p_L, f, window, flag classes, false-flag rate) at p_Z=1e-3, eta=1e6."""
-    rows = [r for r in flag_rows(("flag_main", "flag_alt")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
+    rows = [r for r in flag_rows(("flag_main", "flag_alt", "flag_supp")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
     pts = []
     for r in rows:
         pl = r["pL"] + pzl_fn(r["code"], r["n_anc"], r["d"], 1e-3)
@@ -471,11 +471,15 @@ def frontier(pzl_fn, tag):
 if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
-    flag_tables()
+    flag_tables(dirs=("flag_main", "flag_supp"))
+    flag_tables(dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
     validation_table()
     bias_sweep(pzl_paper, "paper-pZL")
     if phase_model() is not None:
-        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL")
+        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_main", "flag_supp"))
+        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_literal",), idle="edge,cnot,op", label="literal")
+        flag_tables(pzl_fn=pzl_model, tag="this-work-pZL", dirs=("flag_alt",), label="alt",
+                    codes=[("ham15", 1), ("ham31", 1), ("xham16", 1)])
         bias_sweep(pzl_model, "this-work-pZL")
         pz1e2(pzl_model, "this-work-pZL")
         frontier(pzl_model, "this-work-pZL")
