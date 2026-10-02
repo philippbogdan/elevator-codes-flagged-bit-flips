@@ -380,6 +380,94 @@ def bias_sweep(pzl_fn, tag, codes=CODES_MAIN, label="bias"):
     return out
 
 
+# ------------------------------------------------------------------ 6. p_Z = 1e-2: floors
+def pz1e2(pzl_fn, tag, codes=CODES_MAIN + [("ham15", 1)]):
+    rows = [r for r in flag_rows(("flag_pz1e2",)) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-8]
+    if not rows:
+        return
+    refs = defaultdict(dict)
+    for r in rows:
+        refs[(r["code"], r["n_anc"], r["f"], r["classes"], r["window"])][r["d"]] = r
+    lines = [f"\n## p_Z = 1e-2, eta = 1e6 (p_X = 1e-8): lowest reachable logical error rate (phase flips: {tag})\n",
+             "Bit flips at d_Z other than the simulated 17/25/33 use the stratum failure fractions of the nearest "
+             "simulated d_Z with exact fault intensities at the new d_Z (transfer; checked below).\n",
+             "### Transfer check (prediction from d_Z = 17 vs direct stratified run)\n",
+             "| code | flags | d_Z | direct p_XL [95% CI] | transferred from 17 [95% CI] |", "|---|---|---|---|---|"]
+    checks = []
+    for key, byd in sorted(refs.items()):
+        if 17 in byd:
+            for dd in (25, 33):
+                if dd in byd:
+                    t = transfer_pxl(byd[17], dd)
+                    r = byd[dd]
+                    if t is None:
+                        continue
+                    ok = not (t[2] < r["lo"] or t[1] > r["hi"])
+                    checks.append(ok)
+                    lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {dd} | "
+                                 f"{r['pL']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {t[0]:.2e} [{t[1]:.2e}, {t[2]:.2e}] {'' if ok else '(outside)'} |")
+    NUMBERS[f"pz1e2_transfer_checks"] = dict(agree=int(sum(checks)), total=len(checks))
+    lines += ["\n### Floor per code and flag setting\n",
+              "| code | flags | lowest p_L | at d_Z | overhead | p_XL there | p_ZL there |", "|---|---|---|---|---|---|---|"]
+    out = {}
+    for key, byd in sorted(refs.items()):
+        if key[:2] not in codes:
+            continue
+        best = None
+        for d in range(15, 62, 2):
+            ref_d = min(byd, key=lambda x: abs(x - d))
+            t = transfer_pxl(byd[ref_d], d)
+            if t is None:
+                continue
+            pzl = pzl_fn(key[0], key[1], d, 1e-2)
+            tot = t[0] + pzl
+            if best is None or tot < best[0]:
+                best = (tot, d, overhead(key[0], key[1], d), t[0], pzl)
+        if best:
+            out[key] = best
+            lines.append(f"| {CODE_LABEL[key[:2]]} | f={key[2]} {key[3]} w={key[4] or 'exact'} | {best[0]:.2e} | {best[1]} | "
+                         f"{best[2]:.1f} | {best[3]:.2e} | {best[4]:.2e} |")
+    NUMBERS.setdefault("pz1e2", {})[tag] = {f"{k[0]}|a{k[1]}|f{k[2]}|{k[3]}|w{k[4]}": dict(pL=v[0], d=v[1], overhead=v[2]) for k, v in out.items()}
+    open(os.path.join(OUT, f"pz1e2_{tag}.md"), "w").write("\n".join(lines) + "\n")
+    return out
+
+
+# ------------------------------------------------------------------ 7. frontier
+CLASS_RANK = {"none": 0, "idle": 1, "idle+gate": 2, "all": 3}
+
+
+def frontier(pzl_fn, tag):
+    """Non-dominated (overhead, p_L, f, window, flag classes, false-flag rate) at p_Z=1e-3, eta=1e6."""
+    rows = [r for r in flag_rows(("flag_main", "flag_alt")) if r["idle"] == "edge,cnot" and r["p_x"] == 1e-9]
+    pts = []
+    for r in rows:
+        pl = r["pL"] + pzl_fn(r["code"], r["n_anc"], r["d"], 1e-3)
+        pts.append(dict(code=r["code"], n_anc=r["n_anc"], d=r["d"], overhead=overhead(r["code"], r["n_anc"], r["d"]),
+                        pL=pl, f=r["f"], window=(10 ** 9 if r["f"] == 0 else (r["window"] if r["window"] else 0)),
+                        cls=CLASS_RANK[r["classes"]], classes=r["classes"], r=r["r"]))
+
+    def dominates(a, b):
+        ge = (a["overhead"] <= b["overhead"] and a["pL"] <= b["pL"] and a["f"] <= b["f"] and a["cls"] <= b["cls"]
+              and a["window"] >= b["window"] and a["r"] >= b["r"])
+        gt = (a["overhead"] < b["overhead"] or a["pL"] < b["pL"] or a["f"] < b["f"] or a["cls"] < b["cls"]
+              or a["window"] > b["window"] or a["r"] > b["r"])
+        return ge and gt
+
+    nd = [p for p in pts if p["pL"] <= 1e-12 and not any(dominates(q, p) for q in pts if q["pL"] <= 1e-12)]
+    nd.sort(key=lambda p: (p["overhead"], p["f"]))
+    lines = [f"\n## Frontier at p_Z = 1e-3, eta = 1e6, p_L <= 1e-12 (phase flips: {tag})\n",
+             "Non-dominated in (overhead, p_L, flag efficiency f required, flag classes required, timing window "
+             "allowed, false-flag rate allowed) among all simulated codes and flag settings (exact MLE decoder).\n",
+             "| overhead | code | d_Z | p_L | f | flags on | window (ticks) | false flags |", "|---|---|---|---|---|---|---|---|"]
+    for p in nd:
+        w = "any (no flags)" if p["window"] == 10 ** 9 else ("exact" if p["window"] == 0 else p["window"])
+        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL']:.2e} | {p['f']} | "
+                     f"{p['classes']} | {w} | {p['r']:g} |")
+    open(os.path.join(OUT, f"frontier_{tag}.md"), "w").write("\n".join(lines) + "\n")
+    NUMBERS.setdefault("frontier", {})[tag] = nd
+    return nd
+
+
 if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
@@ -389,5 +477,9 @@ if __name__ == "__main__":
     if phase_model() is not None:
         flag_tables(pzl_fn=pzl_model, tag="this-work-pZL")
         bias_sweep(pzl_model, "this-work-pZL")
+        pz1e2(pzl_model, "this-work-pZL")
+        frontier(pzl_model, "this-work-pZL")
+    pz1e2(pzl_paper, "paper-pZL")
+    frontier(pzl_paper, "paper-pZL")
     save_numbers()
     print("wrote", OUT)
