@@ -51,6 +51,7 @@ def load_elev_x(dirs) -> list[dict]:
             P = st["fails"] / st["shots"]
             lo, hi = wilson(st["fails"], st["shots"])
             rows.append(dict(code=sp["code"], n_anc=sp["n_anc"], d=sp["d"], p=sp["p_z"],
+                             anc_scale=float(sp.get("anc_scale", 1.0)),
                              variant=sp.get("variant"), idle=",".join(sp.get("idle_ctx", [])),
                              compress=sp.get("compress", False), decoder=sp["decoder"]["name"]
                              + ("-ms" if sp["decoder"].get("bp_method") == "minimum_sum" else ""),
@@ -116,8 +117,8 @@ def fit_ratio(elev_rows, rep_model: RepModel, nb_over_k: dict):
 
 
 def fit_two_component(elev_rows, rep_model: RepModel, nb_k: dict, data_only_rows=None):
-    """p_ZL k = (n_b - 1) a p_rep(d, p) + g p_rep(d, kappa p): data blocks behave like isolated
-    repetition codes (factor a), the moving ancilla like one at kappa times the noise (weight g).
+    """p_ZL k = n a p_rep(d, p) + n_anc g p_rep(d, kappa p): the n data blocks behave like isolated
+    repetition codes (factor a), each moving ancilla like one at kappa times the noise (weight g).
     Weighted least squares on log p_ZL over (a, g, kappa); data_only_rows (ancilla noise off)
     constrain a directly."""
     from scipy.optimize import least_squares
@@ -127,9 +128,9 @@ def fit_two_component(elev_rows, rep_model: RepModel, nb_k: dict, data_only_rows
         la, lg, lk = theta
         n, k = nb_k[(r["code"], r["n_anc"])]
         pr = rep_model.predict(r["d"], r["p"])
-        val = (n + r["n_anc"] - 1) * np.exp(la) * pr
+        val = n * np.exp(la) * pr
         if anc:
-            val += np.exp(lg) * rep_model.predict(r["d"], np.exp(lk) * r["p"])
+            val += r["n_anc"] * np.exp(lg) * rep_model.predict(r["d"], np.exp(lk) * r["p"])
         return val / k
 
     def resid(theta):

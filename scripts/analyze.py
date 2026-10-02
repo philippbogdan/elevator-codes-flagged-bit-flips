@@ -149,8 +149,10 @@ def phase_model():
         fit = 0.13 * (25.02 * r["p"]) ** (0.99 * (r["d"] + 1) / 2)
         lines.append(f"| {r['p']:.1e} | {r['d']} | {r['y']:.2e} | {fit:.2e} | {r['y']/fit:.2f} |")
     # elevator / rep ratio
-    elev = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow")])
+    allx = [r for r in load_elev_x([os.path.join(ROOT, "results", d) for d in ("repro_x", "phase_xlow", "phase_ancdiag")])
             if r["idle"] == "edge,cnot" and not r["compress"]]
+    elev = [r for r in allx if r["anc_scale"] == 1.0]
+    data_only = [r for r in allx if r["anc_scale"] == 0.0]
     NBK = {(c, a): (OH.ELEVATOR_NK[c][0] + a) / OH.ELEVATOR_NK[c][1] for c in OH.ELEVATOR_NK for a in (1, 2)}
     if len(elev) >= 4:
         coef, cov, resid = fit_ratio(elev, m, NBK)
@@ -163,14 +165,38 @@ def phase_model():
             pr = float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])]
             lines.append(f"| {r['code']} | {r['d']} | {r['p']:.1e} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {pr:.2e} | {r['y']/pr:.2f} |")
         NUMBERS["phase_ratio_fit"] = dict(coef=list(coef), n=len(elev))
+        if data_only:
+            lines.append("\n### Ancilla diagnostic: logical-ancilla and logical-operation noise switched off\n")
+            lines.append("| d_Z | p_Z | p_ZL ancilla noise off [95% CI] | (n_b/k) p_rep | c without ancilla noise |")
+            lines.append("|---|---|---|---|---|")
+            for r in sorted(data_only, key=lambda r: (r["p"], r["d"])):
+                pr = float(m.predict(r["d"], r["p"])) * NBK[(r["code"], r["n_anc"])]
+                lines.append(f"| {r['d']} | {r['p']:.1e} | {r['y']:.2e} [{r['lo']:.2e}, {r['hi']:.2e}] | {pr:.2e} | {r['y']/pr:.2f} |")
+        from elevator.phasemodel import fit_two_component
+        if len(elev) >= 5:
+            NBK2 = {(c, a): OH.ELEVATOR_NK[c] for c in OH.ELEVATOR_NK for a in (1, 2)}
+            th, thcov, tmodel = fit_two_component(elev, m, NBK2, data_only)
+            PHASE["two"] = (th, thcov, tmodel)
+            lines.append(f"\nTwo-component model: p_ZL k = n a p_rep(d,p) + n_anc g p_rep(d, kappa p), "
+                         f"a = {math.exp(th[0]):.2f}, g = {math.exp(th[1]):.2f}, kappa = {math.exp(th[2]):.2f}\n")
+            NUMBERS["phase_two_component"] = dict(a=math.exp(th[0]), g=math.exp(th[1]), kappa=math.exp(th[2]),
+                                                   cov=thcov.tolist())
     open(os.path.join(OUT, "phase_model.md"), "w").write("\n".join(lines) + "\n")
     return m
 
 
 def pzl_model(code, n_anc, d, pz, conservative=False):
-    """This work's phase-flip model: (n_b/k) c(d,p) p_rep(d,p)."""
+    """This work's phase-flip model: n a p_rep(d,p) + n_anc g p_rep(d, kappa p), per logical qubit;
+    falls back to (n_b/k) c(d,p) p_rep(d,p) if the two-component fit is unavailable."""
     m = PHASE["rep"]
     n, k = OH.ELEVATOR_NK[code]
+    if "two" in PHASE:
+        th, thcov, tmodel = PHASE["two"]
+        a, g, kap = np.exp(th)
+        val = n * a * m.predict(d, pz) + n_anc * g * m.predict(d, kap * pz)
+        if conservative:
+            val *= math.exp(2 * m.log_predict(d, kap * pz)[1][0])
+        return float(val) / k
     mu, sd = m.log_predict(d, pz)
     val = float(np.exp(mu[0] + (2 * sd[0] if conservative else 0.0)))
     if "c" in PHASE:
