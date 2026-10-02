@@ -1520,8 +1520,8 @@ def frontier(pzl_fn, tag):
              "| overhead | code | d_Z | p_L | p_XL 95% upper | f | flags on | window (ticks) | false flags tolerated |",
              "|---|---|---|---|---|---|---|---|---|"]
     for p in req:
-        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL']:.2e} | {p['pXL_hi']:.1e} | "
-                     f"{p['f']} | {p['classes']} | {wtxt(p['window'])} | {p['r']:g} |" + (" (transferred)" if p["transferred"] else ""))
+        lines.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']}{' (transferred)' if p['transferred'] else ''} | "
+                     f"{p['pL']:.2e} | {p['pXL_hi']:.1e} | {p['f']} | {p['classes']} | {wtxt(p['window'])} | {p['r']:g} |")
     lines += ["\n### (b) Lowest p_L per code and d_Z, and what it takes\n",
               "For every simulated (or transferred) code and d_Z: the lowest p_L of any flag setting, the phase-flip part "
               "of it (flags cannot lower it), the flag-free p_L, and the least demanding setting within a factor 1.5 of "
@@ -1537,8 +1537,8 @@ def frontier(pzl_fn, tag):
     md = ["| overhead | code | d_Z | p_L | f needed | flags on | coarsest window | false flags tolerated |",
           "|---|---|---|---|---|---|---|---|"]
     for p in req:
-        md.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']} | {p['pL']:.1e} | {p['f']} | "
-                  f"{p['classes']} | {wtxt(p['window'])} | {p['r']:g} |")
+        md.append(f"| {p['overhead']:.1f} | {CODE_LABEL[(p['code'], p['n_anc'])]} | {p['d']}{' (transferred)' if p['transferred'] else ''} | "
+                  f"{p['pL']:.1e} | {p['f']} | {p['classes']} | {wtxt(p['window'])} | {p['r']:g} |")
     NUMBERS.setdefault("md", {})[f"frontier_req_{tag}"] = "\n".join(md)
     md = ["| overhead | code | d_Z | lowest p_L | of which phase flips | without flags | least f within 1.5x | flags on | coarsest window |",
           "|---|---|---|---|---|---|---|---|---|"]
