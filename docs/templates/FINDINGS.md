@@ -91,7 +91,8 @@ this work's own.
 2. **The same figures follow from this work's flag-free simulation.**  With the paper's phase-flip
    fit and this work's bit-flip rates (stratified, p_X ≤ 2.5e-8), the steps of Fig. 1 come out as
    {{ "; ".join(f"{s['overhead']} ({s['code']}, d_Z = {s['d']}) from η = {e2(s['eta'])}" for s in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}
-   (published: 88 from 1.21e5, 58.7 from 1.76e6).  Evidence: `fig1_this_work_paper-pZL.md/.png`.
+   (published: 187 below 6.7e4, 93.5 from 6.7e4, 88 from 1.21e5, 58.7 from 1.76e6): the same
+   overheads, with the steps within a factor 1.4 in η.  Evidence: `fig1_this_work_paper-pZL.md/.png`.
 
 3. **The paper's circuits evidently carry no idle noise on blocks that wait during a
    logical-operation tick.**  With idle noise on every waiting block (the literal reading of Table

@@ -18,7 +18,7 @@ from elevator.blocklevel import BlockModel, class_sums  # noqa: E402
 from elevator.codes import load_code  # noqa: E402
 from elevator.schedule import ElevatorSchedule  # noqa: E402
 
-DEFAULT = ["15_9_3:1", "15_6_5:1", "15_6_5:2", "ham15:1", "ham31:1", "xham16:1", "ham63:1:3",
+DEFAULT = ["15_9_3:1", "15_6_5:1", "15_6_5:2", "ham15:1", "ham31:1", "xham16:1", "ham63:1:3", "16_3_8:1",
            "15_9_3:1:lit", "15_6_5:1:lit", "15_6_5:2:lit"]
 DS = [13, 15, 17, 19, 21, 25, 29, 33, 37, 41, 45, 51, 57, 61]
 PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "summary", "class_sums.json")

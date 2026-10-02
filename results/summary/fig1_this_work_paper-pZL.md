@@ -5,6 +5,7 @@ Steps of the minimum overhead (p_Z = 1e-3, target 1e-12) as the bias grows; bit 
 
 | flags | from eta | overhead | code | d_Z |
 |---|---|---|---|---|
+| none|w0|f0.0 | 4e+04 | 187.0 | [16,3,8] | 17 |
 | none|w0|f0.0 | 4.82e+04 | 93.5 | [15,6,5] 2 anc | 17 |
 | none|w0|f0.0 | 8.8e+04 | 88.0 | [15,6,5] | 17 |
 | none|w0|f0.0 | 2.16e+06 | 58.7 | [15,9,3] | 17 |

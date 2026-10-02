@@ -67,10 +67,10 @@ evidence in detail: `FINDINGS.md`; each criterion against the published floor: `
   {{ e2(N["fig2_from_fits_floors"]["pz=0.01"]["[15,9] 15_9_3 a1"]["pl"]) }} and
   {{ e2(N["fig2_from_fits_floors"]["pz=0.01"]["[15,6] 15_6_5 a2"]["pl"]) }}).  From this work's
   flag-free simulation (bit flips) with the paper's phase-flip fit: the published operating point
-  is reproduced — {{ ohs("paper-pZL", "none|w0|f0.0") }} at η = 1e6 — and the Fig. 1 steps fall at
-  η = {{ ", ".join(e2(s["eta"]) for s in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}
-  ({{ ", ".join(s["code"] for s in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}), published
-  6.7e4, 1.21e5, 1.76e6.  At p_Z = 1e-2 the flag-free floors come out as
+  is reproduced — {{ ohs("paper-pZL", "none|w0|f0.0") }} at η = 1e6 — and so is Fig. 1:
+  {{ " → ".join(str(st["overhead"]) + " (" + st["code"] + ")" for st in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"]) }}
+  with steps at η = {{ ", ".join(e2(st["eta"]) for st in N["fig1_this_work"]["paper-pZL"]["none|w0|f0.0"][1:]) }}
+  (published 187 → 93.5 → 88 → 58.7 at 6.7e4, 1.21e5, 1.76e6).  At p_Z = 1e-2 the flag-free floors come out as
   {{ e1(N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["pL"]) }} ([15,6,5], two ancillas, d_Z =
   {{ N["limits"]["p1e-2|[15,6,5] 2 anc|none|paper-pZL"]["d"] }}; published 2.08e-11 at 49) and
   {{ e1(N["limits"]["p1e-2|[15,9,3]|none|paper-pZL"]["pL"]) }} ([15,9,3]; published 1.94e-9).
