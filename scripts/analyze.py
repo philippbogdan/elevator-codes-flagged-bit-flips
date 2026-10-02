@@ -106,8 +106,94 @@ def figures_from_fits():
     fig.tight_layout(); fig.savefig(os.path.join(OUT, "fig2_from_paper_fits.png"), dpi=130); plt.close(fig)
 
 
+# ------------------------------------------------------------------ 3. flag study
+CODES_MAIN = [("15_9_3", 1), ("15_6_5", 1), ("15_6_5", 2)]
+CODE_LABEL = {("15_9_3", 1): "[15,9,3]", ("15_6_5", 1): "[15,6,5]", ("15_6_5", 2): "[15,6,5] 2 anc",
+              ("ham15", 1): "Hamming [15,11,3]", ("ham31", 1): "Hamming [31,26,3]", ("xham16", 1): "ext. Hamming [16,11,4]"}
+
+
+def pzl_paper(code, n_anc, d, pz):
+    return OH.paper_pzl(code, n_anc, d, pz)
+
+
+def flag_rows(dirs):
+    rows = []
+    for dd in dirs:
+        p = os.path.join(ROOT, "results", dd)
+        if os.path.isdir(p):
+            rows += load_strata(p)
+    return rows
+
+
+def select(rows, **kw):
+    out = []
+    for r in rows:
+        if all((r.get(k) == v) if not callable(v) else v(r.get(k)) for k, v in kw.items()):
+            out.append(r)
+    return out
+
+
+def best_overhead(rows_by_cd, pz, target, pzl_fn, use="pL", codes=CODES_MAIN):
+    """rows_by_cd: {(code, n_anc, d): row}; cheapest admissible (code, d)."""
+    best = None
+    for (code, n_anc, d), r in rows_by_cd.items():
+        if (code, n_anc) not in codes:
+            continue
+        tot = r[use] + pzl_fn(code, n_anc, d, pz)
+        if tot <= target:
+            oh = overhead(code, n_anc, d)
+            if best is None or oh < best[0]:
+                best = (oh, code, n_anc, d, r[use], tot)
+    return best
+
+
+def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="edge,cnot", px=1e-9,
+                codes=CODES_MAIN, label="main"):
+    rows = select(flag_rows(dirs), idle=idle, p_x=px)
+    if not rows:
+        return
+    lines = [f"\n## Flagged bit flips, p_X = {px:g} (reading: idle={idle}); phase flips from {tag}\n"]
+    # f = 0 rows apply to every class and window
+    f0 = {(r["code"], r["n_anc"], r["d"]): r for r in rows if r["f"] == 0}
+    settings = sorted({(r["classes"], r["window"], r["f"], r["r"]) for r in rows if r["f"] > 0})
+    res = {}
+    for (cls, w, f, rr) in [("none", 0, 0.0, 0.0)] + settings:
+        if f == 0:
+            byc = f0
+        else:
+            byc = {(r["code"], r["n_anc"], r["d"]): r for r in rows
+                   if r["classes"] == cls and r["window"] == w and r["f"] == f and r["r"] == rr}
+        for use in ("pL", "hi"):
+            b = best_overhead(byc, 1e-3, 1e-12, pzl_fn, use, codes)
+            res[(cls, w, f, rr, use)] = b
+        per_code = {}
+        for code in codes:
+            sub = {k: v for k, v in byc.items() if (k[0], k[1]) == code}
+            b = best_overhead(sub, 1e-3, 1e-12, pzl_fn, "pL", [code])
+            per_code[code] = b
+        res[(cls, w, f, rr, "per_code")] = per_code
+    # table: overhead vs f (exact timing)
+    lines.append("### Minimum qubit overhead at p_Z = 1e-3, eta = 1e6, target 1e-12 per round per logical qubit\n")
+    lines.append("Central estimate (conservative: bit-flip rate at its 95% upper bound) and the chosen code/d_Z.\n")
+    lines.append("| flags on | window (ticks) | f | false flags /qubit/tick | overhead (central) | code, d_Z | p_XL | overhead (conservative) |")
+    lines.append("|---|---|---|---|---|---|---|---|")
+    for key in [("none", 0, 0.0, 0.0)] + settings:
+        b = res[key + ("pL",)]
+        bh = res[key + ("hi",)]
+        cell = (f"{b[0]:.1f} | {CODE_LABEL[(b[1], b[2])]}, {b[3]} | {b[4]:.2e}" if b else "not reached | - | -")
+        cellh = f"{bh[0]:.1f}" if bh else "not reached"
+        lines.append(f"| {key[0]} | {'exact' if key[1] == 0 else key[1]} | {key[2]} | {key[3]:g} | {cell} | {cellh} |")
+    open(os.path.join(OUT, f"flags_{label}_{tag}.md"), "w").write("\n".join(lines) + "\n")
+    NUMBERS.setdefault("flags", {})[f"{label}:{tag}"] = {
+        f"{k[0]}|w{k[1]}|f{k[2]}|r{k[3]}|{k[4]}": (None if v is None else (v if k[4] != "per_code" else
+                                                     {CODE_LABEL[c]: (None if bb is None else bb[0]) for c, bb in v.items()}))
+        for k, v in res.items()}
+    return res, rows
+
+
 if __name__ == "__main__":
     repro_tables()
     figures_from_fits()
+    flag_tables()
     save_numbers()
     print("wrote", OUT)

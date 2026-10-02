@@ -12,6 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from elevator.flagstudy import run_strata  # noqa: E402
 from elevator.tasks import run_task, task_id  # noqa: E402
 
 
@@ -32,7 +33,6 @@ def main():
             continue
         out = os.path.join(a.outdir, task_id(spec) + ".json")
         if spec["kind"] == "strata":
-            from elevator.flagstudy import run_strata
             if os.path.exists(out) and json.load(open(out)).get("spec") == spec:
                 continue
             res = run_strata(spec, a.procs, out)

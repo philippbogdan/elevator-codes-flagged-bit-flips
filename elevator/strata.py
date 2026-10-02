@@ -20,6 +20,7 @@ import math
 
 import numpy as np
 
+from .decode import wilson
 from .flags import FlagModel
 
 
@@ -73,7 +74,6 @@ def pois(k: int, lam: float) -> float:
 def combine(U: float, S: float, Fs: dict) -> dict:
     """Fs: {(a,b): (fails, n)} -> P_fail estimate with a 95% interval (Wilson per stratum,
     combined by adding the per-stratum bounds weighted by the Poisson probabilities)."""
-    from .decode import wilson
     est = lo = hi = 0.0
     for (a, b), (fails, n) in Fs.items():
         w = pois(a, U) * pois(b, S)

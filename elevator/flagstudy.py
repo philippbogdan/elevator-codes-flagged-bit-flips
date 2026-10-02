@@ -7,10 +7,12 @@ Result: per-stratum (fails, n), U, S, rounds, k and the combined estimate.
 """
 from __future__ import annotations
 
+import json
 import math
 import os
 import time
 import zlib
+from multiprocessing import Pool
 
 import numpy as np
 
@@ -60,7 +62,6 @@ def strata_list(kmax: int):
 
 
 def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
-    from multiprocessing import Pool
     t0 = time.time()
     code, sched, bm, fm, dec, ss = _build(spec)
     U, S = ss.U, ss.S
@@ -134,7 +135,6 @@ def run_strata(spec: dict, procs: int, out_path: str | None = None) -> dict:
     res["hi"] += res["tail_bound"]          # truncated strata contribute at most this
     res["pL_hi"] = res["hi"] / (R * k)
     if out_path:
-        import json
         tmp = out_path + ".tmp"
         json.dump(res, open(tmp, "w"))
         os.replace(tmp, out_path)

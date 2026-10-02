@@ -10,6 +10,7 @@ layers under the literal noise reading).  Decoded with PyMatching (the DEM is gr
 from __future__ import annotations
 
 import numpy as np
+import pymatching
 import stim
 
 
@@ -57,7 +58,6 @@ def rep_circuit(d: int, rounds: int, p: float, extra_idle: float = 0.0) -> stim.
 
 def sample_rep(d: int, rounds: int, p: float, shots: int, seed: int, extra_idle: float = 0.0,
                batch: int = 100000) -> dict:
-    import pymatching
     c = rep_circuit(d, rounds, p, extra_idle)
     dem = c.detector_error_model(decompose_errors=True, approximate_disjoint_errors=True)
     m = pymatching.Matching.from_detector_error_model(dem)

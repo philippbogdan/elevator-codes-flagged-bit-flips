@@ -17,8 +17,12 @@ import time
 
 import numpy as np
 
+from ldpc import BpLsdDecoder, BpOsdDecoder
+from ldpc.ckt_noise.dem_matrices import detector_error_model_to_check_matrices
+
 from .circuits import build_circuit
 from .codes import load_code
+from .repcode import sample_rep
 
 
 def task_id(spec: dict) -> str:
@@ -27,8 +31,6 @@ def task_id(spec: dict) -> str:
 
 
 def make_decoder(dem, dspec: dict):
-    from ldpc import BpLsdDecoder, BpOsdDecoder
-    from ldpc.ckt_noise.dem_matrices import detector_error_model_to_check_matrices
     m = detector_error_model_to_check_matrices(dem, allow_undecomposed_hyperedges=True)
     H = m.check_matrix.tocsr()
     L = m.observables_matrix.tocsr()
@@ -75,7 +77,6 @@ def run_phys_shard(spec: dict, shots: int, seed: int) -> dict:
 
 
 def run_rep_shard(spec: dict, shots: int, seed: int) -> dict:
-    from .repcode import sample_rep
     t0 = time.time()
     r = sample_rep(spec["d"], spec["rounds"], spec["p_z"], shots, seed, extra_idle=spec.get("extra_idle", 0.0))
     return dict(shots=r["shots"], fails=r["fails"], rounds=spec["rounds"], k=1, seconds=time.time() - t0)
@@ -87,9 +88,6 @@ def run_shard(args):
         return run_phys_shard(spec, shots, seed)
     if spec["kind"] == "rep":
         return run_rep_shard(spec, shots, seed)
-    if spec["kind"] == "block":
-        from .blocklevel import run_block_shard
-        return run_block_shard(spec, shots, seed)
     raise ValueError(spec["kind"])
 
 

@@ -21,7 +21,12 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+import scipy.sparse as sp
+from ldpc import BpOsdDecoder
+from scipy.optimize import Bounds, LinearConstraint, milp
+
 from .blocklevel import BlockModel
+from .mle import mle_solve
 
 
 @dataclass
@@ -160,13 +165,11 @@ class BpOsdFlagDecoder:
     """BP+OSD on the merged block-level DEM with per-shot flag posteriors."""
 
     def __init__(self, fm: FlagModel, **opts):
-        from ldpc import BpOsdDecoder
         o = dict(bp_method="product_sum", max_iter=100, osd_method="osd_cs", osd_order=7)
         o.update(opts)
         self.fm = fm
         H = fm.bm.col_D.astype(np.uint8)
         self.L = fm.bm.col_L.astype(np.uint8)
-        import scipy.sparse as sp
         self.dec = BpOsdDecoder(sp.csr_matrix(H), error_channel=list(fm.col_bg), **o)
         self._bg = True
 
@@ -205,15 +208,12 @@ class MleFlagDecoder:
     w_j = log((1 - p_j) / p_j).  Used to check the optimality of BP+OSD."""
 
     def __init__(self, fm: FlagModel):
-        import scipy.sparse as sp
         self.fm = fm
         self.H = sp.csr_matrix(fm.bm.col_D.astype(np.int64))
         self.L = fm.bm.col_L.astype(np.uint8)
         self.colw = np.asarray(fm.bm.col_D.sum(axis=0)).ravel()
 
     def decode(self, det, wins):
-        from scipy.optimize import milp, LinearConstraint, Bounds
-        import scipy.sparse as sp
         if not det.any():
             return np.zeros(self.L.shape[0], np.uint8)
         p = self.fm.column_probs(wins) if wins else self.fm.col_bg
@@ -362,7 +362,6 @@ class ExclusiveMleDecoder:
     Constraints: H (x + sum_W y_W) = s (mod 2),  sum_c y_{W,c} <= 1."""
 
     def __init__(self, fm: FlagModel):
-        import scipy.sparse as sp
         self.fm = fm
         bm = fm.bm
         self.H = sp.csc_matrix(bm.col_D.astype(np.int64))
@@ -398,8 +397,6 @@ class ExclusiveMleDecoder:
         return out
 
     def decode(self, det, wins):
-        from scipy.optimize import milp, LinearConstraint, Bounds
-        import scipy.sparse as sp
         if not det.any():
             return np.zeros(self.L.shape[0], np.uint8)
         fm = self.fm
@@ -425,6 +422,5 @@ class ExclusiveMleDecoder:
                 ycols.append(c)
                 ycost.append(np.log(p0 / pcv))
                 ywin.append(wi)
-        from .mle import mle_solve
         x = mle_solve(self.H, w, det, ycols, ycost, ywin)
         return (self.L @ x) & 1
