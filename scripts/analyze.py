@@ -375,6 +375,47 @@ def validation_table():
                      f"{P:.3e} [{lo:.2e}, {hi:.2e}] | {s_['P']:.3e} [{s_['lo']:.2e}, {s_['hi']:.2e}] | {'yes' if ok else 'NO'} |")
     lines.append(f"\n{agree} of {total} configurations agree within the 95% intervals.\n")
     NUMBERS["validation"] = dict(agree=agree, total=total)
+    # the p_X = 1e-9 estimates themselves, transferred to the validation p_X (intensities scale with p)
+    from elevator.strata import pois
+    main = {}
+    for r in flag_rows(("flag_main",)):
+        if r["p_x"] == 1e-9 and r["idle"] == "edge,cnot" and r["r"] == 0:
+            main[(r["code"], r["n_anc"], r["d"], r["f"], r["classes"], r["window"])] = r
+    lines += ["\n### The p_X = 1e-9 estimates predicting held-out direct samples\n",
+              "Stratum failure fractions measured at p_X = 1e-9 (the numbers behind the overheads) with exact "
+              "intensities at the held-out p_X; the upper bound adds the truncated strata.\n",
+              "| code | p_X | f | flags on | window | direct P_fail [95% CI] | predicted from p_X = 1e-9 [lo, hi] | inside |",
+              "|---|---|---|---|---|---|---|---|"]
+    ins = tot2 = 0
+    for key in sorted(direct):
+        code, n_anc, d, px, f, cls_t, w = key
+        cls = {1: "idle", 2: "idle+gate", 4: "all"}.get(len(cls_t), "?") if f > 0 else "none"
+        r9 = main.get((code, n_anc, d, f, cls, w))
+        if r9 is None:
+            continue
+        U, S = r9["U"] * px / 1e-9, r9["S"] * px / 1e-9
+        est = lo = hi = 0.0
+        kmax = 0
+        for k2, (fa, n) in r9["strata"].items():
+            a, b = map(int, k2.split(","))
+            kmax = max(kmax, a + b)
+            wgt = pois(a, U) * pois(b, S)
+            if k2 in r9["exact"]:
+                v = r9["exact"][k2]; est += wgt * v; lo += wgt * v; hi += wgt * v
+            elif n:
+                l, h = wilson(fa, n); est += wgt * fa / n; lo += wgt * l; hi += wgt * h
+        tail = 1 - sum(pois(a, U) * pois(t - a, S) for t in range(kmax + 1) for a in range(t + 1))
+        hi += max(tail, 0)
+        d_ = direct[key]
+        P = d_["fails"] / d_["shots"]
+        dlo, dhi = wilson(d_["fails"], d_["shots"])
+        ok = not (hi < dlo or lo > dhi)
+        ins += ok
+        tot2 += 1
+        lines.append(f"| {CODE_LABEL[(code, n_anc)]} | {px:.0e} | {f} | {cls} | {w or 'exact'} | {P:.3e} [{dlo:.2e}, {dhi:.2e}] | "
+                     f"{est:.3e} [{lo:.2e}, {hi:.2e}] | {'yes' if ok else 'NO'} |")
+    lines.append(f"\n{ins} of {tot2} held-out direct-sampling points are inside the predicted interval.\n")
+    NUMBERS["validation_transfer"] = dict(inside=ins, total=tot2)
     open(os.path.join(OUT, "validation.md"), "w").write("\n".join(lines) + "\n")
 
 
