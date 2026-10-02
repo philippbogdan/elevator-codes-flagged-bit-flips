@@ -1,6 +1,6 @@
 """Flag-free decoder sensitivity at the paper's sampled points: the same sampled shots decoded by
 BP+LSD-CS4 (this work's X-memory decoder), BP+OSD-CS7 (this work's Z-memory decoder) and BP+OSD-0
-with ldpc's default settings (min-sum, max_iter = n; the paper names BP+OSD but not its settings).
+(product-sum 100 iterations, or min-sum 30); the paper names BP+OSD but not its settings.
 Writes results/decoder_variants_flagfree.json.
 
   python scripts/decoder_variants_flagfree.py [shots]
@@ -24,7 +24,10 @@ DECODERS = {
                                              lsd_method="lsd_cs", lsd_order=4),
     "bposd_cs7": lambda H, pri: BpOsdDecoder(H, error_channel=pri, bp_method="product_sum", max_iter=100,
                                              osd_method="osd_cs", osd_order=7),
-    "bposd0_default": lambda H, pri: BpOsdDecoder(H, error_channel=pri),
+    "bposd0_ps": lambda H, pri: BpOsdDecoder(H, error_channel=pri, bp_method="product_sum", max_iter=100,
+                                             osd_method="osd0", osd_order=0),
+    "bposd0_ms": lambda H, pri: BpOsdDecoder(H, error_channel=pri, bp_method="minimum_sum", max_iter=30,
+                                             osd_method="osd0", osd_order=0),
 }
 
 
@@ -57,12 +60,12 @@ def run(code_name, d, memory, p_x, p_z, shots, seed, names):
 def main():
     shots = int(sys.argv[1]) if len(sys.argv) > 1 else 300
     out = []
-    cases = [("15_9_3", 9, "X", 0.0, 1e-2, ["bplsd_cs4", "bposd0_default", "bposd_cs7"]),
-             ("15_9_3", 9, "X", 0.0, 7e-3, ["bplsd_cs4", "bposd0_default"]),
-             ("15_9_3", 9, "Z", 1e-5, 0.0, ["bposd_cs7", "bposd0_default"]),
-             ("15_6_5", 9, "Z", 1e-5, 0.0, ["bposd_cs7", "bposd0_default"])]
+    cases = [("15_9_3", 9, "X", 0.0, 1e-2, ["bplsd_cs4", "bposd_cs7", "bposd0_ps", "bposd0_ms"]),
+             ("15_9_3", 9, "X", 0.0, 7e-3, ["bplsd_cs4", "bposd_cs7", "bposd0_ps", "bposd0_ms"]),
+             ("15_9_3", 9, "Z", 1e-5, 0.0, ["bposd_cs7", "bposd0_ps", "bposd0_ms"]),
+             ("15_6_5", 9, "Z", 1e-5, 0.0, ["bposd_cs7", "bposd0_ps", "bposd0_ms"])]
     for (code, d, mem, px, pz, names) in cases:
-        n = shots if mem == "X" else 20 * shots
+        n = shots if mem == "X" else 10 * shots
         r = run(code, d, mem, px, pz, n, 4242, names)
         print(json.dumps(r), flush=True)
         out.append(r)

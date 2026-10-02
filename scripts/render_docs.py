@@ -50,8 +50,46 @@ def pct(x):
     return f"{100 * x:.0f} %"
 
 
-ENV = dict(N=N, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
-           round=round, sorted=sorted)
+H = N.get("headline", {})
+
+
+def ohv(tag, key, lab="main"):
+    """minimum overhead (number) at p_Z = 1e-3, eta = 1e6, 1e-12 for a flag setting key 'cls|w..|f..'"""
+    e = H[tag][key][lab]
+    return e["overhead"] if e else None
+
+
+def ohs(tag, key, lab="main"):
+    """minimum overhead with its code and d_Z, as text"""
+    e = H[tag][key][lab]
+    return f"{e['overhead']:.1f} ({e['code']}, d_Z = {e['d']})" if e else "not reached"
+
+
+def reqf(tag, code, d, cls, w, which=0):
+    """minimum flag efficiency (central = 0, conservative = 1) for code 'code|aN', d_Z, classes, window"""
+    return N["required_f"][tag][f"{code}|d{d}|{cls}|w{w}"][which]
+
+
+def first_eta(tag, key, code_label):
+    """lowest bias from which the given code is the cheapest choice (Fig. 1 from this work's simulations)"""
+    for st in N["fig1_this_work"][tag][key]:
+        if st["code"] == code_label:
+            return st["eta"]
+    return None
+
+
+def floor2(tag, key):
+    """lowest reachable p_L at p_Z = 1e-2 (Fig. 2 from this work's simulations) for flag setting key"""
+    return N["fig2_this_work"][tag][f"pz=0.01|{key}"]
+
+
+def pfloor(code, pz, tgt, which="d_model"):
+    return N["phase_floor"][f"{code}|{pz:g}|{tgt:g}"][which]
+
+
+ENV = dict(N=N, H=H, f1=f1, f2=f2, e1=e1, e2=e2, g=g, pct=pct, math=math, min=min, max=max, len=len, sum=sum,
+           round=round, sorted=sorted, ohv=ohv, ohs=ohs, reqf=reqf, first_eta=first_eta, floor2=floor2, pfloor=pfloor,
+           abs=abs, str=str, int=int, float=float)
 PAT = re.compile(r"\{\{(.+?)\}\}", re.S)
 
 

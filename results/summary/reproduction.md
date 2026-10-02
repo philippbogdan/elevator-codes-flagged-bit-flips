@@ -185,7 +185,7 @@
 | 15_9_3 | 1 | compress/noop bplsd | 2/2 | 0.52 - 0.53 |
 | 15_9_3 | 1 | full/all bplsd | 0/2 | 2.27 - 2.54 |
 | 15_9_3 | 1 | full/noop bplsd | 1/2 | 0.44 - 0.47 |
-| 15_9_3 | 1 | full/noop bplsd-minsum | 2/6 | 0.39 - 0.50 |
+| 15_9_3 | 1 | full/noop bplsd-minsum | 2/7 | 0.38 - 0.50 |
 
 | code | anc | reading | d | p | fails/shots | p_L this work [95% CI] | fit | ratio |
 |---|---|---|---|---|---|---|---|---|
@@ -200,6 +200,7 @@
 | 15_9_3 | 1 | full/noop bplsd-minsum | 9 | 5.0e-03 | 208/19200 | 1.26e-05 [1.10e-05, 1.44e-05] | 3.06e-05 | 0.41 (outside) |
 | 15_9_3 | 1 | full/noop bplsd-minsum | 9 | 7.0e-03 | 398/6400 | 7.43e-05 [6.73e-05, 8.20e-05] | 1.49e-04 | 0.50 |
 | 15_9_3 | 1 | full/noop bplsd-minsum | 9 | 1.0e-02 | 188/800 | 3.10e-04 [2.68e-04, 3.57e-04] | 7.96e-04 | 0.39 (outside) |
+| 15_9_3 | 1 | full/noop bplsd-minsum | 11 | 5.0e-03 | 41/19200 | 2.47e-06 [1.82e-06, 3.36e-06] | 5.86e-06 | 0.42 |
 | 15_9_3 | 1 | full/noop bplsd-minsum | 11 | 7.0e-03 | 150/11200 | 1.56e-05 [1.33e-05, 1.83e-05] | 3.91e-05 | 0.40 (outside) |
-| 15_9_3 | 1 | full/noop bplsd-minsum | 13 | 7.0e-03 | 22/6400 | 3.99e-06 [2.63e-06, 6.03e-06] | 1.02e-05 | 0.39 |
+| 15_9_3 | 1 | full/noop bplsd-minsum | 13 | 7.0e-03 | 171/51200 | 3.87e-06 [3.33e-06, 4.50e-06] | 1.02e-05 | 0.38 (outside) |
 | 15_9_3 | 1 | full/noop bplsd-minsum | 13 | 1.0e-02 | 157/4400 | 4.21e-05 [3.60e-05, 4.92e-05] | 1.07e-04 | 0.39 (outside) |

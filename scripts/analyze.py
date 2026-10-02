@@ -544,8 +544,8 @@ def flag_tables(pzl_fn=pzl_paper, tag="paper-pZL", dirs=("flag_main",), idle="ed
 def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + [("ham15", 1), ("ham31", 1), ("ham63", 1)],
                target=1e-12, pz=1e-3, px=1e-9):
     """Minimum flag efficiency for each (code, d_Z, flag classes, window) to reach the target:
-    log p_XL interpolated linearly in f between simulated efficiencies (bit-flip upper bound used
-    for the conservative column)."""
+    log p_XL interpolated linearly in log(1 - f) between the bracketing simulated efficiencies (bit-flip
+    upper bound used for the conservative column); the bracketing efficiencies are reported."""
     rows = [r for r in flag_rows(dirs + ("flag_alt", "flag_ham63")) if r["idle"] == "edge,cnot" and r["p_x"] == px and r["r"] == 0]
     groups = defaultdict(dict)
     zero = {}
@@ -579,12 +579,19 @@ def required_f(pzl_fn, tag, dirs=("flag_main", "flag_supp"), codes=CODES_MAIN + 
                     if i == 0:
                         val = f
                     else:
+                        # interpolate log p_XL linearly in log(1 - f) (p_XL ~ (1 - f)^k at small 1 - f)
                         f0, f1 = fs[i - 1], f
                         y0, y1 = math.log(max(pts[f0][use], 1e-300)), math.log(max(pts[f1][use], 1e-300))
                         yb = math.log(budget)
-                        val = f0 + (f1 - f0) * (y0 - yb) / (y0 - y1) if y0 != y1 else f1
+                        x0, x1 = math.log(1 - f0 + 1e-4), math.log(1 - f1 + 1e-4)
+                        xb = x0 + (x1 - x0) * (y0 - yb) / (y0 - y1) if y0 != y1 else x1
+                        val = 1 + 1e-4 - math.exp(xb)
                     break
-            res.append("not reached with f <= 1" if val is None else f"{val:.3f}")
+            if val is None:
+                res.append("not reached with f <= 1")
+            else:
+                j = fs.index(f)
+                res.append(f"{val:.3f}" if j == 0 else f"{val:.3f} (between {fs[j - 1]:g} and {f:g})")
         out[f"{code}|a{n_anc}|d{d}|{cls}|w{w}"] = res
         lines.append(f"| {CODE_LABEL[(code, n_anc)]} | {d} | {overhead(code, n_anc, d):.1f} | {cls} | {w or 'exact'} | {res[0]} | {res[1]} |")
     NUMBERS.setdefault("required_f", {})[tag] = out
@@ -838,6 +845,54 @@ def headline():
                 cells.append(f"{e['overhead']:.1f} ({e['code']}, {e['d']})" if e else "not reached / not simulated")
         lines.append(f"| {cls} | {w or 'exact'} | {f} | " + " | ".join(cells) + " |")
     open(os.path.join(OUT, "headline.md"), "w").write("\n".join(lines) + "\n")
+
+
+def aux_checks():
+    """Known answers, decoder-optimality and decoder-variant checks, exact perfect-flag strata: summaries
+    for the documents (from results/*.json written by the local check scripts)."""
+    def load(name):
+        fn = os.path.join(ROOT, "results", name)
+        return json.load(open(fn)) if os.path.exists(fn) else None
+    A = {}
+    ka = load("known_answers.json")
+    if ka:
+        out = {}
+        for k, v in ka.items():
+            if not isinstance(v, dict):
+                continue
+            if k.startswith("KA1_code_capacity") or k.startswith("KA2_code_capacity"):
+                sizes = {int(s): x for s, x in v.items()}
+                dmax = max(sizes)
+                out[k] = dict(max_size=dmax, patterns_below_d=sum(x["patterns"] for s, x in sizes.items() if s < dmax),
+                              failures_below_d=sum(x["failures"] for s, x in sizes.items() if s < dmax),
+                              patterns_at_d=sizes[dmax]["patterns"], failures_at_d=sizes[dmax]["failures"],
+                              sets_with_failure_at_d=sizes[dmax].get("sets_with_failure"))
+            elif k.startswith("KA2_circuit"):
+                out[k] = dict(sets=sum(x["sets"] for x in v.values()), patterns=sum(x.get("patterns", 0) for x in v.values()),
+                              failures=sum(x["failures"] for x in v.values()))
+            elif k.startswith("KA1_circuit"):
+                out[k] = {s: dict(samples=x.get("samples"), failures=x["failures"]) for s, x in v.items()}
+        A["known_answers"] = out
+    do = load("decoder_optimality.json")
+    if do:
+        A["decoder_optimality"] = dict(cases=len(do), n=sum(r["n"] for r in do), ml=sum(r["ml"] for r in do),
+                                       mle=sum(r["mle"] for r in do), bposd=sum(r["bposd"] for r in do),
+                                       disagree=sum(r["disagree_ml_mle"] for r in do), rows=do)
+    dw = load("decoder_optimality_windows.json")
+    if dw:
+        A["decoder_optimality_windows"] = dict(cases=len(dw), n=sum(r["n"] for r in dw), ml=sum(r["ml"] for r in dw),
+                                               mle=sum(r["mle"] for r in dw), disagree=sum(r["disagree"] for r in dw),
+                                               windows=sorted({r["window"] for r in dw}), rows=dw)
+    dv = load("decoder_variants_flagfree.json")
+    if dv:
+        A["decoder_variants_flagfree"] = dv
+    pf = load("perfect_flags_exact.json")
+    if pf:
+        A["perfect_flags_exact"] = {f"{r['code']}|a{r['n_anc']}|d{r['d']}": {b: v["F"] for b, v in r["F"].items()} for r in pf}
+    se = load("sensitivity_15_9_3.json")
+    if se:
+        A["sensitivity_15_9_3"] = se
+    NUMBERS["checks"] = A
 
 
 # ------------------------------------------------------------------ 5. bias sweep
@@ -1264,6 +1319,7 @@ def plot_bias(out, tag):
 
 
 if __name__ == "__main__":
+    aux_checks()
     repro_tables()
     figures_from_fits()
     flag_tables(dirs=("flag_main", "flag_supp", "flag_falseflag"))
