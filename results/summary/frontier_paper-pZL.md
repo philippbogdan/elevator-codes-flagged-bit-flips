@@ -16,6 +16,7 @@ Non-dominated in overhead, flag efficiency f, flag classes needed, timing window
 | 48.0 | Hamming [15,11,3] | 17 (transferred) | 6.96e-13 | 7.4e-13 | 0.8 | all | exact | 0 |
 | 48.0 | Hamming [15,11,3] | 17 (transferred) | 4.99e-13 | 5.8e-13 | 0.99 | all | 4096 | 0 |
 | 51.0 | ext. Hamming [16,11,4] | 17 (transferred) | 8.04e-13 | 8.5e-13 | 0.9 | idle | 4 | 0 |
+| 51.0 | ext. Hamming [16,11,4] | 17 (transferred) | 7.14e-13 | 7.8e-13 | 0.99 | idle | 64 | 0 |
 | 58.7 | [15,9,3] | 17 (transferred) | 5.19e-13 | 5.1e-13 | 0.8 | idle+gate | exact | 0 |
 | 58.7 | [15,9,3] | 17 (transferred) | 5.71e-13 | 6.8e-13 | 0.8 | all | 64 | 0 |
 | 58.7 | [15,9,3] | 17 (transferred) | 5.08e-13 | 5.8e-13 | 0.9 | all | 4096 | 0 |
