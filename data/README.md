@@ -15,3 +15,5 @@ SHA-256:
 27b4a08c82f4f4f6b8c063b68549cf186848d940e4c6eff557020e5500190d73  outer-codes/H_15_9_3.txt
 199c7fa6c3c6461841d77fa228fd303a76c4977fec33d95fdc28dd75b7d835e8  outer-codes/H_15_6_5.txt
 ```
+
+The papers themselves are not included in this public copy: fetch them from the arXiv links above (their SHA-256 are listed for checking).
