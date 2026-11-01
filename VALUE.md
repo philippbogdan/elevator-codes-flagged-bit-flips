@@ -1,5 +1,7 @@
 US$100,000 to US$5 million
 
+*This is a very rough estimate produced by GPT 6 Astra (max) for reference.*
+
 This is my rounded estimate of incremental expected value to the quantum computing industry through 2040, expressed in present-value 2026 US dollars. The probabilities and economic assumptions below are judgements. Realised value could be zero.
 
 The work contributes a reusable simulation, decoder and design study combining [Elevator Codes](https://arxiv.org/abs/2601.10786v2) with [flagging of bit flips in dissipative cat qubits](https://arxiv.org/abs/2607.01375v1). Its [saved results](results/summary/headline.md) predict a reduction from 88 to 58.7 physical qubits per logical qubit at the main operating point, a 33% saving, with 90% flag efficiency at all locations, exact timing and no false alarms. An alternative extended Hamming code reaches 51 with idle-only flags under the same phase-error model. These predictions concern quantum memory at a very high noise bias and a target error rate of 10^-12 per round per logical qubit; hardware validation remains outstanding.
