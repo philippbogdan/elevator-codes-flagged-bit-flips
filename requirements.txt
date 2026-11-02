@@ -1,0 +1,8 @@
+stim==1.16.0
+sinter==1.16.0
+ldpc==2.4.1
+pymatching==2.4.0
+numpy==2.5.4
+scipy==1.18.1
+matplotlib==3.11.2
+pytest

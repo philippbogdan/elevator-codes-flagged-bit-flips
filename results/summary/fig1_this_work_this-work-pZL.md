@@ -1,0 +1,22 @@
+
+## Qubit count against noise bias from the bit-flip samples (phase flips: this-work-pZL)
+
+Steps of the minimum overhead (p_Z = 1e-3, target 1e-12) as the bias grows; bit flips from the simulated stratum failure fractions re-weighted to each p_X (transfer, checked against direct samples in validation.md).
+
+| flags | from eta | overhead | code | d_Z |
+|---|---|---|---|---|
+| none|w0|f0.0 | 4e+04 | 164.3 | [16,3,8] | 15 |
+| none|w0|f0.0 | 4.39e+04 | 82.2 | [15,6,5] 2 anc | 15 |
+| none|w0|f0.0 | 7.66e+04 | 77.3 | [15,6,5] | 15 |
+| none|w0|f0.0 | 1.88e+06 | 51.6 | [15,9,3] | 15 |
+| idle|w0|f0.99 | 4e+04 | 82.2 | [15,6,5] 2 anc | 15 |
+| idle|w0|f0.99 | 4.19e+04 | 77.3 | [15,6,5] | 15 |
+| idle|w0|f0.99 | 1.03e+06 | 51.6 | [15,9,3] | 15 |
+| all|w0|f0.9 | 4e+04 | 77.3 | [15,6,5] | 15 |
+| all|w0|f0.9 | 4.26e+05 | 51.6 | [15,9,3] | 15 |
+| all|w0|f0.99 | 4e+04 | 77.3 | [15,6,5] | 15 |
+| all|w0|f0.99 | 1.01e+05 | 58.7 | [15,9,3] | 17 |
+| all|w0|f0.99 | 1.54e+05 | 51.6 | [15,9,3] | 15 |
+| all|w1024|f0.99 | 4e+04 | 77.3 | [15,6,5] | 15 |
+| all|w1024|f0.99 | 4.07e+05 | 51.6 | [15,9,3] | 15 |
+| all|w0|f1.0 | 4e+04 | 51.6 | [15,9,3] | 15 |

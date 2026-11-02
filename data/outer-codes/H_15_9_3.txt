@@ -1,0 +1,7 @@
+# Parity-check matrix of the [15,9,3] outer code, transcribed from Appendix C of arXiv:2601.10786v2 (data/papers/2601.10786v2-source/apssamp.tex)
+1 0 1 0 1 1 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 1 0 0 1 0 1
+0 0 0 0 0 1 0 0 1 1 0 0 0 1 0
+0 0 0 0 1 0 0 0 0 0 1 1 1 0 0
+0 0 0 1 0 0 0 1 1 0 0 1 0 0 0
+0 1 1 1 0 0 1 0 0 0 0 0 0 0 0

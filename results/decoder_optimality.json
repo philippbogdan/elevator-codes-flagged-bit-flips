@@ -1,0 +1,116 @@
+[
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.0,
+  "classes": [
+   "idle"
+  ],
+  "stratum": [
+   2,
+   0
+  ],
+  "seconds": 165.0724401473999,
+  "n": 500,
+  "ml": 72,
+  "mle": 72,
+  "bposd": 94,
+  "disagree_ml_mle": 0
+ },
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.9,
+  "classes": [
+   "idle"
+  ],
+  "stratum": [
+   2,
+   0
+  ],
+  "seconds": 154.4786069393158,
+  "n": 500,
+  "ml": 69,
+  "mle": 68,
+  "bposd": 89,
+  "disagree_ml_mle": 1
+ },
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.9,
+  "classes": [
+   "idle"
+  ],
+  "stratum": [
+   1,
+   1
+  ],
+  "seconds": 160.8391454219818,
+  "n": 500,
+  "ml": 15,
+  "mle": 17,
+  "bposd": 16,
+  "disagree_ml_mle": 6
+ },
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.9,
+  "classes": [
+   "idle"
+  ],
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 176.457622051239,
+  "n": 500,
+  "ml": 0,
+  "mle": 0,
+  "bposd": 0,
+  "disagree_ml_mle": 0
+ },
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.9,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   2,
+   0
+  ],
+  "seconds": 159.97602772712708,
+  "n": 500,
+  "ml": 72,
+  "mle": 72,
+  "bposd": 96,
+  "disagree_ml_mle": 0
+ },
+ {
+  "code": "15_9_3",
+  "d": 17,
+  "f": 0.9,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "stratum": [
+   1,
+   1
+  ],
+  "seconds": 173.62874126434326,
+  "n": 500,
+  "ml": 8,
+  "mle": 8,
+  "bposd": 8,
+  "disagree_ml_mle": 2
+ }
+]

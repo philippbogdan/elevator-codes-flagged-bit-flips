@@ -1,0 +1,186 @@
+[
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 64,
+  "stratum": [
+   0,
+   2
+  ],
+  "seconds": 74.52155303955078,
+  "n": 20000,
+  "ml": 8,
+  "mle": 8,
+  "disagree": 0,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 64,
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 8.351714611053467,
+  "n": 2000,
+  "ml": 4,
+  "mle": 4,
+  "disagree": 0,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 1024,
+  "stratum": [
+   0,
+   2
+  ],
+  "seconds": 98.36929297447205,
+  "n": 20000,
+  "ml": 28,
+  "mle": 29,
+  "disagree": 3,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 1024,
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 16.760639905929565,
+  "n": 2000,
+  "ml": 9,
+  "mle": 9,
+  "disagree": 2,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 4096,
+  "stratum": [
+   0,
+   2
+  ],
+  "seconds": 176.38532304763794,
+  "n": 20000,
+  "ml": 32,
+  "mle": 30,
+  "disagree": 4,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_9_3",
+  "n_anc": 1,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 4096,
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 89.5544810295105,
+  "n": 2000,
+  "ml": 10,
+  "mle": 12,
+  "disagree": 4,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 2,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 1024,
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 43.68243408203125,
+  "n": 2000,
+  "ml": 0,
+  "mle": 0,
+  "disagree": 0,
+  "ml_ties": 0
+ },
+ {
+  "code": "15_6_5",
+  "n_anc": 2,
+  "d": 15,
+  "f": 1.0,
+  "classes": [
+   "idle",
+   "gate",
+   "prep",
+   "meas"
+  ],
+  "window": 4096,
+  "stratum": [
+   0,
+   3
+  ],
+  "seconds": 315.07667779922485,
+  "n": 2000,
+  "ml": 0,
+  "mle": 0,
+  "disagree": 0,
+  "ml_ties": 0
+ }
+]

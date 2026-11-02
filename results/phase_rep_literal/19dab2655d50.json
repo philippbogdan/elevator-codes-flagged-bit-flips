@@ -1,0 +1,1 @@
+{"spec": {"kind": "rep", "d": 9, "p_z": 0.001, "rounds": 100, "extra_idle": 2.7333333333333334, "shots": 88894644, "max_fail": 200, "seed": 7603, "shard": 1388978}, "shots": 88894644, "fails": 123, "seconds": 585.2833869457245, "rounds": 100, "k": 1, "shards": 65}
